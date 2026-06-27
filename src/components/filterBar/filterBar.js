@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Executive Filter Bar
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -28,7 +28,11 @@ import {
 
 import { refreshDashboard } from "../../pages/dashboard/dashboard.js";
 
+let filterRoot = null;
+
 export async function renderFilterBar(target){
+
+    filterRoot = target;
 
     await createComponent({
 
@@ -42,33 +46,40 @@ export async function renderFilterBar(target){
 
     initializeFilters();
 
-    populatePeriods();
+    buildPeriodList();
 
-    populateSelect(
+    buildSelect(
         "filter-brand",
-        LookupStore.brands,
-        "All"
+        LookupStore.brands
     );
 
-    populateSelect(
+    buildSelect(
         "filter-category",
-        LookupStore.categories,
-        "All"
+        LookupStore.categories
     );
 
-    populateSelect(
+    buildSelect(
         "filter-status",
-        LookupStore.erpStatuses,
-        "All"
+        LookupStore.erpStatuses
     );
 
-    attachEvents();
+    syncUI();
+
+    bindEvents();
 
 }
 
-function populatePeriods(){
+/**
+ * -------------------------
+ * Build Period Dropdown
+ * -------------------------
+ */
+
+function buildPeriodList(){
 
     const select = document.getElementById("filter-period");
+
+    select.innerHTML = "";
 
     const periods = new Map();
 
@@ -103,17 +114,15 @@ function populatePeriods(){
 
         });
 
-    const latest=getLatestPeriod(DataStore.sales);
-
-    if(latest){
-
-        select.value=latest.key;
-
-    }
-
 }
 
-function populateSelect(id,list,first){
+/**
+ * -------------------------
+ * Build Dropdown
+ * -------------------------
+ */
+
+function buildSelect(id,list){
 
     const select=document.getElementById(id);
 
@@ -123,60 +132,95 @@ function populateSelect(id,list,first){
 
     all.value="All";
 
-    all.textContent=first;
+    all.textContent="All";
 
     select.appendChild(all);
 
-    list.forEach(item=>{
+    [...list]
+        .sort()
+        .forEach(item=>{
 
-        const option=document.createElement("option");
+            const option=document.createElement("option");
 
-        option.value=item;
+            option.value=item;
 
-        option.textContent=item;
+            option.textContent=item;
 
-        select.appendChild(option);
+            select.appendChild(option);
 
-    });
+        });
 
 }
 
-function attachEvents(){
+/**
+ * -------------------------
+ * Sync UI with State
+ * -------------------------
+ */
 
-    document
-        .getElementById("applyFilters")
-        .addEventListener("click",()=>{
+function syncUI(){
 
-            updateFilters({
+    document.getElementById("filter-period").value =
+        FilterState.period;
 
-                period:Number(document.getElementById("filter-period").value),
+    document.getElementById("filter-brand").value =
+        FilterState.brand;
 
-                brand:document.getElementById("filter-brand").value,
+    document.getElementById("filter-category").value =
+        FilterState.category;
 
-                category:document.getElementById("filter-category").value,
+    document.getElementById("filter-status").value =
+        FilterState.erpStatus;
 
-                erpStatus:document.getElementById("filter-status").value,
+    document.getElementById("filter-search").value =
+        FilterState.search;
 
-                search:document.getElementById("filter-search").value.trim()
+}
 
-            });
+/**
+ * -------------------------
+ * Events
+ * -------------------------
+ */
 
-            refreshDashboard();
+function bindEvents(){
+
+    document.getElementById("applyFilters").onclick=()=>{
+
+        updateFilters({
+
+            period:Number(
+                document.getElementById("filter-period").value
+            ),
+
+            brand:
+                document.getElementById("filter-brand").value,
+
+            category:
+                document.getElementById("filter-category").value,
+
+            erpStatus:
+                document.getElementById("filter-status").value,
+
+            search:
+                document.getElementById("filter-search")
+                    .value
+                    .trim()
 
         });
 
-    document
-        .getElementById("resetFilters")
-        .addEventListener("click",()=>{
+        refreshDashboard();
 
-            resetFilters();
+    };
 
-            renderFilterBar(
-                document.querySelector(".filter-container")
-            );
+    document.getElementById("resetFilters").onclick=()=>{
 
-            refreshDashboard();
+        resetFilters();
 
-        });
+        syncUI();
+
+        refreshDashboard();
+
+    };
 
 }
