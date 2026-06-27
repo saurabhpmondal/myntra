@@ -5,6 +5,8 @@
  * =====================================================
  */
 
+
+import { renderDashboard } from "../pages/dashboard/dashboard.js";
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 import { renderHeader } from "../components/header/header.js";
 import { renderFilterBar } from "../components/filterbar/filterbar.js";
@@ -46,5 +48,9 @@ export async function renderLayout() {
     await renderFilterBar(
         document.getElementById("filterbar")
     );
+
+await renderDashboard(
+    document.getElementById("content")
+);
 
 }
