@@ -8,6 +8,7 @@
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 import { renderHeader } from "../components/header/header.js";
 import { renderFilterBar } from "../components/filterbar/filterbar.js";
+import { renderCommandPalette } from "../components/commandPalette/commandPalette.js";
 
 export async function renderLayout() {
 
