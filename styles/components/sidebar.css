@@ -1,1 +1,150 @@
-test
+/* =====================================================
+   Project Phoenix
+   Product : Myntra Analytics
+   Module : Sidebar
+   Author : Saurabh Mondal & Magical CTO
+===================================================== */
+
+.sidebar{
+
+    display:flex;
+    flex-direction:column;
+
+    width:270px;
+    height:100vh;
+
+    background:#FFFFFF;
+
+    border-right:1px solid #E5E7EB;
+
+    box-shadow:4px 0 18px rgba(0,0,0,.04);
+
+}
+
+/* ================= Logo ================= */
+
+.sidebar-logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    padding:22px;
+
+    border-bottom:1px solid #F1F5F9;
+
+}
+
+.sidebar-logo img{
+
+    width:58px;
+
+    height:58px;
+
+    object-fit:cover;
+
+    border-radius:14px;
+
+}
+
+.sidebar-title{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.sidebar-title h2{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.sidebar-title span{
+
+    margin-top:2px;
+
+    font-size:12px;
+
+    color:#6B7280;
+
+}
+
+/* ================= Menu ================= */
+
+.sidebar-menu{
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:18px 14px;
+
+    gap:8px;
+
+    flex:1;
+
+}
+
+.sidebar-menu a{
+
+    display:flex;
+
+    align-items:center;
+
+    height:46px;
+
+    padding:0 16px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    color:#374151;
+
+    font-weight:500;
+
+}
+
+.sidebar-menu a:hover{
+
+    background:#F8FAFC;
+
+}
+
+.sidebar-menu a.active{
+
+    background:#FF3F6C;
+
+    color:#FFFFFF;
+
+    font-weight:600;
+
+}
+
+/* ================= Footer ================= */
+
+.sidebar-footer{
+
+    padding:20px;
+
+    border-top:1px solid #F1F5F9;
+
+    font-size:12px;
+
+    color:#9CA3AF;
+
+    text-align:center;
+
+}
