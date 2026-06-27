@@ -6,7 +6,7 @@
  * Author  : Saurabh Mondal & Magical CTO
  * =====================================================
  */
-
+import { buildMenu } from "./menu.js";
 import { loadComponent } from "../../utils/loadComponent.js";
 import { Assets } from "../../config/assets.js";
 import { Version } from "../../config/version.js";
