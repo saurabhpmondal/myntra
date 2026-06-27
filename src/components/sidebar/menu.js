@@ -6,7 +6,7 @@
  */
 
 import { Navigation } from "../../config/navigation.js";
-import { renderIcons } from "../../utils/icons.js";
+import { renderIcons } from "../../utils/icon.js";
 
 export function buildMenu() {
 
