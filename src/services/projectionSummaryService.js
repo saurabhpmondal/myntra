@@ -3,40 +3,41 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Projection Summary Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import { getFilteredSales } from "./filterService.js";
+import { getReportRows } from "./reportHelper.js";
 import { getComparisonData } from "./comparisonService.js";
 import { projectMetric } from "./projectionService.js";
 
 export function getProjectionSummary(){
 
-    const rows = getFilteredSales();
+    const rows = getReportRows();
 
     const {
 
         previousPeriod,
+
         previousSales
 
     } = getComparisonData();
 
-    // -------------------------
-    // Metric Helpers
-    // -------------------------
+    // -----------------------
+    // Current Month
+    // -----------------------
 
     const total = projectMetric(rows,"qty");
 
     const gmv = projectMetric(rows,"final_amount");
 
-    // -------------------------
-    // PO Type
-    // -------------------------
-
     const ppmp = projectMetric(
 
-        rows.filter(r=>r.po_type==="PPMP"),
+        rows.filter(r=>
+
+            String(r.po_type).toUpperCase()==="PPMP"
+
+        ),
 
         "qty"
 
@@ -44,7 +45,11 @@ export function getProjectionSummary(){
 
     const sjit = projectMetric(
 
-        rows.filter(r=>r.po_type==="SJIT"),
+        rows.filter(r=>
+
+            String(r.po_type).toUpperCase()==="SJIT"
+
+        ),
 
         "qty"
 
@@ -52,23 +57,27 @@ export function getProjectionSummary(){
 
     const sor = projectMetric(
 
-        rows.filter(r=>r.po_type==="SOR"),
+        rows.filter(r=>
+
+            String(r.po_type).toUpperCase()==="SOR"
+
+        ),
 
         "qty"
 
     );
 
-    // -------------------------
-    // Brands
-    // -------------------------
+    // -----------------------
+    // Brand Projection
+    // -----------------------
 
-    const brands={};
+    const brands = {};
 
     [...new Set(rows.map(r=>r.brand))]
         .sort()
         .forEach(brand=>{
 
-            brands[brand]=projectMetric(
+            brands[brand] = projectMetric(
 
                 rows.filter(r=>r.brand===brand),
 
@@ -78,29 +87,74 @@ export function getProjectionSummary(){
 
         });
 
-    // -------------------------
+    // -----------------------
     // Previous Month
-    // -------------------------
+    // -----------------------
 
-    const previous={
+    const previousRows = previousSales.map(row=>{
 
-        total:sum(previousSales,"qty"),
+        const current = rows.find(
 
-        gmv:sum(previousSales,"final_amount"),
+            r=>r.style_id===row.style_id
 
-        ppmp:sum(
-            previousSales.filter(r=>r.po_type==="PPMP"),
+        );
+
+        return{
+
+            ...row,
+
+            brand:
+
+                current?.brand ||
+
+                row.brand ||
+
+                "Unknown"
+
+        };
+
+    });
+
+    const previous = {
+
+        total: sum(previousRows,"qty"),
+
+        gmv: sum(previousRows,"final_amount"),
+
+        ppmp: sum(
+
+            previousRows.filter(r=>
+
+                String(r.po_type).toUpperCase()==="PPMP"
+
+            ),
+
             "qty"
+
         ),
 
-        sjit:sum(
-            previousSales.filter(r=>r.po_type==="SJIT"),
+        sjit: sum(
+
+            previousRows.filter(r=>
+
+                String(r.po_type).toUpperCase()==="SJIT"
+
+            ),
+
             "qty"
+
         ),
 
-        sor:sum(
-            previousSales.filter(r=>r.po_type==="SOR"),
+        sor: sum(
+
+            previousRows.filter(r=>
+
+                String(r.po_type).toUpperCase()==="SOR"
+
+            ),
+
             "qty"
+
         ),
 
         brands:{}
@@ -109,9 +163,9 @@ export function getProjectionSummary(){
 
     Object.keys(brands).forEach(brand=>{
 
-        previous.brands[brand]=sum(
+        previous.brands[brand] = sum(
 
-            previousSales.filter(r=>r.brand===brand),
+            previousRows.filter(r=>r.brand===brand),
 
             "qty"
 
@@ -122,13 +176,20 @@ export function getProjectionSummary(){
     return{
 
         total,
+
         gmv,
+
         ppmp,
+
         sjit,
+
         sor,
+
         brands,
-        previousPeriod,
-        previous
+
+        previous,
+
+        previousPeriod
 
     };
 
@@ -138,13 +199,9 @@ function sum(rows,column){
 
     return rows.reduce(
 
-        (a,b)=>
+        (total,row)=>
 
-            a+Number(
-
-                b[column]||0
-
-            ),
+            total + Number(row[column] || 0),
 
         0
 
