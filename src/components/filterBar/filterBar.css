@@ -1,14 +1,14 @@
-.filterbar{
-
-    min-height:68px;
+.filter-bar{
 
     display:flex;
 
-    align-items:center;
+    justify-content:space-between;
 
-    gap:12px;
+    align-items:flex-end;
 
-    padding:14px 24px;
+    gap:20px;
+
+    padding:16px 24px;
 
     background:#ffffff;
 
@@ -18,34 +18,77 @@
 
 }
 
-.filterbar select,
-.filterbar input{
+.filter-grid{
+
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:repeat(5,minmax(160px,1fr));
+
+    gap:16px;
+
+}
+
+.filter-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.filter-item label{
+
+    font-size:12px;
+
+    font-weight:600;
+
+    color:#6B7280;
+
+}
+
+.filter-item select,
+
+.filter-item input{
 
     height:40px;
 
-    padding:0 14px;
+    padding:0 12px;
 
     border:1px solid #D1D5DB;
 
     border-radius:8px;
 
-    font-size:14px;
-
     background:#fff;
 
-}
-
-.filterbar input{
-
-    width:260px;
+    font-size:14px;
 
 }
 
-.filterbar button{
+.search-box input{
+
+    width:100%;
+
+}
+
+.filter-actions{
+
+    display:flex;
+
+    align-items:flex-end;
+
+    gap:10px;
+
+}
+
+.filter-actions button{
 
     height:40px;
 
-    padding:0 16px;
+    padding:0 18px;
 
     border:none;
 
@@ -53,26 +96,36 @@
 
     cursor:pointer;
 
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
     font-weight:600;
+
+    transition:.2s;
 
 }
 
-#btnReset{
+.secondary{
 
     background:#F3F4F6;
 
+    color:#374151;
+
 }
 
-#btnRefresh{
+.secondary:hover{
+
+    background:#E5E7EB;
+
+}
+
+.primary{
 
     background:#FF3F6C;
 
     color:#fff;
+
+}
+
+.primary:hover{
+
+    background:#E6365F;
 
 }
