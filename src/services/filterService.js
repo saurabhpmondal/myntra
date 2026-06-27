@@ -181,3 +181,107 @@ export function getSalesByPeriod(period) {
     });
 
 }
+
+/**
+ * ==========================================
+ * Sales for Trend Charts
+ * Applies all filters except Period
+ * ==========================================
+ */
+
+export function getTrendSales(){
+
+    return DataStore.sales.filter(sale=>{
+
+        const product =
+            LookupStore.productMap[sale.style_id];
+
+        if(!product){
+
+            return false;
+
+        }
+
+        // Brand
+
+        if(
+
+            FilterState.brand !== "All" &&
+
+            product.brand !== FilterState.brand
+
+        ){
+
+            return false;
+
+        }
+
+        // Category
+
+        if(
+
+            FilterState.category !== "All" &&
+
+            product.category !== FilterState.category
+
+        ){
+
+            return false;
+
+        }
+
+        // ERP Status
+
+        if(
+
+            FilterState.erpStatus !== "All" &&
+
+            product.erpStatus !== FilterState.erpStatus
+
+        ){
+
+            return false;
+
+        }
+
+        // Search
+
+        if(FilterState.search.trim()){
+
+            const keyword =
+
+                FilterState.search
+
+                    .trim()
+
+                    .toLowerCase();
+
+            const matched =
+
+                String(sale.style_id || "")
+
+                    .toLowerCase()
+
+                    .includes(keyword)
+
+                ||
+
+                String(product.erpSku || "")
+
+                    .toLowerCase()
+
+                    .includes(keyword);
+
+            if(!matched){
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    });
+
+}
