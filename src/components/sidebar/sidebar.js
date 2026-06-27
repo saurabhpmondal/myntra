@@ -9,59 +9,57 @@
 
 import { Assets } from "../../config/assets.js";
 
-export function renderSidebar() {
+export function renderSidebar(target) {
 
-    return `
+    target.innerHTML = `
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <div class="sidebar-logo">
+            <div class="sidebar-logo">
 
-            <img
-                src="${Assets.logo}"
-                alt="Myntra Analytics Logo">
+                <img src="${Assets.logo}" alt="Logo">
 
-            <div class="sidebar-title">
+                <div class="sidebar-title">
 
-                <h2>Myntra Analytics</h2>
+                    <h2>Myntra Analytics</h2>
 
-                <span>Project Phoenix</span>
+                    <span>Project Phoenix</span>
+
+                </div>
 
             </div>
 
-        </div>
+            <nav class="sidebar-menu">
 
-        <nav class="sidebar-menu">
+                <a class="active">Dashboard</a>
 
-            <a class="active">Dashboard</a>
+                <a>Daily Sales</a>
 
-            <a>Daily Sales</a>
+                <a>Business</a>
 
-            <a>Business</a>
+                <a>Growth</a>
 
-            <a>Growth</a>
+                <a>Shipment</a>
 
-            <a>Shipment</a>
+                <a>Surge</a>
 
-            <a>Surge</a>
+                <a>Sales Drop</a>
 
-            <a>Sales Drop</a>
+                <a>New Launch</a>
 
-            <a>New Launch</a>
+                <a>Style Eye</a>
 
-            <a>Style Eye</a>
+                <a>Ads</a>
 
-            <a>Ads</a>
+            </nav>
 
-        </nav>
+            <div class="sidebar-footer">
 
-        <div class="sidebar-footer">
+                Foundation v0.1.0
 
-            Foundation v0.1.0
+            </div>
 
-        </div>
-
-    </aside>
+        </aside>
 
     `;
 
