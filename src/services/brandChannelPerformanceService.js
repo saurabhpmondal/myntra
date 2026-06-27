@@ -3,23 +3,29 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Brand Channel Performance Service
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
-import { getReportRows } from "./reportHelper.js";
+import { getFilteredSales } from "./filterService.js";
+import { LookupStore } from "./lookupService.js";
+import { DataStore } from "./dataService.js";
 
 export function getBrandChannelPerformance(){
 
-    const rows = getReportRows();
+    const sales = getFilteredSales();
 
     const summary = {};
 
-    let totalUnits = 0;
+    let maxDay = 1;
 
-    rows.forEach(row=>{
+    function getBrand(styleId){
 
-        const brand = row.brand || "Unknown";
+        return LookupStore.productMap[styleId]?.brand || "Unknown";
+
+    }
+
+    function row(brand){
 
         if(!summary[brand]){
 
@@ -27,123 +33,184 @@ export function getBrandChannelPerformance(){
 
                 brand,
 
-                PPMP:0,
+                stockSOR:0,
+                stockSJIT:0,
 
-                SJIT:0,
+                saleSOR:0,
+                saleSJIT:0,
+                salePPMP:0,
 
-                SOR:0,
+                totalSale:0,
 
-                total:0,
+                shareSOR:0,
+                shareSJIT:0,
+                sharePPMP:0,
 
-                gmv:0
+                drrSOR:0,
+                drrSJIT:0,
+                drrPPMP:0
 
             };
 
         }
 
-        const qty = Number(row.qty || 0);
+        return summary[brand];
 
-        const gmv = Number(row.final_amount || 0);
+    }
 
-        const poType = String(row.po_type || "").toUpperCase();
+    // -------------------------
+    // SALES
+    // -------------------------
 
-        if(summary[brand][poType] !== undefined){
+    sales.forEach(r=>{
 
-            summary[brand][poType] += qty;
+        const brand = getBrand(r.style_id);
+
+        const item = row(brand);
+
+        const qty = Number(r.qty||0);
+
+        const po = String(r.po_type).toUpperCase();
+
+        maxDay = Math.max(
+            maxDay,
+            Number(r.date||1)
+        );
+
+        if(po==="SOR") item.saleSOR += qty;
+
+        else if(po==="SJIT") item.saleSJIT += qty;
+
+        else if(po==="PPMP") item.salePPMP += qty;
+
+        item.totalSale += qty;
+
+    });
+
+    // -------------------------
+    // SJIT STOCK
+    // -------------------------
+
+    DataStore.sjitStock.forEach(r=>{
+
+        const brand = getBrand(r.style_id);
+
+        row(brand).stockSJIT +=
+            Number(r.sellable_inventory_count||0);
+
+    });
+
+    // -------------------------
+    // SOR STOCK
+    // -------------------------
+
+    DataStore.sorStock.forEach(r=>{
+
+        const brand = getBrand(r.style_id);
+
+        row(brand).stockSOR +=
+            Number(r.units||0);
+
+    });
+
+    // -------------------------
+    // CALCULATIONS
+    // -------------------------
+
+    const data = Object.values(summary);
+
+    data.forEach(r=>{
+
+        if(r.totalSale){
+
+            r.shareSOR =
+                r.saleSOR*100/r.totalSale;
+
+            r.shareSJIT =
+                r.saleSJIT*100/r.totalSale;
+
+            r.sharePPMP =
+                r.salePPMP*100/r.totalSale;
 
         }
 
-        summary[brand].total += qty;
+        r.drrSOR =
+            r.saleSOR/maxDay;
 
-        summary[brand].gmv += gmv;
+        r.drrSJIT =
+            r.saleSJIT/maxDay;
 
-        totalUnits += qty;
+        r.drrPPMP =
+            r.salePPMP/maxDay;
 
     });
 
-    const data = Object.values(summary)
+    data.sort(
 
-        .map(item=>({
+        (a,b)=>
 
-            brand:item.brand,
+        b.totalSale-a.totalSale
 
-            PPMP:item.PPMP,
+    );
 
-            SJIT:item.SJIT,
+    // -------------------------
+    // GRAND TOTAL
+    // -------------------------
 
-            SOR:item.SOR,
-
-            total:item.total,
-
-            gmv:item.gmv,
-
-            asp:
-
-                item.total===0
-
-                ?0
-
-                :item.gmv/item.total,
-
-            share:
-
-                totalUnits===0
-
-                ?0
-
-                :(item.total/totalUnits)*100
-
-        }))
-
-        .sort((a,b)=>b.total-a.total);
-
-    // ------------------------------------
-    // Grand Total Row
-    // ------------------------------------
-
-    const grandTotal={
+    const total={
 
         brand:"TOTAL",
 
-        PPMP:0,
+        stockSOR:0,
+        stockSJIT:0,
 
-        SJIT:0,
+        saleSOR:0,
+        saleSJIT:0,
+        salePPMP:0,
 
-        SOR:0,
+        totalSale:0,
 
-        total:0,
+        shareSOR:0,
+        shareSJIT:0,
+        sharePPMP:0,
 
-        gmv:0,
-
-        asp:0,
-
-        share:100
+        drrSOR:0,
+        drrSJIT:0,
+        drrPPMP:0
 
     };
 
-    data.forEach(row=>{
+    data.forEach(r=>{
 
-        grandTotal.PPMP += row.PPMP;
+        total.stockSOR+=r.stockSOR;
+        total.stockSJIT+=r.stockSJIT;
 
-        grandTotal.SJIT += row.SJIT;
+        total.saleSOR+=r.saleSOR;
+        total.saleSJIT+=r.saleSJIT;
+        total.salePPMP+=r.salePPMP;
 
-        grandTotal.SOR += row.SOR;
-
-        grandTotal.total += row.total;
-
-        grandTotal.gmv += row.gmv;
+        total.totalSale+=r.totalSale;
 
     });
 
-    grandTotal.asp =
+    if(total.totalSale){
 
-        grandTotal.total===0
+        total.shareSOR=
+            total.saleSOR*100/total.totalSale;
 
-        ?0
+        total.shareSJIT=
+            total.saleSJIT*100/total.totalSale;
 
-        :grandTotal.gmv/grandTotal.total;
+        total.sharePPMP=
+            total.salePPMP*100/total.totalSale;
 
-    data.push(grandTotal);
+    }
+
+    total.drrSOR=total.saleSOR/maxDay;
+    total.drrSJIT=total.saleSJIT/maxDay;
+    total.drrPPMP=total.salePPMP/maxDay;
+
+    data.push(total);
 
     return data;
 
