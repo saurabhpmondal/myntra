@@ -6,44 +6,91 @@ export function showSplash() {
     const root = document.getElementById("root");
 
     root.innerHTML = `
+
     <div class="splash">
 
         <div class="splash-card">
 
-            <img class="splash-logo"
-                 src="${Assets.logo}"
-                 alt="Logo">
+            <img
+                class="logo"
+                src="${Assets.logo}"
+                alt="Logo">
 
             <h1>${Version.app}</h1>
 
-            <p class="tagline">
+            <p class="subtitle">
+
                 Fashion Data Intelligence
+
             </p>
 
             <div class="progress">
 
-                <div id="progressBar"
-                     class="progress-bar"></div>
+                <div
+                    id="progress"
+                    class="progress-fill"></div>
 
             </div>
 
-            <p id="progressText">
+            <p
+                id="status">
 
                 Preparing Workspace...
 
             </p>
 
-            <div class="footer">
+            <small>
 
-                Version ${Version.version}
-                •
                 ${Version.release}
+                •
+                ${Version.version}
 
-            </div>
+            </small>
 
         </div>
 
     </div>
+
     `;
+
+    animate();
+
+}
+
+function animate(){
+
+    const progress=document.getElementById("progress");
+
+    const status=document.getElementById("status");
+
+    const steps=[
+
+        "Loading Theme...",
+
+        "Loading Components...",
+
+        "Preparing Dashboard...",
+
+        "Launching Phoenix..."
+
+    ];
+
+    let i=0;
+
+    const timer=setInterval(()=>{
+
+        progress.style.width=((i+1)*25)+"%";
+
+        status.textContent=steps[i];
+
+        i++;
+
+        if(i===steps.length){
+
+            clearInterval(timer);
+
+        }
+
+    },500);
 
 }
