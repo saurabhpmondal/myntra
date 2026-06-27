@@ -1,0 +1,124 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Module  : KPI Card
+ * Author  : Saurabh Mondal & Magical CTO
+ * =====================================================
+ */
+
+.kpi-card{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    gap:18px;
+
+    min-height:150px;
+
+    box-shadow:
+        0 4px 12px rgba(15,23,42,.05);
+
+    transition:all .25s ease;
+
+}
+
+.kpi-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 12px 28px rgba(15,23,42,.12);
+
+}
+
+.kpi-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.kpi-title{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#64748B;
+
+}
+
+.kpi-header i{
+
+    width:22px;
+
+    height:22px;
+
+    color:#94A3B8;
+
+}
+
+.kpi-value{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+
+    line-height:1;
+
+}
+
+.kpi-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.kpi-change{
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.kpi-change.up{
+
+    color:#16A34A;
+
+}
+
+.kpi-change.down{
+
+    color:#DC2626;
+
+}
+
+.kpi-period{
+
+    font-size:12px;
+
+    color:#94A3B8;
+
+}
