@@ -6,7 +6,7 @@
  * Version : V3.0
  * =====================================================
  */
-
+import { updateSplash } from "../splash/splash.js";
 import { Sheets } from "./sheetConfig.js";
 import { loadCSV } from "./csvService.js";
 
@@ -32,27 +32,28 @@ export async function initializeData() {
 
     console.log("🚀 Loading Phoenix Data Engine...");
 
-    const [
+    updateSplash(5, "Connecting to Google Sheets...");
 
-        sales,
-        returns,
-        sjitStock,
-        sorStock,
-        sellerStock,
-        productMaster,
-        traffic
+    updateSplash(15, "Loading Sales...");
+    const sales = await loadCSV(Sheets.sales);
 
-    ] = await Promise.all([
+    updateSplash(30, "Loading Returns...");
+    const returns = await loadCSV(Sheets.returns);
 
-        loadCSV(Sheets.sales),
-        loadCSV(Sheets.returns),
-        loadCSV(Sheets.sjitStock),
-        loadCSV(Sheets.sorStock),
-        loadCSV(Sheets.sellerStock),
-        loadCSV(Sheets.productMaster),
-        loadCSV(Sheets.traffic)
+    updateSplash(45, "Loading SJIT Stock...");
+    const sjitStock = await loadCSV(Sheets.sjitStock);
 
-    ]);
+    updateSplash(60, "Loading SOR Stock...");
+    const sorStock = await loadCSV(Sheets.sorStock);
+
+    updateSplash(72, "Loading Seller Stock...");
+    const sellerStock = await loadCSV(Sheets.sellerStock);
+
+    updateSplash(85, "Loading Product Master...");
+    const productMaster = await loadCSV(Sheets.productMaster);
+
+    updateSplash(95, "Loading Traffic...");
+    const traffic = await loadCSV(Sheets.traffic);
 
     DataStore.sales = sales;
     DataStore.returns = returns;
@@ -65,7 +66,6 @@ export async function initializeData() {
     DataStore.loaded = true;
 
     console.table({
-
         Sales: sales.length,
         Returns: returns.length,
         SJIT: sjitStock.length,
@@ -73,8 +73,9 @@ export async function initializeData() {
         SellerStock: sellerStock.length,
         Products: productMaster.length,
         Traffic: traffic.length
-
     });
+
+    updateSplash(100, "Launching Phoenix...");
 
     return DataStore;
 
