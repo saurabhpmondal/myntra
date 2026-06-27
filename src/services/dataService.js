@@ -9,7 +9,7 @@
 import { updateSplash } from "../splash/splash.js";
 import { Sheets } from "./sheetConfig.js";
 import { loadCSV } from "./csvService.js";
-
+import { buildLookups } from "./lookupService.js";
 export const DataStore = {
 
     sales: [],
