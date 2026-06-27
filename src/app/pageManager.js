@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -30,13 +30,37 @@ export async function openPage(page){
 
     switch(page){
 
-        case "dailySales":
+        case "dashboard":
+
+            await renderDashboard(content);
+
+            break;
+
+        case "daily-sales":
 
             await renderDailySales(content);
 
             break;
 
-        case "dashboard":
+        case "business":
+
+        case "growth":
+
+        case "shipment":
+
+        case "surge":
+
+        case "sales-drop":
+
+        case "new-launch":
+
+        case "style-eye":
+
+        case "ads":
+
+            comingSoon(page);
+
+            break;
 
         default:
 
@@ -45,5 +69,26 @@ export async function openPage(page){
             break;
 
     }
+
+}
+
+function comingSoon(page){
+
+    const title = page
+        .split("-")
+        .map(word=>word.charAt(0).toUpperCase()+word.slice(1))
+        .join(" ");
+
+    content.innerHTML = `
+
+        <div class="dashboard-card" style="padding:60px;text-align:center;">
+
+            <h2>${title}</h2>
+
+            <p>This module is under development.</p>
+
+        </div>
+
+    `;
 
 }
