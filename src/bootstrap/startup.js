@@ -1,13 +1,14 @@
 /**
  * =====================================================
  * Project Phoenix
- * Product : Myntra Analytics
- * Version : 0.1.0
- * Module : Startup
  * =====================================================
  */
 
+import { buildLayout } from "../app/layout.js";
+
 export function startApp() {
+
+    buildLayout();
 
     console.log("🚀 Phoenix Started");
 
