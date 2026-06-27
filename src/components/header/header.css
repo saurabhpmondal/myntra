@@ -1,0 +1,99 @@
+.app-header{
+
+    height:72px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #E5E7EB;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 28px;
+
+}
+
+.page-title{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.page-subtitle{
+
+    margin-top:4px;
+
+    color:#64748B;
+
+    font-size:13px;
+
+}
+
+.header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.header-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    border:none;
+
+    background:#FF3F6C;
+
+    color:#fff;
+
+    padding:10px 18px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.header-btn:hover{
+
+    transform:translateY(-1px);
+
+    box-shadow:0 6px 16px rgba(255,63,108,.25);
+
+}
+
+.header-avatar{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#111827;
+
+    color:#fff;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
