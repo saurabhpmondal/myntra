@@ -1,4 +1,12 @@
-export default {
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Version : 0.1.0
+ * =====================================================
+ */
+
+export const Version = {
 
     app: "Myntra Analytics",
 
@@ -6,6 +14,8 @@ export default {
 
     version: "0.1.0",
 
-    release: "Foundation"
+    release: "Foundation",
+
+    author: "Saurabh Mondal & Magical CTO"
 
 };
