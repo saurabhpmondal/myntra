@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Service
- * Version : V1.2
+ * Version : V1.3
  * =====================================================
  */
 
@@ -12,40 +12,44 @@ import {
     calculateGrowth
 } from "./comparisonService.js";
 
-function periodLabel(periodKey){
+const MONTHS = {
 
-    if(!periodKey) return "-";
+    1:"JAN",
+    2:"FEB",
+    3:"MAR",
+    4:"APR",
+    5:"MAY",
+    6:"JUNE",
+    7:"JULY",
+    8:"AUG",
+    9:"SEP",
+    10:"OCT",
+    11:"NOV",
+    12:"DEC"
 
-    const year = Math.floor(periodKey / 100);
+};
 
-    const month = periodKey % 100;
+function getPeriodLabel(period){
 
-    const months = {
+    if(!period){
 
-        1:"JAN",
-        2:"FEB",
-        3:"MAR",
-        4:"APR",
-        5:"MAY",
-        6:"JUNE",
-        7:"JULY",
-        8:"AUG",
-        9:"SEP",
-        10:"OCT",
-        11:"NOV",
-        12:"DEC"
+        return "-";
 
-    };
+    }
 
-    return `${months[month]} ${year}`;
+    const year = Math.floor(period / 100);
+
+    const month = period % 100;
+
+    return `${MONTHS[month]} ${year}`;
 
 }
 
-function calculateSummary(rows){
+function summarize(rows){
 
     let revenue = 0;
 
-    let unitsSold = 0;
+    let units = 0;
 
     const styles = new Set();
 
@@ -53,7 +57,7 @@ function calculateSummary(rows){
 
         revenue += Number(row.final_amount || 0);
 
-        unitsSold += Number(row.qty || 0);
+        units += Number(row.qty || 0);
 
         if(row.style_id){
 
@@ -67,17 +71,11 @@ function calculateSummary(rows){
 
         revenue,
 
-        unitsSold,
+        units,
 
-        avgSellingPrice:
+        asp: units===0 ? 0 : revenue/units,
 
-            unitsSold===0
-
-                ?0
-
-                :revenue/unitsSold,
-
-        soldStyles:styles.size
+        styles: styles.size
 
     };
 
@@ -88,31 +86,32 @@ export function getDashboardSummary(){
     const {
 
         currentPeriod,
+
         previousPeriod,
+
         currentSales,
+
         previousSales
 
     } = getComparisonData();
 
-    const current = calculateSummary(currentSales);
+    const current = summarize(currentSales);
 
-    const previous = calculateSummary(previousSales);
+    const previous = summarize(previousSales);
 
     return{
 
-        period:currentPeriod,
+        period: currentPeriod,
 
-        periodLabel:periodLabel(currentPeriod),
+        periodLabel: getPeriodLabel(currentPeriod),
 
         previousPeriod,
 
-        previousPeriodLabel:periodLabel(previousPeriod),
+        previousPeriodLabel: getPeriodLabel(previousPeriod),
 
-        revenue:current.revenue,
+        revenue: current.revenue,
 
-        previousRevenue:previous.revenue,
-
-        revenueGrowth:calculateGrowth(
+        revenueGrowth: calculateGrowth(
 
             current.revenue,
 
@@ -120,39 +119,33 @@ export function getDashboardSummary(){
 
         ),
 
-        unitsSold:current.unitsSold,
+        unitsSold: current.units,
 
-        previousUnitsSold:previous.unitsSold,
+        unitsGrowth: calculateGrowth(
 
-        unitsGrowth:calculateGrowth(
+            current.units,
 
-            current.unitsSold,
-
-            previous.unitsSold
+            previous.units
 
         ),
 
-        avgSellingPrice:current.avgSellingPrice,
+        avgSellingPrice: current.asp,
 
-        previousAvgSellingPrice:previous.avgSellingPrice,
+        aspGrowth: calculateGrowth(
 
-        aspGrowth:calculateGrowth(
+            current.asp,
 
-            current.avgSellingPrice,
-
-            previous.avgSellingPrice
+            previous.asp
 
         ),
 
-        soldStyles:current.soldStyles,
+        soldStyles: current.styles,
 
-        previousSoldStyles:previous.soldStyles,
+        soldStylesGrowth: calculateGrowth(
 
-        soldStylesGrowth:calculateGrowth(
+            current.styles,
 
-            current.soldStyles,
-
-            previous.soldStyles
+            previous.styles
 
         )
 
