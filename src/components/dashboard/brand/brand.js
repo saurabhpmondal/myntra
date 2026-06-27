@@ -8,7 +8,6 @@
  */
 
 import { renderTable } from "../../common/table/table.js";
-
 import { getBrandPerformance } from "../../../services/brandService.js";
 
 export async function renderBrandPerformance(target){
