@@ -65,9 +65,11 @@ function renderHeader(columns){
 
         th.textContent = column.label;
 
-        th.className =
+        th.classList.add(
 
-            `text-${column.align || "center"}`;
+    `text-${column.align || "center"}`
+);
+
 
         tr.appendChild(th);
 
