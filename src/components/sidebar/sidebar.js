@@ -1,113 +1,36 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Sidebar
+ * =====================================================
+ */
+
+import { loadComponent } from "../../utils/loadComponent.js";
+
 import { Assets } from "../../config/assets.js";
 
-export function renderSidebar(target){
+import { Version } from "../../config/version.js";
 
-target.innerHTML=`
+export async function renderSidebar(target){
 
-<aside class="sidebar">
+    await loadComponent(
 
-<div class="sidebar-header">
+        target,
 
-<img
-class="sidebar-logo"
-src="${Assets.logo}">
+        "src/components/sidebar/sidebar.html",
 
-<div class="sidebar-app">
+        {
 
-Myntra Analytics
+            logo:Assets.logo,
 
-</div>
+            appName:Version.app,
 
-<div class="sidebar-tag">
+            tagLine:"Fashion Data Intelligence",
 
-Fashion Data Intelligence
+            version:Version.release+" • "+Version.version
 
-</div>
+        }
 
-</div>
-
-<div class="sidebar-menu">
-
-<div class="sidebar-item active">
-
-📊 Dashboard
-
-</div>
-
-<div class="sidebar-item">
-
-📈 Daily Sales
-
-</div>
-
-<div class="sidebar-item">
-
-💼 Business
-
-</div>
-
-<div class="sidebar-item">
-
-📦 Growth
-
-</div>
-
-<div class="sidebar-item">
-
-🚚 Shipment
-
-</div>
-
-<div class="sidebar-item">
-
-🔥 Surge
-
-</div>
-
-<div class="sidebar-item">
-
-📉 Sales Drop
-
-</div>
-
-<div class="sidebar-item">
-
-🚀 New Launch
-
-</div>
-
-<div class="sidebar-item">
-
-👁 Style Eye
-
-</div>
-
-<div class="sidebar-item">
-
-📢 Ads
-
-</div>
-
-</div>
-
-<div class="sidebar-footer">
-
-<div class="sidebar-version">
-
-Foundation v0.1.0
-
-</div>
-
-<div class="sidebar-made">
-
-Made with ❤️ by Magical CTO
-
-</div>
-
-</div>
-
-</aside>
-
-`;
+    );
 
 }
