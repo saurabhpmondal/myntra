@@ -3,49 +3,52 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module : Layout
+ * Author : Saurabh Mondal & Magical CTO
  * =====================================================
  */
 
-import { renderSidebar } from "../ui/sidebar/sidebar.js";
-import { renderHeader } from "../ui/header/header.js";
-import { renderFooter } from "../ui/footer/footer.js";
+import { renderSidebar } from "../components/sidebar/sidebar.js";
 
-export function buildLayout() {
+export function renderLayout() {
 
-    renderSidebar();
+    const root = document.getElementById("root");
 
-    renderHeader();
+    root.innerHTML = `
 
-    renderFooter();
+        <div class="app-shell">
 
-    document.getElementById("content").innerHTML = `
+            <div id="sidebar-container"></div>
 
-        <div style="
-            padding:60px;
-            text-align:center;
-        ">
+            <div class="app-main">
 
-            <img
-                src="assets/logo/logo.jpeg"
-                style="
-                    width:180px;
-                    margin-bottom:20px;
-                ">
+                <header class="app-header">
 
-            <h1>Myntra Analytics</h1>
+                    Dashboard
 
-            <p>🔥 Project Phoenix</p>
+                </header>
 
-            <br>
+                <main class="app-content">
 
-            <h3>Foundation v0.1.0</h3>
+                    <h1>Welcome to Myntra Analytics</h1>
 
-            <br>
+                    <p>
 
-            <p>Application Boot Successful</p>
+                        🚀 Project Phoenix has officially started.
+
+                    </p>
+
+                </main>
+
+            </div>
 
         </div>
 
     `;
+
+    renderSidebar(
+
+        document.getElementById("sidebar-container")
+
+    );
 
 }
