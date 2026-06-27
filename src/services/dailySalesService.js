@@ -3,15 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import { getFilteredSales } from "./filterService.js";
+import { getReportRows } from "./reportHelper.js";
 
 export function getDailySales(){
 
-    const rows = getFilteredSales();
+    const rows = getReportRows();
 
     const summary = {};
 
@@ -47,41 +47,29 @@ export function getDailySales(){
 
         summary[day].gmv += gmv;
 
-        // -----------------------
-        // PO Type
-        // -----------------------
+        const poType = String(row.po_type || "").toUpperCase();
 
-        const po = String(row.po_type || "").toUpperCase();
+        if(summary[day][poType] !== undefined){
 
-        if(summary[day][po] !== undefined){
-
-            summary[day][po] += qty;
+            summary[day][poType] += qty;
 
         }
 
-        // -----------------------
-        // Brand
-        // -----------------------
-
-        const brand = String(row.brand || "").toUpperCase();
+        const brand = row.brand;
 
         if(!summary[day][brand]){
 
-            summary[day][brand] = 0;
+            summary[day][brand]=0;
 
         }
 
-        summary[day][brand] += qty;
+        summary[day][brand]+=qty;
 
     });
 
     const data = Object.values(summary)
 
         .sort((a,b)=>a.date-b.date);
-
-    // -----------------------------------
-    // Grand Total Row
-    // -----------------------------------
 
     const total={
 
@@ -101,41 +89,7 @@ export function getDailySales(){
 
     data.forEach(day=>{
 
-        total.total += day.total;
-
-        total.gmv += day.gmv;
-
-        total.PPMP += day.PPMP;
-
-        total.SJIT += day.SJIT;
-
-        total.SOR += day.SOR;
-
         Object.keys(day).forEach(key=>{
-
-            if(
-
-                [
-
-                    "date",
-
-                    "total",
-
-                    "gmv",
-
-                    "PPMP",
-
-                    "SJIT",
-
-                    "SOR"
-
-                ].includes(key)
-
-            ){
-
-                return;
-
-            }
 
             if(!total[key]){
 
@@ -143,7 +97,13 @@ export function getDailySales(){
 
             }
 
-            total[key]+=day[key];
+            if(key==="date"){
+
+                return;
+
+            }
+
+            total[key]+=Number(day[key]||0);
 
         });
 
