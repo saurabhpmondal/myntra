@@ -64,7 +64,7 @@ export async function initializeData() {
     DataStore.traffic = traffic;
 
     DataStore.loaded = true;
-
+buildLookups();
     console.table({
         Sales: sales.length,
         Returns: returns.length,
