@@ -3,95 +3,58 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Service
+ * Version : V1.1
  * =====================================================
  */
 
-import { DataStore } from "./dataService.js";
+import { getFilteredSales } from "./filterService.js";
+import { FilterState } from "./filterService.js";
 
 export function getDashboardSummary() {
 
-    const sales = DataStore.sales;
+    const sales = getFilteredSales();
 
-    if (!sales || sales.length === 0) {
+    let revenue = 0;
+    let unitsSold = 0;
 
-        return {
+    const styleSet = new Set();
 
-            revenue: 0,
-            unitsSold: 0,
-            avgSellingPrice: 0,
-            soldStyles: 0
+    sales.forEach(row => {
 
-        };
+        revenue += Number(row.final_amount || 0);
 
-    }
+        unitsSold += Number(row.qty || 0);
 
-    // -------------------------------------
-    // Find Latest Month
-    // -------------------------------------
+        if (row.style_id) {
 
-    const latestMonth = sales
-        .map(r => r.month)
-        .filter(Boolean)
-        .sort()
-        .pop();
+            styleSet.add(row.style_id);
 
-    const currentSales = sales.filter(
-        r => r.month === latestMonth
-    );
+        }
 
-    // -------------------------------------
-    // Revenue
-    // -------------------------------------
-
-    const revenue = currentSales.reduce((sum, row) => {
-
-        return sum + Number(row.final_amount || 0);
-
-    }, 0);
-
-    // -------------------------------------
-    // Units Sold
-    // -------------------------------------
-
-    const unitsSold = currentSales.reduce((sum, row) => {
-
-        return sum + Number(row.qty || 0);
-
-    }, 0);
-
-    // -------------------------------------
-    // Sold Styles
-    // -------------------------------------
-
-    const soldStyles = new Set(
-
-        currentSales.map(r => r.style_id)
-
-    ).size;
-
-    // -------------------------------------
-    // ASP
-    // -------------------------------------
-
-    const avgSellingPrice =
-
-        unitsSold === 0
-
-            ? 0
-
-            : revenue / unitsSold;
+    });
 
     return {
-
-        month: latestMonth,
 
         revenue,
 
         unitsSold,
 
-        avgSellingPrice,
+        avgSellingPrice:
+            unitsSold === 0
+                ? 0
+                : revenue / unitsSold,
 
-        soldStyles
+        soldStyles: styleSet.size,
+
+        totalRows: sales.length,
+
+        period: FilterState.period,
+
+        brand: FilterState.brand,
+
+        category: FilterState.category,
+
+        erpStatus: FilterState.erpStatus
 
     };
 
