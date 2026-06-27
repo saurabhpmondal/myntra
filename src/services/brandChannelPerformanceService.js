@@ -2,16 +2,16 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Brand Channel Performance
- * Version : V1.0
+ * Module  : Brand Channel Performance Service
+ * Version : V1.1
  * =====================================================
  */
 
-import { getFilteredSales } from "./filterService.js";
+import { getReportRows } from "./reportHelper.js";
 
 export function getBrandChannelPerformance(){
 
-    const rows = getFilteredSales();
+    const rows = getReportRows();
 
     const summary = {};
 
@@ -45,11 +45,11 @@ export function getBrandChannelPerformance(){
 
         const gmv = Number(row.final_amount || 0);
 
-        const po = String(row.po_type || "").toUpperCase();
+        const poType = String(row.po_type || "").toUpperCase();
 
-        if(summary[brand][po] !== undefined){
+        if(summary[brand][poType] !== undefined){
 
-            summary[brand][po] += qty;
+            summary[brand][poType] += qty;
 
         }
 
@@ -61,7 +61,7 @@ export function getBrandChannelPerformance(){
 
     });
 
-    return Object.values(summary)
+    const data = Object.values(summary)
 
         .map(item=>({
 
@@ -75,13 +75,7 @@ export function getBrandChannelPerformance(){
 
             total:item.total,
 
-            share:
-
-                totalUnits===0
-
-                ?0
-
-                :(item.total/totalUnits)*100,
+            gmv:item.gmv,
 
             asp:
 
@@ -89,10 +83,68 @@ export function getBrandChannelPerformance(){
 
                 ?0
 
-                :item.gmv/item.total
+                :item.gmv/item.total,
+
+            share:
+
+                totalUnits===0
+
+                ?0
+
+                :(item.total/totalUnits)*100
 
         }))
 
         .sort((a,b)=>b.total-a.total);
+
+    // ------------------------------------
+    // Grand Total Row
+    // ------------------------------------
+
+    const grandTotal={
+
+        brand:"TOTAL",
+
+        PPMP:0,
+
+        SJIT:0,
+
+        SOR:0,
+
+        total:0,
+
+        gmv:0,
+
+        asp:0,
+
+        share:100
+
+    };
+
+    data.forEach(row=>{
+
+        grandTotal.PPMP += row.PPMP;
+
+        grandTotal.SJIT += row.SJIT;
+
+        grandTotal.SOR += row.SOR;
+
+        grandTotal.total += row.total;
+
+        grandTotal.gmv += row.gmv;
+
+    });
+
+    grandTotal.asp =
+
+        grandTotal.total===0
+
+        ?0
+
+        :grandTotal.gmv/grandTotal.total;
+
+    data.push(grandTotal);
+
+    return data;
 
 }
