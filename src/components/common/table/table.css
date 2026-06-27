@@ -181,15 +181,24 @@
    Alignment
 ========================================== */
 
-.text-right{
+.phoenix-table th.text-center,
+.phoenix-table td.text-center{
 
-    text-align:right;
+    text-align:center !important;
 
 }
 
-.text-center{
+.phoenix-table th.text-right,
+.phoenix-table td.text-right{
 
-    text-align:center;
+    text-align:right !important;
+
+}
+
+.phoenix-table th.text-left,
+.phoenix-table td.text-left{
+
+    text-align:left !important;
 
 }
 
