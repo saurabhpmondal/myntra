@@ -7,7 +7,7 @@
  * =====================================================
  */
 
-
+import { initializeData } from "../services/dataService.js";
 import { startApp } from "./startup.js";
 
 document.addEventListener("DOMContentLoaded", () => {
