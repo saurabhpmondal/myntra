@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Service
- * Version : V1.3
+ * Version : V2.0
  * =====================================================
  */
 
@@ -12,8 +12,9 @@ import {
     calculateGrowth
 } from "./comparisonService.js";
 
-const MONTHS = {
+import { projectMetric } from "./projectionService.js";
 
+const MONTHS = {
     1:"JAN",
     2:"FEB",
     3:"MAR",
@@ -26,38 +27,33 @@ const MONTHS = {
     10:"OCT",
     11:"NOV",
     12:"DEC"
-
 };
 
 function getPeriodLabel(period){
 
-    if(!period){
+    if(!period) return "-";
 
-        return "-";
+    const year=Math.floor(period/100);
 
-    }
-
-    const year = Math.floor(period / 100);
-
-    const month = period % 100;
+    const month=period%100;
 
     return `${MONTHS[month]} ${year}`;
 
 }
 
-function summarize(rows){
+function calculateSummary(rows){
 
-    let revenue = 0;
+    let revenue=0;
 
-    let units = 0;
+    let units=0;
 
-    const styles = new Set();
+    const styles=new Set();
 
     rows.forEach(row=>{
 
-        revenue += Number(row.final_amount || 0);
+        revenue+=Number(row.final_amount||0);
 
-        units += Number(row.qty || 0);
+        units+=Number(row.qty||0);
 
         if(row.style_id){
 
@@ -73,9 +69,9 @@ function summarize(rows){
 
         units,
 
-        asp: units===0 ? 0 : revenue/units,
+        asp:units===0?0:revenue/units,
 
-        styles: styles.size
+        soldStyles:styles.size
 
     };
 
@@ -83,7 +79,7 @@ function summarize(rows){
 
 export function getDashboardSummary(){
 
-    const {
+    const{
 
         currentPeriod,
 
@@ -93,61 +89,107 @@ export function getDashboardSummary(){
 
         previousSales
 
-    } = getComparisonData();
+    }=getComparisonData();
 
-    const current = summarize(currentSales);
+    const current=calculateSummary(currentSales);
 
-    const previous = summarize(previousSales);
+    const previous=calculateSummary(previousSales);
+
+    // Projection
+
+    const projectedRevenue=
+
+        projectMetric(currentSales,"final_amount");
+
+    const projectedUnits=
+
+        projectMetric(currentSales,"qty");
 
     return{
 
-        period: currentPeriod,
+        period:currentPeriod,
 
-        periodLabel: getPeriodLabel(currentPeriod),
+        periodLabel:getPeriodLabel(currentPeriod),
 
         previousPeriod,
 
-        previousPeriodLabel: getPeriodLabel(previousPeriod),
+        previousPeriodLabel:getPeriodLabel(previousPeriod),
 
-        revenue: current.revenue,
+        // Revenue
 
-        revenueGrowth: calculateGrowth(
+        revenue:projectedRevenue.projected,
 
-            current.revenue,
+        revenueActual:projectedRevenue.actual,
 
-            previous.revenue
+        revenueProjected:
 
-        ),
+            projectedRevenue.projectedMode,
 
-        unitsSold: current.units,
+        revenueGrowth:
 
-        unitsGrowth: calculateGrowth(
+            calculateGrowth(
 
-            current.units,
+                projectedRevenue.projected,
 
-            previous.units
+                previous.revenue
 
-        ),
+            ),
 
-        avgSellingPrice: current.asp,
+        // Units
 
-        aspGrowth: calculateGrowth(
+        unitsSold:
+
+            projectedUnits.projected,
+
+        unitsActual:
+
+            projectedUnits.actual,
+
+        unitsProjected:
+
+            projectedUnits.projectedMode,
+
+        unitsGrowth:
+
+            calculateGrowth(
+
+                projectedUnits.projected,
+
+                previous.units
+
+            ),
+
+        // ASP (Actual)
+
+        avgSellingPrice:
 
             current.asp,
 
-            previous.asp
+        aspGrowth:
 
-        ),
+            calculateGrowth(
 
-        soldStyles: current.styles,
+                current.asp,
 
-        soldStylesGrowth: calculateGrowth(
+                previous.asp
 
-            current.styles,
+            ),
 
-            previous.styles
+        // Sold Styles (Actual)
 
-        )
+        soldStyles:
+
+            current.soldStyles,
+
+        soldStylesGrowth:
+
+            calculateGrowth(
+
+                current.soldStyles,
+
+                previous.soldStyles
+
+            )
 
     };
 
