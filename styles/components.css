@@ -1,2 +1,1 @@
-@import url("./components/sidebar.css");
-@import url("./components/header.css");
+/* Component CSS is loaded dynamically by createComponent(). */
