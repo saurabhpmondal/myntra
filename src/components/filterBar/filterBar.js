@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Executive Filter Bar
- * Version : V1.2
+ * Version : V1.3
  * =====================================================
  */
 
@@ -21,7 +21,6 @@ import {
 import { DataStore } from "../../services/dataService.js";
 
 import {
-    getLatestPeriod,
     getPeriodKey,
     getPeriodLabel
 } from "../../services/periodService.js";
@@ -30,7 +29,7 @@ import { refreshDashboard } from "../../pages/dashboard/dashboard.js";
 
 let filterRoot = null;
 
-export async function renderFilterBar(target){
+export async function renderFilterBar(target) {
 
     filterRoot = target;
 
@@ -38,9 +37,9 @@ export async function renderFilterBar(target){
 
         target,
 
-        html:"src/components/filterBar/filterBar.html",
+        html: "src/components/filterBar/filterBar.html",
 
-        css:"src/components/filterBar/filterBar.css"
+        css: "src/components/filterBar/filterBar.css"
 
     });
 
@@ -69,21 +68,29 @@ export async function renderFilterBar(target){
 
 }
 
-/**
- * -------------------------
- * Build Period Dropdown
- * -------------------------
- */
+/* =====================================
+   Helpers
+===================================== */
 
-function buildPeriodList(){
+function $(id) {
 
-    const select = document.getElementById("filter-period");
+    return filterRoot.querySelector(`#${id}`);
+
+}
+
+/* =====================================
+   Period
+===================================== */
+
+function buildPeriodList() {
+
+    const select = $("filter-period");
 
     select.innerHTML = "";
 
     const periods = new Map();
 
-    DataStore.sales.forEach(row=>{
+    DataStore.sales.forEach(row => {
 
         const key = getPeriodKey(
             row.month,
@@ -101,14 +108,14 @@ function buildPeriodList(){
     });
 
     [...periods.entries()]
-        .sort((a,b)=>b[0]-a[0])
-        .forEach(([key,label])=>{
+        .sort((a, b) => b[0] - a[0])
+        .forEach(([key, label]) => {
 
-            const option=document.createElement("option");
+            const option = document.createElement("option");
 
-            option.value=key;
+            option.value = key;
 
-            option.textContent=label;
+            option.textContent = label;
 
             select.appendChild(option);
 
@@ -116,35 +123,33 @@ function buildPeriodList(){
 
 }
 
-/**
- * -------------------------
- * Build Dropdown
- * -------------------------
- */
+/* =====================================
+   Dropdowns
+===================================== */
 
-function buildSelect(id,list){
+function buildSelect(id, list) {
 
-    const select=document.getElementById(id);
+    const select = $(id);
 
-    select.innerHTML="";
+    select.innerHTML = "";
 
-    const all=document.createElement("option");
+    const option = document.createElement("option");
 
-    all.value="All";
+    option.value = "All";
 
-    all.textContent="All";
+    option.textContent = "All";
 
-    select.appendChild(all);
+    select.appendChild(option);
 
     [...list]
         .sort()
-        .forEach(item=>{
+        .forEach(item => {
 
-            const option=document.createElement("option");
+            const option = document.createElement("option");
 
-            option.value=item;
+            option.value = item;
 
-            option.textContent=item;
+            option.textContent = item;
 
             select.appendChild(option);
 
@@ -152,58 +157,49 @@ function buildSelect(id,list){
 
 }
 
-/**
- * -------------------------
- * Sync UI with State
- * -------------------------
- */
+/* =====================================
+   Sync UI
+===================================== */
 
-function syncUI(){
+function syncUI() {
 
-    document.getElementById("filter-period").value =
-        FilterState.period;
+    $("filter-period").value = FilterState.period;
 
-    document.getElementById("filter-brand").value =
-        FilterState.brand;
+    $("filter-brand").value = FilterState.brand;
 
-    document.getElementById("filter-category").value =
-        FilterState.category;
+    $("filter-category").value = FilterState.category;
 
-    document.getElementById("filter-status").value =
-        FilterState.erpStatus;
+    $("filter-status").value = FilterState.erpStatus;
 
-    document.getElementById("filter-search").value =
-        FilterState.search;
+    $("filter-search").value = FilterState.search;
 
 }
 
-/**
- * -------------------------
- * Events
- * -------------------------
- */
+/* =====================================
+   Events
+===================================== */
 
-function bindEvents(){
+function bindEvents() {
 
-    document.getElementById("applyFilters").onclick=()=>{
+    $("applyFilters").onclick = () => {
 
         updateFilters({
 
-            period:Number(
-                document.getElementById("filter-period").value
+            period: Number(
+                $("filter-period").value
             ),
 
             brand:
-                document.getElementById("filter-brand").value,
+                $("filter-brand").value,
 
             category:
-                document.getElementById("filter-category").value,
+                $("filter-category").value,
 
             erpStatus:
-                document.getElementById("filter-status").value,
+                $("filter-status").value,
 
             search:
-                document.getElementById("filter-search")
+                $("filter-search")
                     .value
                     .trim()
 
@@ -213,7 +209,7 @@ function bindEvents(){
 
     };
 
-    document.getElementById("resetFilters").onclick=()=>{
+    $("resetFilters").onclick = () => {
 
         resetFilters();
 
