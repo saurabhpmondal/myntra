@@ -1,0 +1,99 @@
+.splash{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100vh;
+
+    background:linear-gradient(
+        180deg,
+        #F8FAFD,
+        #EEF2F7
+    );
+
+}
+
+.splash-card{
+
+    width:520px;
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:50px;
+
+    text-align:center;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.08);
+
+}
+
+.splash-logo{
+
+    width:180px;
+
+    margin:auto;
+
+    margin-bottom:30px;
+
+}
+
+.splash h1{
+
+    margin-bottom:8px;
+
+}
+
+.tagline{
+
+    color:#6B7280;
+
+    margin-bottom:40px;
+
+}
+
+.progress{
+
+    height:10px;
+
+    background:#ECEFF3;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.progress-bar{
+
+    width:0;
+
+    height:100%;
+
+    background:#FF3F6C;
+
+    transition:.4s;
+
+}
+
+#progressText{
+
+    margin-top:20px;
+
+    color:#6B7280;
+
+}
+
+.footer{
+
+    margin-top:40px;
+
+    font-size:12px;
+
+    color:#9CA3AF;
+
+}
