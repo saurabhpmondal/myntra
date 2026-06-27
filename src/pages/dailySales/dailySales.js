@@ -3,15 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Page
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import { renderDailySalesTable } from "../../components/dailySales/dailySalesTable/dailySalesTable.js";
+import { renderProjectionSummary } from "../../components/dailySales/projectionSummary/projectionSummary.js";
 
-// Future Imports
-// import { renderProjectionSummary } ...
-// import { renderBrandChannelPerformance } ...
+// Future Import
+// import { renderBrandChannelPerformance } from "../../components/dailySales/brandChannelPerformance/brandChannelPerformance.js";
 
 let pageContainer = null;
 
@@ -61,21 +61,21 @@ export async function refreshDailySales(){
     // Projection Summary
     // ======================================
 
-    // const projectionSection = createSection();
+    const projectionSection = createSection();
 
-    // pageContainer.appendChild(projectionSection);
+    pageContainer.appendChild(projectionSection);
 
-    // await renderProjectionSummary(projectionSection);
+    await renderProjectionSummary(projectionSection);
 
     // ======================================
     // Brand Channel Performance
     // ======================================
 
-    // const brandSection = createSection();
+    // const brandChannelSection = createSection();
 
-    // pageContainer.appendChild(brandSection);
+    // pageContainer.appendChild(brandChannelSection);
 
-    // await renderBrandChannelPerformance(brandSection);
+    // await renderBrandChannelPerformance(brandChannelSection);
 
 }
 
