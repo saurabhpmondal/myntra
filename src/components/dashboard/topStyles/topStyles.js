@@ -36,12 +36,26 @@ export async function renderTopStyles(target){
             },
 
             {
+    key:"styleId",
 
-                key:"styleId",
+    label:"Style ID",
 
-                label:"Style ID"
+    align:"center",
 
-            },
+    renderer:(value)=>`
+
+        <a
+            href="https://www.myntra.com/${value}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="phoenix-link">
+
+            ${value}
+
+        </a>
+
+    `
+},
 
             {
 
