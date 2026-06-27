@@ -3,15 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Page
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
 import { renderDailySalesTable } from "../../components/dailySales/dailySalesTable/dailySalesTable.js";
 import { renderProjectionSummary } from "../../components/dailySales/projectionSummary/projectionSummary.js";
-
-// Future Import
-// import { renderBrandChannelPerformance } from "../../components/dailySales/brandChannelPerformance/brandChannelPerformance.js";
+import { renderBrandChannelPerformance } from "../../components/dailySales/brandChannelPerformance/brandChannelPerformance.js";
 
 let pageContainer = null;
 
@@ -31,7 +29,7 @@ export async function renderDailySales(target){
 
 /**
  * ==========================================
- * Refresh
+ * Refresh Page
  * ==========================================
  */
 
@@ -71,11 +69,11 @@ export async function refreshDailySales(){
     // Brand Channel Performance
     // ======================================
 
-    // const brandChannelSection = createSection();
+    const brandChannelSection = createSection();
 
-    // pageContainer.appendChild(brandChannelSection);
+    pageContainer.appendChild(brandChannelSection);
 
-    // await renderBrandChannelPerformance(brandChannelSection);
+    await renderBrandChannelPerformance(brandChannelSection);
 
 }
 
