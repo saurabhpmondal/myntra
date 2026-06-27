@@ -1,20 +1,23 @@
 import { Assets } from "../config/assets.js";
 import { Version } from "../config/version.js";
 
+let progressBar;
+let statusText;
+let splash;
+
 export function showSplash() {
 
     const root = document.getElementById("root");
 
     root.innerHTML = `
 
-    <div class="splash">
+    <div class="splash" id="phoenixSplash">
 
         <div class="splash-card">
 
-            <img
-                class="logo"
-                src="${Assets.logo}"
-                alt="Logo">
+            <img class="logo"
+                 src="${Assets.logo}"
+                 alt="Logo">
 
             <h1>${Version.app}</h1>
 
@@ -26,16 +29,14 @@ export function showSplash() {
 
             <div class="progress">
 
-                <div
-                    id="progress"
-                    class="progress-fill"></div>
+                <div id="progress"
+                     class="progress-fill"></div>
 
             </div>
 
-            <p
-                id="status">
+            <p id="status">
 
-                Preparing Workspace...
+                Starting Phoenix...
 
             </p>
 
@@ -53,44 +54,38 @@ export function showSplash() {
 
     `;
 
-    animate();
+    splash = document.getElementById("phoenixSplash");
+    progressBar = document.getElementById("progress");
+    statusText = document.getElementById("status");
 
 }
 
-function animate(){
+export function updateSplash(percent, message){
 
-    const progress=document.getElementById("progress");
+    if(progressBar){
 
-    const status=document.getElementById("status");
+        progressBar.style.width = percent + "%";
 
-    const steps=[
+    }
 
-        "Loading Theme...",
+    if(statusText){
 
-        "Loading Components...",
+        statusText.textContent = message;
 
-        "Preparing Dashboard...",
+    }
 
-        "Launching Phoenix..."
+}
 
-    ];
+export function hideSplash(){
 
-    let i=0;
+    if(!splash) return;
 
-    const timer=setInterval(()=>{
+    splash.style.opacity = "0";
 
-        progress.style.width=((i+1)*25)+"%";
+    setTimeout(()=>{
 
-        status.textContent=steps[i];
+        splash.remove();
 
-        i++;
-
-        if(i===steps.length){
-
-            clearInterval(timer);
-
-        }
-
-    },500);
+    },400);
 
 }
