@@ -6,6 +6,8 @@
  * Author  : Saurabh Mondal & Magical CTO
  * =====================================================
  */
+
+import { loadStyle } from "../../utils/loadStyle.js";
 import { buildMenu } from "./menu.js";
 import { loadComponent } from "../../utils/loadComponent.js";
 import { Assets } from "../../config/assets.js";
@@ -13,6 +15,10 @@ import { Version } from "../../config/version.js";
 import { Navigation } from "../../config/navigation.js";
 
 export async function renderSidebar(target) {
+
+await loadStyle(
+    "src/components/sidebar/sidebar.css"
+);
 
     await loadComponent(
         target,
