@@ -3,20 +3,16 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Table
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
 import { renderTable } from "../../common/table/table.js";
 import { getDailySales } from "../../../services/dailySalesService.js";
-import { getLatestPeriod } from "../../../services/periodService.js";
-import { DataStore } from "../../../services/dataService.js";
 
 export async function renderDailySalesTable(target){
 
     const rows = getDailySales();
-
-    const latest = getLatestPeriod(DataStore.sales);
 
     await renderTable({
 
@@ -36,7 +32,7 @@ export async function renderDailySalesTable(target){
 
                 align:"center",
 
-                renderer:value=>{
+                renderer:(value,row)=>{
 
                     if(value==="TOTAL"){
 
@@ -48,7 +44,7 @@ export async function renderDailySalesTable(target){
 
                         value,
 
-                        latest.month
+                        row.month
 
                     );
 
@@ -129,27 +125,16 @@ function formatDate(day,month){
     const months={
 
         JAN:"Jan",
-
         FEB:"Feb",
-
         MAR:"Mar",
-
         APR:"Apr",
-
         MAY:"May",
-
         JUNE:"Jun",
-
         JULY:"Jul",
-
         AUG:"Aug",
-
         SEP:"Sep",
-
         OCT:"Oct",
-
         NOV:"Nov",
-
         DEC:"Dec"
 
     };
