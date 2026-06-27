@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Service
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -15,6 +15,7 @@ import {
 import { projectMetric } from "./projectionService.js";
 
 const MONTHS = {
+
     1:"JAN",
     2:"FEB",
     3:"MAR",
@@ -27,15 +28,20 @@ const MONTHS = {
     10:"OCT",
     11:"NOV",
     12:"DEC"
+
 };
 
 function getPeriodLabel(period){
 
-    if(!period) return "-";
+    if(!period){
 
-    const year=Math.floor(period/100);
+        return "-";
 
-    const month=period%100;
+    }
+
+    const year = Math.floor(period / 100);
+
+    const month = period % 100;
 
     return `${MONTHS[month]} ${year}`;
 
@@ -43,17 +49,17 @@ function getPeriodLabel(period){
 
 function calculateSummary(rows){
 
-    let revenue=0;
+    let revenue = 0;
 
-    let units=0;
+    let units = 0;
 
-    const styles=new Set();
+    const styles = new Set();
 
     rows.forEach(row=>{
 
-        revenue+=Number(row.final_amount||0);
+        revenue += Number(row.final_amount || 0);
 
-        units+=Number(row.qty||0);
+        units += Number(row.qty || 0);
 
         if(row.style_id){
 
@@ -69,9 +75,9 @@ function calculateSummary(rows){
 
         units,
 
-        asp:units===0?0:revenue/units,
+        asp: units === 0 ? 0 : revenue / units,
 
-        soldStyles:styles.size
+        soldStyles: styles.size
 
     };
 
@@ -89,80 +95,119 @@ export function getDashboardSummary(){
 
         previousSales
 
-    }=getComparisonData();
+    } = getComparisonData();
 
-    const current=calculateSummary(currentSales);
+    const current = calculateSummary(currentSales);
 
-    const previous=calculateSummary(previousSales);
+    const previous = calculateSummary(previousSales);
 
-    // Projection
+    // ==========================================
+    // Projection Engine
+    // ==========================================
 
-    const projectedRevenue=
+    const revenueProjection =
+        projectMetric(
+            currentSales,
+            "final_amount"
+        );
 
-        projectMetric(currentSales,"final_amount");
+    const unitsProjection =
+        projectMetric(
+            currentSales,
+            "qty"
+        );
 
-    const projectedUnits=
+    // ==========================================
+    // Display Values (Always Actual)
+    // ==========================================
 
-        projectMetric(currentSales,"qty");
+    const revenueDisplay =
+        revenueProjection.actual;
+
+    const unitsDisplay =
+        unitsProjection.actual;
+
+    // ==========================================
+    // Comparison Values
+    // Projection only for latest incomplete month
+    // ==========================================
+
+    const revenueCompare =
+        revenueProjection.projectedMode
+            ? revenueProjection.projected
+            : revenueProjection.actual;
+
+    const unitsCompare =
+        unitsProjection.projectedMode
+            ? unitsProjection.projected
+            : unitsProjection.actual;
 
     return{
 
-        period:currentPeriod,
+        period: currentPeriod,
 
-        periodLabel:getPeriodLabel(currentPeriod),
+        periodLabel: getPeriodLabel(currentPeriod),
 
         previousPeriod,
 
-        previousPeriodLabel:getPeriodLabel(previousPeriod),
+        previousPeriodLabel: getPeriodLabel(previousPeriod),
 
+        // ======================================
         // Revenue
+        // ======================================
 
-        revenue:projectedRevenue.projected,
+        revenue: revenueDisplay,
 
-        revenueActual:projectedRevenue.actual,
+        revenueActual:
+            revenueProjection.actual,
 
         revenueProjected:
+            revenueProjection.projected,
 
-            projectedRevenue.projectedMode,
+        revenueProjectionMode:
+            revenueProjection.projectedMode,
 
         revenueGrowth:
 
             calculateGrowth(
 
-                projectedRevenue.projected,
+                revenueCompare,
 
                 previous.revenue
 
             ),
 
+        // ======================================
         // Units
+        // ======================================
 
         unitsSold:
-
-            projectedUnits.projected,
+            unitsDisplay,
 
         unitsActual:
-
-            projectedUnits.actual,
+            unitsProjection.actual,
 
         unitsProjected:
+            unitsProjection.projected,
 
-            projectedUnits.projectedMode,
+        unitsProjectionMode:
+            unitsProjection.projectedMode,
 
         unitsGrowth:
 
             calculateGrowth(
 
-                projectedUnits.projected,
+                unitsCompare,
 
                 previous.units
 
             ),
 
-        // ASP (Actual)
+        // ======================================
+        // ASP
+        // ======================================
 
         avgSellingPrice:
-
             current.asp,
 
         aspGrowth:
@@ -175,10 +220,11 @@ export function getDashboardSummary(){
 
             ),
 
-        // Sold Styles (Actual)
+        // ======================================
+        // Sold Styles
+        // ======================================
 
         soldStyles:
-
             current.soldStyles,
 
         soldStylesGrowth:
