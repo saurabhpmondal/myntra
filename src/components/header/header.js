@@ -1,30 +1,39 @@
-import { loadComponent } from "../../utils/loadComponent.js";
-import { loadStyle } from "../../utils/loadStyle.js";
-import { renderIcons } from "../../utils/icon.js";
+import { createComponent } from "../../utils/createComponent.js";
 
-export async function renderHeader(target, title = "Dashboard") {
+export async function renderHeader(
 
-    await loadStyle(
-        "src/components/header/header.css"
-    );
+    target,
 
-    await loadComponent(
+    title = "Dashboard"
+
+){
+
+    await createComponent({
 
         target,
 
-        "src/components/header/header.html",
+        html:"src/components/header/header.html",
 
-        {
+        css:"src/components/header/header.css",
+
+        data:{
 
             title
 
+        },
+
+        afterRender(){
+
+            document.getElementById(
+
+                "last-refresh"
+
+            ).textContent=
+
+            new Date().toLocaleString();
+
         }
 
-    );
-
-    document.getElementById("last-refresh").textContent =
-        new Date().toLocaleString();
-
-    renderIcons();
+    });
 
 }
