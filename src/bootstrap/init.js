@@ -1,23 +1,20 @@
 /**
  * =====================================================
  * Project Phoenix
- * File : init.js
+ * Product : Myntra Analytics
  * Version : 0.1.0
- * Purpose : Application Bootstrap
+ * Module : Bootstrap
  * =====================================================
  */
 
 import { startApp } from "./startup.js";
 
-document.addEventListener("DOMContentLoaded", initialize);
-
-function initialize() {
+document.addEventListener("DOMContentLoaded", () => {
 
     console.clear();
 
     console.log("🔥 Project Phoenix");
-    console.log("🚀 Initializing Myntra Analytics");
 
     startApp();
 
-}
+});
