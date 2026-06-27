@@ -1,13 +1,12 @@
 /**
  * =====================================================
  * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Sidebar Menu
- * Author  : Saurabh Mondal & Magical CTO
+ * Sidebar Menu
  * =====================================================
  */
 
 import { Navigation } from "../../config/navigation.js";
+import { renderIcons } from "../../utils/icons.js";
 
 export function buildMenu() {
 
@@ -22,18 +21,25 @@ export function buildMenu() {
         item.className = "sidebar-item";
 
         if (index === 0) {
+
             item.classList.add("active");
+
         }
 
         item.dataset.page = page.id;
 
         item.innerHTML = `
-            <span class="sidebar-icon">${page.icon}</span>
+
+            <i data-lucide="${page.icon}"></i>
+
             <span>${page.title}</span>
+
         `;
 
         menu.appendChild(item);
 
     });
+
+    renderIcons();
 
 }
