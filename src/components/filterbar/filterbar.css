@@ -1,18 +1,20 @@
 .filterbar{
 
-    height:72px;
-
-    background:#ffffff;
-
-    border-bottom:1px solid #E5E7EB;
+    min-height:68px;
 
     display:flex;
 
     align-items:center;
 
-    gap:14px;
+    gap:12px;
 
-    padding:0 24px;
+    padding:14px 24px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #E5E7EB;
+
+    flex-wrap:wrap;
 
 }
 
