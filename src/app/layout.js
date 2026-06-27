@@ -1,12 +1,13 @@
 /**
  * =====================================================
  * Project Phoenix
- * Layout
+ * Layout Engine
  * =====================================================
  */
 
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 import { renderHeader } from "../components/header/header.js";
+import { renderFilterBar } from "../components/filterbar/filterbar.js";
 
 export async function renderLayout() {
 
@@ -20,6 +21,8 @@ export async function renderLayout() {
             <div class="app-main">
 
                 <div id="header"></div>
+
+                <div id="filterbar"></div>
 
                 <main id="content"></main>
 
@@ -37,6 +40,10 @@ export async function renderLayout() {
     await renderHeader(
         document.getElementById("header"),
         "Dashboard"
+    );
+
+    await renderFilterBar(
+        document.getElementById("filterbar")
     );
 
 }
