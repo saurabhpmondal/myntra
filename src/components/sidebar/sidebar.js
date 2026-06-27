@@ -1,66 +1,113 @@
-/**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module : Sidebar
- * Author : Saurabh Mondal & Magical CTO
- * =====================================================
- */
-
 import { Assets } from "../../config/assets.js";
 
-export function renderSidebar(target) {
+export function renderSidebar(target){
 
-    target.innerHTML = `
+target.innerHTML=`
 
-        <aside class="sidebar">
+<aside class="sidebar">
 
-            <div class="sidebar-logo">
+<div class="sidebar-header">
 
-                <img src="${Assets.logo}" alt="Logo">
+<img
+class="sidebar-logo"
+src="${Assets.logo}">
 
-                <div class="sidebar-title">
+<div class="sidebar-app">
 
-                    <h2>Myntra Analytics</h2>
+Myntra Analytics
 
-                    <span>Project Phoenix</span>
+</div>
 
-                </div>
+<div class="sidebar-tag">
 
-            </div>
+Fashion Data Intelligence
 
-            <nav class="sidebar-menu">
+</div>
 
-                <a class="active">Dashboard</a>
+</div>
 
-                <a>Daily Sales</a>
+<div class="sidebar-menu">
 
-                <a>Business</a>
+<div class="sidebar-item active">
 
-                <a>Growth</a>
+📊 Dashboard
 
-                <a>Shipment</a>
+</div>
 
-                <a>Surge</a>
+<div class="sidebar-item">
 
-                <a>Sales Drop</a>
+📈 Daily Sales
 
-                <a>New Launch</a>
+</div>
 
-                <a>Style Eye</a>
+<div class="sidebar-item">
 
-                <a>Ads</a>
+💼 Business
 
-            </nav>
+</div>
 
-            <div class="sidebar-footer">
+<div class="sidebar-item">
 
-                Foundation v0.1.0
+📦 Growth
 
-            </div>
+</div>
 
-        </aside>
+<div class="sidebar-item">
 
-    `;
+🚚 Shipment
+
+</div>
+
+<div class="sidebar-item">
+
+🔥 Surge
+
+</div>
+
+<div class="sidebar-item">
+
+📉 Sales Drop
+
+</div>
+
+<div class="sidebar-item">
+
+🚀 New Launch
+
+</div>
+
+<div class="sidebar-item">
+
+👁 Style Eye
+
+</div>
+
+<div class="sidebar-item">
+
+📢 Ads
+
+</div>
+
+</div>
+
+<div class="sidebar-footer">
+
+<div class="sidebar-version">
+
+Foundation v0.1.0
+
+</div>
+
+<div class="sidebar-made">
+
+Made with ❤️ by Magical CTO
+
+</div>
+
+</div>
+
+</aside>
+
+`;
 
 }
