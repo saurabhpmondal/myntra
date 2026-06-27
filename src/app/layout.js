@@ -37,20 +37,22 @@ export async function renderLayout() {
     `;
 
     await renderSidebar(
-        document.getElementById("sidebar")
-    );
+    document.getElementById("sidebar")
+);
 
-    await renderHeader(
-        document.getElementById("header"),
-        "Dashboard"
-    );
+await renderHeader(
+    document.getElementById("header"),
+    "Dashboard"
+);
 
-    await renderFilterBar(
-        document.getElementById("filterbar")
-    );
+await renderFilterBar(
+    document.getElementById("filterbar")
+);
 
 await renderDashboard(
     document.getElementById("content")
 );
+
+await renderCommandPalette();
 
 }
