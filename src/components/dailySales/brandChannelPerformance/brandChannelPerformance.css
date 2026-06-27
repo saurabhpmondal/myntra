@@ -1,0 +1,35 @@
+.brand-channel-head th{
+
+    background:#F8FAFC;
+
+    text-align:center;
+
+    font-weight:700;
+
+}
+
+.brand-channel-body td{
+
+    text-align:right;
+
+}
+
+.brand-channel-body td:first-child{
+
+    text-align:left;
+
+    font-weight:600;
+
+}
+
+.brand-channel-body tr:nth-child(even){
+
+    background:#F8FAFC;
+
+}
+
+.brand-channel-body tr:hover{
+
+    background:#EEF6FF;
+
+}
