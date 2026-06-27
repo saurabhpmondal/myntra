@@ -3,13 +3,23 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Comparison Service
+ * Version : V1.1
  * =====================================================
  */
 
-import { getFilteredSales, FilterState } from "./filterService.js";
-import { getPeriodKey } from "./periodService.js";
+import {
+    FilterState,
+    getSalesByPeriod
+} from "./filterService.js";
 
-export function getPreviousPeriod(periodKey){
+/**
+ * Get Previous Period
+ * Example:
+ * 202606 -> 202605
+ * 202601 -> 202512
+ */
+
+export function getPreviousPeriod(periodKey) {
 
     let year = Math.floor(periodKey / 100);
 
@@ -17,27 +27,30 @@ export function getPreviousPeriod(periodKey){
 
     month--;
 
-    if(month === 0){
+    if (month === 0) {
 
         month = 12;
-
         year--;
 
     }
 
-    return year * 100 + month;
+    return (year * 100) + month;
 
 }
 
-export function getComparisonData(){
+/**
+ * Returns current & previous period sales
+ */
+
+export function getComparisonData() {
 
     const currentPeriod = FilterState.period;
 
     const previousPeriod = getPreviousPeriod(currentPeriod);
 
-    const current = getFilteredSales();
+    const currentSales = getSalesByPeriod(currentPeriod);
 
-    const previous = current.filter(()=>false);
+    const previousSales = getSalesByPeriod(previousPeriod);
 
     return {
 
@@ -45,10 +58,38 @@ export function getComparisonData(){
 
         previousPeriod,
 
-        current,
+        currentSales,
 
-        previous
+        previousSales
 
     };
+
+}
+
+/**
+ * Calculate Growth %
+ */
+
+export function calculateGrowth(current, previous) {
+
+    if (previous === 0) {
+
+        return 0;
+
+    }
+
+    return ((current - previous) / previous) * 100;
+
+}
+
+/**
+ * Format Growth
+ */
+
+export function formatGrowth(value) {
+
+    const sign = value >= 0 ? "+" : "";
+
+    return `${sign}${value.toFixed(1)}%`;
 
 }
