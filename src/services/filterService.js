@@ -2,106 +2,129 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Global Filter Service
+ * Module  : Filter Service
+ * Version : V1.1
  * =====================================================
  */
 
 import { DataStore } from "./dataService.js";
 import { LookupStore } from "./lookupService.js";
+import { getLatestPeriod, getPeriodKey } from "./periodService.js";
 
 export const FilterState = {
 
-    fromDate: null,
-    toDate: null,
+    period: null,
 
     brand: "All",
+
     category: "All",
-    erpStatus: "All"
+
+    erpStatus: "All",
+
+    search: ""
 
 };
 
 /**
- * Initialize default filters
+ * Initialize Filters
  */
-export function initializeFilters(){
+export function initializeFilters() {
 
-    const dates = DataStore.sales
-        .map(row => row.date)
-        .filter(Boolean)
-        .sort();
+    const latest = getLatestPeriod(DataStore.sales);
 
-    if(dates.length){
+    if (latest) {
 
-        FilterState.fromDate = dates[0];
-        FilterState.toDate = dates[dates.length-1];
+        FilterState.period = latest.key;
 
     }
 
 }
 
 /**
- * Update any filter
+ * Update Filters
  */
-export function updateFilters(filters){
+export function updateFilters(filters) {
 
-    Object.assign(FilterState,filters);
+    Object.assign(FilterState, filters);
+
+}
+
+/**
+ * Reset Filters
+ */
+export function resetFilters() {
+
+    initializeFilters();
+
+    FilterState.brand = "All";
+    FilterState.category = "All";
+    FilterState.erpStatus = "All";
+    FilterState.search = "";
 
 }
 
 /**
  * Return filtered sales
  */
-export function getFilteredSales(){
+export function getFilteredSales() {
 
-    return DataStore.sales.filter(sale=>{
+    return DataStore.sales.filter(sale => {
 
         const product = LookupStore.productMap[sale.style_id];
 
-        if(!product) return false;
+        if (!product) return false;
 
-        if(FilterState.brand !== "All"){
+        // Period
+        const periodKey = getPeriodKey(sale.month, sale.year);
 
-            if(product.brand !== FilterState.brand){
+        if (FilterState.period && periodKey !== FilterState.period) {
 
-                return false;
-
-            }
-
-        }
-
-        if(FilterState.category !== "All"){
-
-            if(product.category !== FilterState.category){
-
-                return false;
-
-            }
+            return false;
 
         }
 
-        if(FilterState.erpStatus !== "All"){
+        // Brand
+        if (
+            FilterState.brand !== "All" &&
+            product.brand !== FilterState.brand
+        ) {
 
-            if(product.erpStatus !== FilterState.erpStatus){
-
-                return false;
-
-            }
-
-        }
-
-        if(FilterState.fromDate){
-
-            if(sale.date < FilterState.fromDate){
-
-                return false;
-
-            }
+            return false;
 
         }
 
-        if(FilterState.toDate){
+        // Category
+        if (
+            FilterState.category !== "All" &&
+            product.category !== FilterState.category
+        ) {
 
-            if(sale.date > FilterState.toDate){
+            return false;
+
+        }
+
+        // ERP Status
+        if (
+            FilterState.erpStatus !== "All" &&
+            product.erpStatus !== FilterState.erpStatus
+        ) {
+
+            return false;
+
+        }
+
+        // Search
+        if (FilterState.search.trim()) {
+
+            const keyword = FilterState.search.toLowerCase();
+
+            const matched =
+
+                sale.style_id?.toLowerCase().includes(keyword) ||
+
+                product.erpSku?.toLowerCase().includes(keyword);
+
+            if (!matched) {
 
                 return false;
 
