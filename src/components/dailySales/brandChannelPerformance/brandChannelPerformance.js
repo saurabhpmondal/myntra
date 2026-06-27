@@ -3,18 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Brand Channel Performance
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
-
 import { getBrandChannelPerformance } from "../../../services/brandChannelPerformanceService.js";
-
-import {
-    formatNumber,
-    formatCurrency
-} from "../../../utils/formatter.js";
+import { formatNumber } from "../../../utils/formatter.js";
 
 export async function renderBrandChannelPerformance(target){
 
@@ -28,38 +23,92 @@ export async function renderBrandChannelPerformance(target){
 
     });
 
-    const data = getBrandChannelPerformance();
+    const table = getBrandChannelPerformance();
 
     const head = target.querySelector(".brand-channel-head");
 
     const body = target.querySelector(".brand-channel-body");
 
     head.innerHTML = `
+
         <tr>
-            <th>Brand</th>
-            <th>PPMP</th>
-            <th>SJIT</th>
-            <th>SOR</th>
-            <th>Total</th>
-            <th>Share %</th>
-            <th>ASP</th>
+
+            <th rowspan="2">Brand</th>
+
+            <th colspan="2">Stock</th>
+
+            <th colspan="4">Sales</th>
+
+            <th colspan="3">Share %</th>
+
+            <th colspan="3">DRR</th>
+
         </tr>
+
+        <tr>
+
+            <th>SOR</th>
+
+            <th>SJIT</th>
+
+            <th>SOR</th>
+
+            <th>SJIT</th>
+
+            <th>PPMP</th>
+
+            <th>Total</th>
+
+            <th>SOR</th>
+
+            <th>SJIT</th>
+
+            <th>PPMP</th>
+
+            <th>SOR</th>
+
+            <th>SJIT</th>
+
+            <th>PPMP</th>
+
+        </tr>
+
     `;
 
-    body.innerHTML = "";
+    body.innerHTML="";
 
-    data.forEach(row=>{
+    table.forEach(row=>{
 
-        const tr = document.createElement("tr");
+        const tr=document.createElement("tr");
 
-        tr.innerHTML = `
+        tr.innerHTML=`
+
             <td>${row.brand}</td>
-            <td class="text-right">${formatNumber(row.PPMP)}</td>
-            <td class="text-right">${formatNumber(row.SJIT)}</td>
-            <td class="text-right">${formatNumber(row.SOR)}</td>
-            <td class="text-right">${formatNumber(row.total)}</td>
-            <td class="text-right">${row.share.toFixed(1)}%</td>
-            <td class="text-right">${formatCurrency(row.asp)}</td>
+
+            <td>${formatNumber(row.stockSOR)}</td>
+
+            <td>${formatNumber(row.stockSJIT)}</td>
+
+            <td>${formatNumber(row.saleSOR)}</td>
+
+            <td>${formatNumber(row.saleSJIT)}</td>
+
+            <td>${formatNumber(row.salePPMP)}</td>
+
+            <td>${formatNumber(row.totalSale)}</td>
+
+            <td>${row.shareSOR.toFixed(1)}%</td>
+
+            <td>${row.shareSJIT.toFixed(1)}%</td>
+
+            <td>${row.sharePPMP.toFixed(1)}%</td>
+
+            <td>${row.drrSOR.toFixed(2)}</td>
+
+            <td>${row.drrSJIT.toFixed(2)}</td>
+
+            <td>${row.drrPPMP.toFixed(2)}</td>
+
         `;
 
         body.appendChild(tr);
