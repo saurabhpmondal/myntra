@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Common Table Engine
  * Module  : Table Engine
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -19,17 +19,17 @@ export async function renderTable(config){
 
     await createComponent({
 
-        target:config.target,
+        target: config.target,
 
-        html:"src/components/common/table/table.html",
+        html: "src/components/common/table/table.html",
 
-        css:"src/components/common/table/table.css",
+        css: "src/components/common/table/table.css",
 
-        data:{
+        data: {
 
-            title:config.title || "",
+            title: config.title || "",
 
-            subtitle:config.subtitle || ""
+            subtitle: config.subtitle || ""
 
         }
 
@@ -39,9 +39,9 @@ export async function renderTable(config){
 
     renderBody(
 
-        config.rows,
+        config.rows || [],
 
-        config.columns
+        config.columns || []
 
     );
 
@@ -57,7 +57,7 @@ function renderHeader(columns){
 
     head.innerHTML = "";
 
-    const row = document.createElement("tr");
+    const tr = document.createElement("tr");
 
     columns.forEach(column=>{
 
@@ -65,19 +65,15 @@ function renderHeader(columns){
 
         th.textContent = column.label;
 
-        if(column.align){
+        th.className =
 
-            th.className =
+            `text-${column.align || "center"}`;
 
-                `text-${column.align}`;
-
-        }
-
-        row.appendChild(th);
+        tr.appendChild(th);
 
     });
 
-    head.appendChild(row);
+    head.appendChild(tr);
 
 }
 
@@ -95,53 +91,71 @@ function renderBody(rows,columns){
 
             const td = document.createElement("td");
 
-            if(column.align){
+            td.className =
 
-                td.className =
+                `text-${column.align || "center"}`;
 
-                    `text-${column.align}`;
+            let value = record[column.key];
 
-            }
+            // ----------------------------
+            // Formatting
+            // ----------------------------
 
-            let value =
+            if(!column.renderer){
 
-                record[column.key];
+                switch(column.format){
 
-            switch(column.format){
+                    case "currency":
 
-                case "currency":
+                        value = formatCurrency(value);
 
-                    value =
+                        break;
 
-                        formatCurrency(value);
+                    case "compactCurrency":
 
-                    break;
+                        value = formatCompactCurrency(value);
 
-                case "compactCurrency":
+                        break;
 
-                    value =
+                    case "number":
 
-                        formatCompactCurrency(value);
+                        value = formatNumber(value);
 
-                    break;
+                        break;
 
-                case "number":
+                    default:
 
-                    value =
+                        break;
 
-                        formatNumber(value);
-
-                    break;
-
-                default:
-
-                    break;
+                }
 
             }
 
-            td.textContent =
+            // ----------------------------
+            // Custom Renderer
+            // ----------------------------
 
-                value ?? "-";
+            if(typeof column.renderer === "function"){
+
+                td.innerHTML =
+
+                    column.renderer(
+
+                        value,
+
+                        record
+
+                    );
+
+            }
+
+            else{
+
+                td.textContent =
+
+                    value ?? "-";
+
+            }
 
             tr.appendChild(td);
 
