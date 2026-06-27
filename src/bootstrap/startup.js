@@ -6,17 +6,15 @@
  * =====================================================
  */
 
-import { showSplash } from "../splash/splash.js";
+import { showSplash, hideSplash } from "../splash/splash.js";
 import { renderLayout } from "../app/layout.js";
 
-export function startApp() {
+export async function startApp() {
 
     showSplash();
 
-    setTimeout(() => {
+    await renderLayout();
 
-        renderLayout();
-
-    },2500);
+    hideSplash();
 
 }
