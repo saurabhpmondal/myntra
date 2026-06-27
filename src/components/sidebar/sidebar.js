@@ -1,36 +1,45 @@
-/**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Sidebar
- * Author  : Saurabh Mondal & Magical CTO
- * =====================================================
- */
+import { createComponent } from "../../utils/createComponent.js";
 
-import { loadStyle } from "../../utils/loadStyle.js";
-import { buildMenu } from "./menu.js";
-import { loadComponent } from "../../utils/loadComponent.js";
 import { Assets } from "../../config/assets.js";
+
 import { Version } from "../../config/version.js";
-import { Navigation } from "../../config/navigation.js";
 
-export async function renderSidebar(target) {
+import { buildMenu } from "./menu.js";
 
-await loadStyle(
-    "src/components/sidebar/sidebar.css"
-);
+export async function renderSidebar(target){
 
-    await loadComponent(
+    await createComponent({
+
         target,
-        "src/components/sidebar/sidebar.html",
-        {
-            logo: Assets.logo,
-            appName: Version.app,
-            tagLine: "Fashion Data Intelligence",
-            version: `${Version.release} • ${Version.version}`
-        }
-    );
 
-    buildMenu();
+        html:"src/components/sidebar/sidebar.html",
+
+        css:"src/components/sidebar/sidebar.css",
+
+        data:{
+
+            logo:Assets.logo,
+
+            appName:Version.app,
+
+            tagLine:"Fashion Data Intelligence",
+
+            version:
+
+            Version.release+
+
+            " • "+
+
+            Version.version
+
+        },
+
+        afterRender(){
+
+            buildMenu();
+
+        }
+
+    });
 
 }
