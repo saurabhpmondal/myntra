@@ -3,13 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Page
- * Version : V1.3
+ * Version : V1.4
  * =====================================================
  */
 
 import { renderKPIRow } from "../../components/dashboard/kpiRow/kpiRow.js";
 import { renderRevenueTrend } from "../../components/dashboard/revenueTrend/revenueTrend.js";
 import { renderTopStyles } from "../../components/dashboard/topStyles/topStyles.js";
+import { renderPOTypePerformance } from "../../components/dashboard/poType/poType.js";
+import { renderBrandPerformance } from "../../components/dashboard/brand/brand.js";
 
 let dashboardContainer = null;
 
@@ -66,6 +68,26 @@ export async function refreshDashboard(){
     await renderRevenueTrend(revenueSection);
 
     // ======================================
+    // PO Type Performance
+    // ======================================
+
+    const poTypeSection = createSection();
+
+    dashboardContainer.appendChild(poTypeSection);
+
+    await renderPOTypePerformance(poTypeSection);
+
+    // ======================================
+    // Brand Performance
+    // ======================================
+
+    const brandSection = createSection();
+
+    dashboardContainer.appendChild(brandSection);
+
+    await renderBrandPerformance(brandSection);
+
+    // ======================================
     // Top 20 Styles
     // ======================================
 
@@ -76,19 +98,13 @@ export async function refreshDashboard(){
     await renderTopStyles(topStyleSection);
 
     // ======================================
-    // Future Widgets
+    // Day on Day Sales
     // ======================================
 
-    // const poTypeSection = createSection();
-    // dashboardContainer.appendChild(poTypeSection);
-    // await renderPOTypePerformance(poTypeSection);
-
-    // const brandSection = createSection();
-    // dashboardContainer.appendChild(brandSection);
-    // await renderBrandPerformance(brandSection);
-
     // const dayOnDaySection = createSection();
+
     // dashboardContainer.appendChild(dayOnDaySection);
+
     // await renderDayOnDaySales(dayOnDaySection);
 
 }
