@@ -7,7 +7,6 @@
  * =====================================================
  */
 
-import "../splash/splash.css";
 
 import { startApp } from "./startup.js";
 
