@@ -1,53 +1,32 @@
-/**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module : Layout
- * Author : Saurabh Mondal & Magical CTO
- * =====================================================
- */
-
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 
-export function renderLayout() {
+export async function renderLayout(){
 
-    const root = document.getElementById("root");
+    const root=document.getElementById("root");
 
-    root.innerHTML = `
+    root.innerHTML=`
 
-        <div class="app-shell">
+    <div class="app-shell">
 
-            <div id="sidebar-container"></div>
+        <div id="sidebar"></div>
 
-            <div class="app-main">
+        <div class="app-main">
 
-                <header class="app-header">
+            <header id="header"></header>
 
-                    Dashboard
+            <main id="content"></main>
 
-                </header>
-
-                <main class="app-content">
-
-                    <h1>Welcome to Myntra Analytics</h1>
-
-                    <p>
-
-                        🚀 Project Phoenix has officially started.
-
-                    </p>
-
-                </main>
-
-            </div>
+            <footer id="footer"></footer>
 
         </div>
 
+    </div>
+
     `;
 
-    renderSidebar(
+    await renderSidebar(
 
-        document.getElementById("sidebar-container")
+        document.getElementById("sidebar")
 
     );
 
