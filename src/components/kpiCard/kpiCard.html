@@ -1,32 +1,42 @@
 <div class="kpi-card">
 
-    <div class="kpi-header">
+    <div class="kpi-top">
 
-        <span class="kpi-title">
-            {{title}}
-        </span>
+        <div>
 
-        <i data-lucide="{{icon}}"></i>
+            <div class="kpi-title">
 
-    </div>
+                {{title}}
 
-    <div class="kpi-value">
+            </div>
 
-        {{value}}
+            <div class="kpi-value">
+
+                {{value}}
+
+            </div>
+
+        </div>
+
+        <div class="kpi-icon">
+
+            <i data-lucide="{{icon}}"></i>
+
+        </div>
 
     </div>
 
     <div class="kpi-footer">
 
-        <span class="kpi-change {{trendClass}}">
+        <span class="kpi-trend">
 
-            {{change}}
+            ▲ 0%
 
         </span>
 
-        <span class="kpi-period">
+        <span class="kpi-compare">
 
-            vs Last Month
+            vs Previous Month
 
         </span>
 
