@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Brand Channel Performance
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -23,65 +23,29 @@ export async function renderBrandChannelPerformance(target){
 
     });
 
-    const table = getBrandChannelPerformance();
+    renderTable(target);
 
-    const head = target.querySelector(".brand-channel-head");
+}
+
+function renderTable(target){
 
     const body = target.querySelector(".brand-channel-body");
 
-    head.innerHTML = `
+    body.innerHTML = "";
 
-        <tr>
+    const data = getBrandChannelPerformance();
 
-            <th rowspan="2">Brand</th>
+    data.forEach(row=>{
 
-            <th colspan="2">Stock</th>
+        const tr = document.createElement("tr");
 
-            <th colspan="4">Sales</th>
+        if(row.brand==="TOTAL"){
 
-            <th colspan="3">Share %</th>
+            tr.classList.add("grand-total");
 
-            <th colspan="3">DRR</th>
+        }
 
-        </tr>
-
-        <tr>
-
-            <th>SOR</th>
-
-            <th>SJIT</th>
-
-            <th>SOR</th>
-
-            <th>SJIT</th>
-
-            <th>PPMP</th>
-
-            <th>Total</th>
-
-            <th>SOR</th>
-
-            <th>SJIT</th>
-
-            <th>PPMP</th>
-
-            <th>SOR</th>
-
-            <th>SJIT</th>
-
-            <th>PPMP</th>
-
-        </tr>
-
-    `;
-
-    body.innerHTML="";
-
-    table.forEach(row=>{
-
-        const tr=document.createElement("tr");
-
-        tr.innerHTML=`
+        tr.innerHTML = `
 
             <td>${row.brand}</td>
 
@@ -103,11 +67,11 @@ export async function renderBrandChannelPerformance(target){
 
             <td>${row.sharePPMP.toFixed(1)}%</td>
 
-            <td>${row.drrSOR.toFixed(2)}</td>
+            <td>${row.drrSOR.toFixed(1)}</td>
 
-            <td>${row.drrSJIT.toFixed(2)}</td>
+            <td>${row.drrSJIT.toFixed(1)}</td>
 
-            <td>${row.drrPPMP.toFixed(2)}</td>
+            <td>${row.drrPPMP.toFixed(1)}</td>
 
         `;
 
