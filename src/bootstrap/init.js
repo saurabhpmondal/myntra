@@ -7,8 +7,10 @@
  * =====================================================
  */
 
+import { showSplash, updateSplash } from "../splash/splash.js";
 import { initializeData } from "../services/dataService.js";
-import { startApp } from "./startup.js";
+import { renderLayout } from "../app/layout.js";
+import { hideSplash } from "../splash/splash.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -16,21 +18,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("🔥 Project Phoenix");
 
+    // STEP 1
+    showSplash();
+
     try {
 
-        console.log("⚡ Initializing Data Engine...");
+        updateSplash(5, "Starting Phoenix...");
 
+        // STEP 2
         await initializeData();
 
-        console.log("✅ Data Engine Ready");
+        updateSplash(95, "Building Dashboard...");
 
-        await startApp();
+        // STEP 3
+        await renderLayout();
+
+        updateSplash(100, "Welcome!");
+
+        // Small delay so users can actually see 100%
+        await new Promise(resolve => setTimeout(resolve, 400));
+
+        hideSplash();
 
         console.log("🚀 Phoenix Ready");
 
     } catch (error) {
 
-        console.error("❌ Startup Failed", error);
+        console.error(error);
 
     }
 
