@@ -93,9 +93,10 @@ function renderBody(rows,columns){
 
             const td = document.createElement("td");
 
-            td.className =
+            td.classList.add(
 
-                `text-${column.align || "center"}`;
+    `text-${column.align || "center"}`
+);
 
             let value = record[column.key];
 
