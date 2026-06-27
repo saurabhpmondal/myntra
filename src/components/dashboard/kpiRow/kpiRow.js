@@ -1,37 +1,39 @@
 /**
  * =====================================================
  * Project Phoenix
- * Dashboard KPI Row
+ * Product : Myntra Analytics
+ * Module  : Dashboard KPI Row
+ * Version : V1.1
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
+
 import { renderKPICard } from "../../kpiCard/kpiCard.js";
 
 import { getDashboardSummary } from "../../../services/dashboardService.js";
 
 import {
-
     formatCompactCurrency,
-    formatCompactNumber,
-    formatCurrency,
-    formatNumber
-
+    formatNumber,
+    formatCurrency
 } from "../../../utils/formatter.js";
 
-export async function renderKPIRow(target){
+export async function renderKPIRow(target) {
 
     await createComponent({
 
         target,
 
-        html:"src/components/dashboard/kpiRow/kpiRow.html",
+        html: "src/components/dashboard/kpiRow/kpiRow.html",
 
-        css:"src/components/dashboard/kpiRow/kpiRow.css"
+        css: "src/components/dashboard/kpiRow/kpiRow.css"
 
     });
 
     const summary = getDashboardSummary();
+
+    // Revenue
 
     await renderKPICard(
 
@@ -39,19 +41,21 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"Revenue",
+            title: "Revenue",
 
-            value:formatCompactCurrency(summary.revenue),
+            value: formatCompactCurrency(summary.revenue),
 
-            icon:"indian-rupee",
+            icon: "indian-rupee",
 
-            change:summary.month,
+            growth: summary.revenueGrowth,
 
-            trend:"up"
+            compareLabel: summary.previousPeriodLabel || "Previous Month"
 
         }
 
     );
+
+    // Units Sold
 
     await renderKPICard(
 
@@ -59,19 +63,21 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"Units Sold",
+            title: "Units Sold",
 
-            value:formatNumber(summary.unitsSold),
+            value: formatNumber(summary.unitsSold),
 
-            icon:"package",
+            icon: "package",
 
-            change:summary.month,
+            growth: summary.unitsGrowth,
 
-            trend:"up"
+            compareLabel: summary.previousPeriodLabel || "Previous Month"
 
         }
 
     );
+
+    // Average Selling Price
 
     await renderKPICard(
 
@@ -79,35 +85,37 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"Avg Selling Price",
+            title: "Avg Selling Price",
 
-            value:formatCurrency(summary.avgSellingPrice),
+            value: formatCurrency(summary.avgSellingPrice),
 
-            icon:"badge-indian-rupee",
+            icon: "badge-indian-rupee",
 
-            change:summary.month,
+            growth: summary.aspGrowth,
 
-            trend:"up"
+            compareLabel: summary.previousPeriodLabel || "Previous Month"
 
         }
 
     );
 
+    // Sold Styles
+
     await renderKPICard(
 
-       document.getElementById("kpi-sold-styles"),
+        document.getElementById("kpi-sold-styles"),
 
         {
 
-            title:"Sold Styles",
+            title: "Sold Styles",
 
-            value:formatNumber(summary.soldStyles),
+            value: formatNumber(summary.soldStyles),
 
-            icon:"shirt",
+            icon: "shirt",
 
-            change:summary.month,
+            growth: summary.soldStylesGrowth,
 
-            trend:"up"
+            compareLabel: summary.previousPeriodLabel || "Previous Month"
 
         }
 
