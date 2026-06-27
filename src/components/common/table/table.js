@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Common Table Engine
  * Module  : Table Engine
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -25,7 +25,7 @@ export async function renderTable(config){
 
         css: "src/components/common/table/table.css",
 
-        data: {
+        data:{
 
             title: config.title || "",
 
@@ -35,9 +35,19 @@ export async function renderTable(config){
 
     });
 
-    renderHeader(config.columns);
+    const table = config.target.querySelector(".dashboard-card");
+
+    renderHeader(
+
+        table,
+
+        config.columns || []
+
+    );
 
     renderBody(
+
+        table,
 
         config.rows || [],
 
@@ -45,15 +55,15 @@ export async function renderTable(config){
 
     );
 
-    document.getElementById("tableInfo").textContent =
+    table.querySelector(".table-info").textContent =
 
         `Showing ${config.rows.length} records`;
 
 }
 
-function renderHeader(columns){
+function renderHeader(table, columns){
 
-    const head = document.getElementById("tableHead");
+    const head = table.querySelector(".table-head");
 
     head.innerHTML = "";
 
@@ -67,9 +77,9 @@ function renderHeader(columns){
 
         th.classList.add(
 
-    `text-${column.align || "center"}`
-);
+            `text-${column.align || "center"}`
 
+        );
 
         tr.appendChild(th);
 
@@ -79,9 +89,9 @@ function renderHeader(columns){
 
 }
 
-function renderBody(rows,columns){
+function renderBody(table, rows, columns){
 
-    const body = document.getElementById("tableBody");
+    const body = table.querySelector(".table-body");
 
     body.innerHTML = "";
 
@@ -95,14 +105,11 @@ function renderBody(rows,columns){
 
             td.classList.add(
 
-    `text-${column.align || "center"}`
-);
+                `text-${column.align || "center"}`
+
+            );
 
             let value = record[column.key];
-
-            // ----------------------------
-            // Formatting
-            // ----------------------------
 
             if(!column.renderer){
 
@@ -126,37 +133,25 @@ function renderBody(rows,columns){
 
                         break;
 
-                    default:
-
-                        break;
-
                 }
 
             }
 
-            // ----------------------------
-            // Custom Renderer
-            // ----------------------------
-
             if(typeof column.renderer === "function"){
 
-                td.innerHTML =
+                td.innerHTML = column.renderer(
 
-                    column.renderer(
+                    value,
 
-                        value,
+                    record
 
-                        record
-
-                    );
+                );
 
             }
 
             else{
 
-                td.textContent =
-
-                    value ?? "-";
+                td.textContent = value ?? "-";
 
             }
 
