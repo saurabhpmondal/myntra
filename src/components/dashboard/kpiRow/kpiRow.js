@@ -35,7 +35,7 @@ export async function renderKPIRow(target){
 
     await renderKPICard(
 
-        document.getElementById("kpi-gmv"),
+        document.getElementById("kpi-revenue"),
 
         {
 
@@ -55,7 +55,7 @@ export async function renderKPIRow(target){
 
     await renderKPICard(
 
-        document.getElementById("kpi-orders"),
+        document.getElementById("kpi-units-sold"),
 
         {
 
@@ -75,7 +75,7 @@ export async function renderKPIRow(target){
 
     await renderKPICard(
 
-        document.getElementById("kpi-units"),
+        document.getElementById("kpi-avg-selling-price"),
 
         {
 
@@ -95,7 +95,7 @@ export async function renderKPIRow(target){
 
     await renderKPICard(
 
-        document.getElementById("kpi-asp"),
+       document.getElementById("kpi-sold-styles"),
 
         {
 
