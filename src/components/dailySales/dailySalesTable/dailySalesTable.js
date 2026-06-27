@@ -3,176 +3,157 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Table
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import { createComponent } from "../../../utils/createComponent.js";
-
+import { renderTable } from "../../common/table/table.js";
 import { getDailySales } from "../../../services/dailySalesService.js";
-
-import {
-    formatCompactCurrency,
-    formatNumber
-} from "../../../utils/formatter.js";
+import { getLatestPeriod } from "../../../services/periodService.js";
+import { DataStore } from "../../../services/dataService.js";
 
 export async function renderDailySalesTable(target){
 
-    await createComponent({
+    const rows = getDailySales();
+
+    const latest = getLatestPeriod(DataStore.sales);
+
+    await renderTable({
 
         target,
 
-        html:"src/components/dailySales/dailySalesTable/dailySalesTable.html",
+        title:"Daily Sales",
 
-        css:"src/components/dailySales/dailySalesTable/dailySalesTable.css"
+        subtitle:"Current Month Performance",
 
-    });
+        columns:[
 
-    const data = getDailySales();
+            {
 
-    renderTable(target,data);
+                key:"date",
 
-}
+                label:"Date",
 
-function renderTable(target,data){
+                align:"center",
 
-    const head = target.querySelector("#dailySalesHead");
+                renderer:value=>{
 
-    const body = target.querySelector("#dailySalesBody");
+                    if(value==="TOTAL"){
 
-    head.innerHTML="";
+                        return "<b>TOTAL</b>";
 
-    body.innerHTML="";
+                    }
 
-    // ----------------------------------------
-    // Dynamic Brand List
-    // ----------------------------------------
+                    return formatDate(
 
-    const brands = new Set();
+                        value,
 
-    data.forEach(row=>{
+                        latest.month
 
-        Object.keys(row).forEach(key=>{
+                    );
 
-            if(
+                }
 
-                [
+            },
 
-                    "date",
-                    "total",
-                    "gmv",
-                    "PPMP",
-                    "SJIT",
-                    "SOR"
+            {
 
-                ].includes(key)
+                key:"PPMP",
 
-            ){
+                label:"PPMP",
 
-                return;
+                align:"center",
+
+                format:"number"
+
+            },
+
+            {
+
+                key:"SJIT",
+
+                label:"SJIT",
+
+                align:"center",
+
+                format:"number"
+
+            },
+
+            {
+
+                key:"SOR",
+
+                label:"SOR",
+
+                align:"center",
+
+                format:"number"
+
+            },
+
+            {
+
+                key:"total",
+
+                label:"Total",
+
+                align:"center",
+
+                format:"number"
+
+            },
+
+            {
+
+                key:"gmv",
+
+                label:"GMV",
+
+                align:"center",
+
+                format:"compactCurrency"
 
             }
 
-            brands.add(key);
+        ],
 
-        });
-
-    });
-
-    const brandList=[...brands].sort();
-
-    // ----------------------------------------
-    // Header Row 1
-    // ----------------------------------------
-
-    const row1=document.createElement("tr");
-
-    row1.innerHTML=`
-
-        <th rowspan="2">Date</th>
-
-        <th rowspan="2">Total</th>
-
-        <th rowspan="2">GMV</th>
-
-        <th colspan="3">PO TYPE</th>
-
-        <th colspan="${brandList.length}">BRANDS</th>
-
-    `;
-
-    head.appendChild(row1);
-
-    // ----------------------------------------
-    // Header Row 2
-    // ----------------------------------------
-
-    const row2=document.createElement("tr");
-
-    row2.innerHTML=`
-
-        <th>PPMP</th>
-
-        <th>SJIT</th>
-
-        <th>SOR</th>
-
-    `;
-
-    brandList.forEach(brand=>{
-
-        const th=document.createElement("th");
-
-        th.textContent=brand;
-
-        row2.appendChild(th);
+        rows
 
     });
 
-    head.appendChild(row2);
+}
 
-    // ----------------------------------------
-    // Body
-    // ----------------------------------------
+function formatDate(day,month){
 
-    data.forEach(row=>{
+    const months={
 
-        const tr=document.createElement("tr");
+        JAN:"Jan",
 
-        tr.innerHTML=`
+        FEB:"Feb",
 
-            <td>${row.date}</td>
+        MAR:"Mar",
 
-            <td class="text-right">${formatNumber(row.total)}</td>
+        APR:"Apr",
 
-            <td class="text-right">${formatCompactCurrency(row.gmv)}</td>
+        MAY:"May",
 
-            <td class="text-right">${formatNumber(row.PPMP)}</td>
+        JUNE:"Jun",
 
-            <td class="text-right">${formatNumber(row.SJIT)}</td>
+        JULY:"Jul",
 
-            <td class="text-right">${formatNumber(row.SOR)}</td>
+        AUG:"Aug",
 
-        `;
+        SEP:"Sep",
 
-        brandList.forEach(brand=>{
+        OCT:"Oct",
 
-            const td=document.createElement("td");
+        NOV:"Nov",
 
-            td.className="text-right";
+        DEC:"Dec"
 
-            td.textContent=formatNumber(
+    };
 
-                row[brand] || 0
-
-            );
-
-            tr.appendChild(td);
-
-        });
-
-        body.appendChild(tr);
-
-    });
+    return `${String(day).padStart(2,"0")}-${months[String(month).toUpperCase()]}`;
 
 }
