@@ -1,22 +1,28 @@
 /**
  * =====================================================
  * Project Phoenix
- * Layout Engine
+ * Product : Myntra Analytics
+ * Module  : Layout Engine
+ * Version : V2.0
  * =====================================================
  */
 
-
-import { renderDashboard } from "../pages/dashboard/dashboard.js";
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 import { renderHeader } from "../components/header/header.js";
 import { renderFilterBar } from "../components/filterbar/filterbar.js";
 import { renderCommandPalette } from "../components/commandPalette/commandPalette.js";
 
-export async function renderLayout() {
+import {
+    initializePageManager,
+    openPage
+} from "./pageManager.js";
+
+export async function renderLayout(){
 
     const root = document.getElementById("root");
 
     root.innerHTML = `
+
         <div class="app-shell">
 
             <div id="sidebar"></div>
@@ -34,25 +40,61 @@ export async function renderLayout() {
             </div>
 
         </div>
+
     `;
 
+    // ------------------------------------
+    // Sidebar
+    // ------------------------------------
+
     await renderSidebar(
-    document.getElementById("sidebar")
-);
 
-await renderHeader(
-    document.getElementById("header"),
-    "Dashboard"
-);
+        document.getElementById("sidebar")
 
-await renderFilterBar(
-    document.getElementById("filterbar")
-);
+    );
 
-await renderDashboard(
-    document.getElementById("content")
-);
+    // ------------------------------------
+    // Header
+    // ------------------------------------
 
-await renderCommandPalette();
+    await renderHeader(
+
+        document.getElementById("header"),
+
+        "Dashboard"
+
+    );
+
+    // ------------------------------------
+    // Filters
+    // ------------------------------------
+
+    await renderFilterBar(
+
+        document.getElementById("filterbar")
+
+    );
+
+    // ------------------------------------
+    // Page Manager
+    // ------------------------------------
+
+    initializePageManager(
+
+        document.getElementById("content")
+
+    );
+
+    // ------------------------------------
+    // Default Page
+    // ------------------------------------
+
+    await openPage("dashboard");
+
+    // ------------------------------------
+    // Command Palette
+    // ------------------------------------
+
+    await renderCommandPalette();
 
 }
