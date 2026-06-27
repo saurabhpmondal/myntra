@@ -1,11 +1,3 @@
-/**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Version : 0.1.0
- * =====================================================
- */
-
 export const Version = {
 
     app: "Myntra Analytics",
@@ -14,8 +6,6 @@ export const Version = {
 
     version: "0.1.0",
 
-    release: "Foundation",
-
-    author: "Saurabh Mondal & Magical CTO"
+    release: "Foundation"
 
 };
