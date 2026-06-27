@@ -3,23 +3,20 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dashboard Service
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
-import { getFilteredSales } from "./filterService.js";
-import { FilterState } from "./filterService.js";
+import { getComparisonData, calculateGrowth } from "./comparisonService.js";
 
-export function getDashboardSummary() {
-
-    const sales = getFilteredSales();
+function calculateSummary(rows) {
 
     let revenue = 0;
     let unitsSold = 0;
 
-    const styleSet = new Set();
+    const styles = new Set();
 
-    sales.forEach(row => {
+    rows.forEach(row => {
 
         revenue += Number(row.final_amount || 0);
 
@@ -27,7 +24,7 @@ export function getDashboardSummary() {
 
         if (row.style_id) {
 
-            styleSet.add(row.style_id);
+            styles.add(row.style_id);
 
         }
 
@@ -40,21 +37,62 @@ export function getDashboardSummary() {
         unitsSold,
 
         avgSellingPrice:
-            unitsSold === 0
-                ? 0
-                : revenue / unitsSold,
+            unitsSold === 0 ? 0 : revenue / unitsSold,
 
-        soldStyles: styleSet.size,
+        soldStyles: styles.size
 
-        totalRows: sales.length,
+    };
 
-        period: FilterState.period,
+}
 
-        brand: FilterState.brand,
+export function getDashboardSummary() {
 
-        category: FilterState.category,
+    const {
 
-        erpStatus: FilterState.erpStatus
+        currentPeriod,
+        previousPeriod,
+        currentSales,
+        previousSales
+
+    } = getComparisonData();
+
+    const current = calculateSummary(currentSales);
+
+    const previous = calculateSummary(previousSales);
+
+    return {
+
+        period: currentPeriod,
+
+        previousPeriod,
+
+        revenue: current.revenue,
+        previousRevenue: previous.revenue,
+        revenueGrowth: calculateGrowth(
+            current.revenue,
+            previous.revenue
+        ),
+
+        unitsSold: current.unitsSold,
+        previousUnitsSold: previous.unitsSold,
+        unitsGrowth: calculateGrowth(
+            current.unitsSold,
+            previous.unitsSold
+        ),
+
+        avgSellingPrice: current.avgSellingPrice,
+        previousAvgSellingPrice: previous.avgSellingPrice,
+        aspGrowth: calculateGrowth(
+            current.avgSellingPrice,
+            previous.avgSellingPrice
+        ),
+
+        soldStyles: current.soldStyles,
+        previousSoldStyles: previous.soldStyles,
+        soldStylesGrowth: calculateGrowth(
+            current.soldStyles,
+            previous.soldStyles
+        )
 
     };
 
