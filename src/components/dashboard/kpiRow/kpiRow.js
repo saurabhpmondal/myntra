@@ -1,12 +1,23 @@
 /**
  * =====================================================
  * Project Phoenix
- * KPI Row Widget
+ * Dashboard KPI Row
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
 import { renderKPICard } from "../../kpiCard/kpiCard.js";
+
+import { getDashboardSummary } from "../../../services/dashboardService.js";
+
+import {
+
+    formatCompactCurrency,
+    formatCompactNumber,
+    formatCurrency,
+    formatNumber
+
+} from "../../../utils/formatter.js";
 
 export async function renderKPIRow(target){
 
@@ -20,19 +31,21 @@ export async function renderKPIRow(target){
 
     });
 
+    const summary = getDashboardSummary();
+
     await renderKPICard(
 
         document.getElementById("kpi-gmv"),
 
         {
 
-            title:"GMV",
+            title:"Revenue",
 
-            value:"₹1.82 Cr",
+            value:formatCompactCurrency(summary.revenue),
 
             icon:"indian-rupee",
 
-            change:"+18.2%",
+            change:summary.month,
 
             trend:"up"
 
@@ -46,13 +59,13 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"Orders",
+            title:"Units Sold",
 
-            value:"24,581",
+            value:formatNumber(summary.unitsSold),
 
-            icon:"shopping-bag",
+            icon:"package",
 
-            change:"+8.4%",
+            change:summary.month,
 
             trend:"up"
 
@@ -66,13 +79,13 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"Units",
+            title:"Avg Selling Price",
 
-            value:"31,294",
+            value:formatCurrency(summary.avgSellingPrice),
 
-            icon:"package",
+            icon:"badge-indian-rupee",
 
-            change:"+10.1%",
+            change:summary.month,
 
             trend:"up"
 
@@ -86,15 +99,15 @@ export async function renderKPIRow(target){
 
         {
 
-            title:"ASP",
+            title:"Sold Styles",
 
-            value:"₹582",
+            value:formatNumber(summary.soldStyles),
 
-            icon:"badge-indian-rupee",
+            icon:"shirt",
 
-            change:"-1.4%",
+            change:summary.month,
 
-            trend:"down"
+            trend:"up"
 
         }
 
