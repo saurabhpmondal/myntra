@@ -137,3 +137,53 @@ export function getFilteredSales() {
     });
 
 }
+
+export function getSalesByPeriod(period){
+
+    return DataStore.sales.filter(sale=>{
+
+        const product = LookupStore.productMap[sale.style_id];
+
+        if(!product) return false;
+
+        if(getPeriodKey(sale.month,sale.year)!==period){
+
+            return false;
+
+        }
+
+        if(FilterState.brand!=="All"){
+
+            if(product.brand!==FilterState.brand){
+
+                return false;
+
+            }
+
+        }
+
+        if(FilterState.category!=="All"){
+
+            if(product.category!==FilterState.category){
+
+                return false;
+
+            }
+
+        }
+
+        if(FilterState.erpStatus!=="All"){
+
+            if(product.erpStatus!==FilterState.erpStatus){
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    });
+
+}
