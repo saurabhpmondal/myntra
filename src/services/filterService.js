@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Filter Service
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -26,9 +26,15 @@ export const FilterState = {
 };
 
 /**
- * Initialize Filters
+ * Initialize filters only once
  */
 export function initializeFilters() {
+
+    if (FilterState.period !== null) {
+
+        return;
+
+    }
 
     const latest = getLatestPeriod(DataStore.sales);
 
@@ -41,148 +47,136 @@ export function initializeFilters() {
 }
 
 /**
- * Update Filters
+ * Update filter state
  */
-export function updateFilters(filters) {
+export function updateFilters(filters = {}) {
 
     Object.assign(FilterState, filters);
 
 }
 
 /**
- * Reset Filters
+ * Reset filters
  */
 export function resetFilters() {
 
-    initializeFilters();
+    const latest = getLatestPeriod(DataStore.sales);
+
+    FilterState.period = latest ? latest.key : null;
 
     FilterState.brand = "All";
+
     FilterState.category = "All";
+
     FilterState.erpStatus = "All";
+
     FilterState.search = "";
 
 }
 
 /**
- * Return filtered sales
+ * Common filter logic
  */
-export function getFilteredSales() {
+function matchesFilters(sale, product, period) {
 
-    return DataStore.sales.filter(sale => {
+    if (!product) return false;
 
-        const product = LookupStore.productMap[sale.style_id];
+    if (period !== null) {
 
-        if (!product) return false;
+        const salePeriod = getPeriodKey(
+            sale.month,
+            sale.year
+        );
 
-        // Period
-        const periodKey = getPeriodKey(sale.month, sale.year);
-
-        if (FilterState.period && periodKey !== FilterState.period) {
-
-            return false;
-
-        }
-
-        // Brand
-        if (
-            FilterState.brand !== "All" &&
-            product.brand !== FilterState.brand
-        ) {
+        if (salePeriod !== period) {
 
             return false;
 
         }
 
-        // Category
-        if (
-            FilterState.category !== "All" &&
-            product.category !== FilterState.category
-        ) {
+    }
+
+    if (
+        FilterState.brand !== "All" &&
+        product.brand !== FilterState.brand
+    ) {
+
+        return false;
+
+    }
+
+    if (
+        FilterState.category !== "All" &&
+        product.category !== FilterState.category
+    ) {
+
+        return false;
+
+    }
+
+    if (
+        FilterState.erpStatus !== "All" &&
+        product.erpStatus !== FilterState.erpStatus
+    ) {
+
+        return false;
+
+    }
+
+    if (FilterState.search.trim()) {
+
+        const keyword = FilterState.search
+            .trim()
+            .toLowerCase();
+
+        const matched =
+
+            String(sale.style_id || "")
+                .toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            String(product.erpSku || "")
+                .toLowerCase()
+                .includes(keyword);
+
+        if (!matched) {
 
             return false;
 
         }
 
-        // ERP Status
-        if (
-            FilterState.erpStatus !== "All" &&
-            product.erpStatus !== FilterState.erpStatus
-        ) {
+    }
 
-            return false;
-
-        }
-
-        // Search
-        if (FilterState.search.trim()) {
-
-            const keyword = FilterState.search.toLowerCase();
-
-            const matched =
-
-                sale.style_id?.toLowerCase().includes(keyword) ||
-
-                product.erpSku?.toLowerCase().includes(keyword);
-
-            if (!matched) {
-
-                return false;
-
-            }
-
-        }
-
-        return true;
-
-    });
+    return true;
 
 }
 
-export function getSalesByPeriod(period){
+/**
+ * Current period sales
+ */
+export function getFilteredSales() {
 
-    return DataStore.sales.filter(sale=>{
+    return getSalesByPeriod(FilterState.period);
 
-        const product = LookupStore.productMap[sale.style_id];
+}
 
-        if(!product) return false;
+/**
+ * Any period sales
+ */
+export function getSalesByPeriod(period) {
 
-        if(getPeriodKey(sale.month,sale.year)!==period){
+    return DataStore.sales.filter(sale => {
 
-            return false;
+        const product =
+            LookupStore.productMap[sale.style_id];
 
-        }
-
-        if(FilterState.brand!=="All"){
-
-            if(product.brand!==FilterState.brand){
-
-                return false;
-
-            }
-
-        }
-
-        if(FilterState.category!=="All"){
-
-            if(product.category!==FilterState.category){
-
-                return false;
-
-            }
-
-        }
-
-        if(FilterState.erpStatus!=="All"){
-
-            if(product.erpStatus!==FilterState.erpStatus){
-
-                return false;
-
-            }
-
-        }
-
-        return true;
+        return matchesFilters(
+            sale,
+            product,
+            period
+        );
 
     });
 
