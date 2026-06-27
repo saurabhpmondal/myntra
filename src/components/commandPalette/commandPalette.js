@@ -38,7 +38,11 @@ function bindShortcuts() {
 
     document.addEventListener("keydown", (event) => {
 
-        if (event.ctrlKey && event.key.toLowerCase() === "k") {
+        if (
+    event.ctrlKey &&
+    event.shiftKey &&
+    event.key.toLowerCase() === "k"
+) {
 
             event.preventDefault();
 
