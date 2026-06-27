@@ -3,93 +3,123 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Comparison Service
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
+import { DataStore } from "./dataService.js";
 import {
     FilterState,
     getSalesByPeriod
 } from "./filterService.js";
 
+import { getPeriodKey } from "./periodService.js";
+
 /**
- * Get Previous Period
- * Example:
- * 202606 -> 202605
- * 202601 -> 202512
+ * Returns latest available period
+ * before current period.
  */
 
-export function getPreviousPeriod(periodKey) {
+export function getPreviousPeriod(currentPeriod){
 
-    let year = Math.floor(periodKey / 100);
+    const periods = new Set();
 
-    let month = periodKey % 100;
+    DataStore.sales.forEach(row=>{
 
-    month--;
+        const key = getPeriodKey(
+            row.month,
+            row.year
+        );
 
-    if (month === 0) {
+        if(key < currentPeriod){
 
-        month = 12;
-        year--;
+            periods.add(key);
+
+        }
+
+    });
+
+    if(periods.size===0){
+
+        return null;
 
     }
 
-    return (year * 100) + month;
+    return Math.max(...periods);
 
 }
 
 /**
- * Returns current & previous period sales
+ * Returns current &
+ * previous period sales.
  */
 
-export function getComparisonData() {
+export function getComparisonData(){
 
     const currentPeriod = FilterState.period;
 
-    const previousPeriod = getPreviousPeriod(currentPeriod);
+    const previousPeriod = getPreviousPeriod(
+        currentPeriod
+    );
 
-    const currentSales = getSalesByPeriod(currentPeriod);
-
-    const previousSales = getSalesByPeriod(previousPeriod);
-
-    return {
+    return{
 
         currentPeriod,
 
         previousPeriod,
 
-        currentSales,
+        currentSales:getSalesByPeriod(
+            currentPeriod
+        ),
 
-        previousSales
+        previousSales:previousPeriod
+            ?getSalesByPeriod(previousPeriod)
+            :[]
 
     };
 
 }
 
 /**
- * Calculate Growth %
+ * Growth %
  */
 
-export function calculateGrowth(current, previous) {
+export function calculateGrowth(
+    current,
+    previous
+){
 
-    if (previous === 0) {
+    current = Number(current)||0;
+
+    previous = Number(previous)||0;
+
+    if(previous===0){
 
         return 0;
 
     }
 
-    return ((current - previous) / previous) * 100;
+    return Number(
+
+        (
+            (
+                current-previous
+            )/
+            previous
+        )*100
+
+    );
 
 }
 
 /**
- * Format Growth
+ * Format growth.
  */
 
-export function formatGrowth(value) {
+export function formatGrowth(value){
 
-    const sign = value >= 0 ? "+" : "";
+    const n = Number(value)||0;
 
-    return `${sign}${value.toFixed(1)}%`;
+    return `${n>=0?"+":""}${n.toFixed(1)}%`;
 
 }
