@@ -9,6 +9,7 @@
 
 import { renderTable } from "../common/table/table.js";
 import { getGrowthReport } from "../../services/growth/growthService.js";
+import { renderExportButton } from "../common/exportButton/exportButton.js";
 
 export async function renderGrowth(target){
 
