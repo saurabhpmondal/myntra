@@ -3,32 +3,66 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Helper
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import { getTrendSales } from "../filterService.js";
+import { getTrendSales, FilterState } from "../filterService.js";
 import { getPeriodKey } from "../periodService.js";
 
 export function getGrowthBaseData(){
 
     const sales = getTrendSales();
 
-    const periods = [...new Set(
+    const periods = [
 
-        sales.map(r=>
+        ...new Set(
 
-            getPeriodKey(r.month,r.year)
+            sales.map(r=>
+
+                getPeriodKey(r.month,r.year)
+
+            )
 
         )
 
-    )].sort((a,b)=>a-b);
+    ].sort((a,b)=>a-b);
 
-    const currentPeriod = periods[periods.length-1];
+    // ==========================================
+    // Use Selected Period
+    // ==========================================
 
-    const previousPeriod = periods[periods.length-2];
+    let currentPeriod = FilterState.period;
 
-    const previous2Period = periods[periods.length-3];
+    if(
+
+        currentPeriod===null ||
+
+        !periods.includes(currentPeriod)
+
+    ){
+
+        currentPeriod = periods[periods.length-1];
+
+    }
+
+    const currentIndex = periods.indexOf(currentPeriod);
+
+    const previousPeriod =
+
+        currentIndex>0
+
+            ? periods[currentIndex-1]
+
+            : null;
+
+    const previous2Period =
+
+        currentIndex>1
+
+            ? periods[currentIndex-2]
+
+            : null;
 
     const currentRows = sales.filter(r=>
 
@@ -38,11 +72,15 @@ export function getGrowthBaseData(){
 
     const previousRows = sales.filter(r=>
 
+        previousPeriod!==null &&
+
         getPeriodKey(r.month,r.year)===previousPeriod
 
     );
 
     const previous2Rows = sales.filter(r=>
+
+        previous2Period!==null &&
 
         getPeriodKey(r.month,r.year)===previous2Period
 
@@ -74,7 +112,11 @@ export function getGrowthBaseData(){
 
         previousPeriod,
 
-        previous2Period
+        previous2Period,
+
+        latestPeriod:
+
+            periods[periods.length-1]
 
     };
 
