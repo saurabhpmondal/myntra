@@ -184,3 +184,19 @@
     }
 
 }
+
+/* ==========================================
+   ACTION BAR
+========================================== */
+
+.growth-action-bar{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+    margin-bottom:16px;
+
+}
