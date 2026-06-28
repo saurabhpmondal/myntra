@@ -3,25 +3,74 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Google Sheets Configuration
- * Version : V3.0
+ * Version : V3.1
  * =====================================================
  */
 
 export const Sheets = {
 
-    sales: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1679615114&single=true&output=csv",
+    // ==========================================
+    // Sales
+    // ==========================================
 
-    returns: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1201655010&single=true&output=csv",
+    sales:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1679615114&single=true&output=csv",
 
-    sjitStock: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=685171659&single=true&output=csv",
+    // ==========================================
+    // Returns
+    // ==========================================
 
-    sorStock: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=2104491192&single=true&output=csv",
+    returns:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1201655010&single=true&output=csv",
 
-    sellerStock: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=325497638&single=true&output=csv",
+    // ==========================================
+    // SJIT Stock
+    // ==========================================
 
-    productMaster: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=205952585&single=true&output=csv",
+    sjitStock:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=685171659&single=true&output=csv",
 
-    traffic: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=533529379&single=true&output=csv"
+    // ==========================================
+    // SOR Stock
+    // ==========================================
+
+    sorStock:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=2104491192&single=true&output=csv",
+
+    // ==========================================
+    // Seller Stock
+    // ==========================================
+
+    sellerStock:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=325497638&single=true&output=csv",
+
+    // ==========================================
+    // Product Master
+    // ==========================================
+
+    productMaster:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=205952585&single=true&output=csv",
+
+    // ==========================================
+    // Traffic
+    // ==========================================
+
+    traffic:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=533529379&single=true&output=csv",
+
+    // ==========================================
+    // Listings Report
+    // ==========================================
+
+    listings:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_-6UqSlJOryIiFpP51m4raSp-Vo5S2NZYTSzYU4RNWfpkvPMGfF_JT39WSBdbc4OwCwpVB1FpSMpq/pub?gid=0&single=true&output=csv",
+
+    // ==========================================
+    // Inventory Report
+    // ==========================================
+
+    inventory:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_-6UqSlJOryIiFpP51m4raSp-Vo5S2NZYTSzYU4RNWfpkvPMGfF_JT39WSBdbc4OwCwpVB1FpSMpq/pub?gid=654272602&single=true&output=csv"
 
 };
 
