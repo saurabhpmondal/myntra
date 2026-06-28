@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Common Table Engine
  * Module  : Table Engine
- * Version : V1.3
+ * Version : V2.0
  * =====================================================
  */
 
@@ -14,6 +14,14 @@ import {
     formatCompactCurrency,
     formatNumber
 } from "../../../utils/formatter.js";
+
+import {
+    createPagination,
+    getVisibleRows,
+    nextPage,
+    previousPage,
+    getPageInfo
+} from "./pagination.js";
 
 export async function renderTable(config){
 
@@ -38,30 +46,103 @@ export async function renderTable(config){
     const table = config.target.querySelector(".dashboard-card");
 
     renderHeader(
-
         table,
-
         config.columns || []
+    );
 
+    const pagination = createPagination(
+        config.rows || []
+    );
+
+    renderPage(
+        table,
+        pagination,
+        config
+    );
+
+    bindPagination(
+        table,
+        pagination,
+        config
+    );
+
+}
+
+function bindPagination(
+    table,
+    pagination,
+    config
+){
+
+    const previous = table.querySelector(".table-previous");
+
+    const next = table.querySelector(".table-next");
+
+    if(previous){
+
+        previous.onclick=()=>{
+
+            previousPage(pagination);
+
+            renderPage(
+                table,
+                pagination,
+                config
+            );
+
+        };
+
+    }
+
+    if(next){
+
+        next.onclick=()=>{
+
+            nextPage(pagination);
+
+            renderPage(
+                table,
+                pagination,
+                config
+            );
+
+        };
+
+    }
+
+}
+
+function renderPage(
+    table,
+    pagination,
+    config
+){
+
+    const rows = getVisibleRows(
+        pagination
     );
 
     renderBody(
-
         table,
-
-        config.rows || [],
-
+        rows,
         config.columns || []
-
     );
 
-    // Hide footer info
+    const info = getPageInfo(
+        pagination
+    );
 
-    const info = table.querySelector(".table-info");
+    const label = table.querySelector(
+        ".table-info"
+    );
 
-    if(info){
+    if(label){
 
-        info.style.display = "none";
+        label.style.display="block";
+
+        label.textContent=
+
+            `Showing ${info.start}-${info.end} of ${info.total} styles | Page ${info.page} of ${info.pages}`;
 
     }
 
@@ -77,15 +158,11 @@ function renderHeader(table, columns){
 
     columns.forEach(column=>{
 
-        const th = document.createElement("th");
+        const th=document.createElement("th");
 
-        th.textContent = column.label;
+        th.textContent=column.label;
 
-        th.classList.add(
-
-            `text-${column.align || "center"}`
-
-        );
+        th.className=`text-${column.align || "center"}`;
 
         tr.appendChild(th);
 
@@ -95,69 +172,83 @@ function renderHeader(table, columns){
 
 }
 
-function renderBody(table, rows, columns){
+function renderBody(
+    table,
+    rows,
+    columns
+){
 
-    const body = table.querySelector(".table-body");
+    const body=table.querySelector(".table-body");
 
-    body.innerHTML = "";
+    body.innerHTML="";
 
     rows.forEach(record=>{
 
-        const tr = document.createElement("tr");
+        const tr=document.createElement("tr");
+
+        if(typeof record.__rowClass==="string"){
+
+            tr.className=record.__rowClass;
+
+        }
 
         columns.forEach(column=>{
 
-            const td = document.createElement("td");
+            const td=document.createElement("td");
 
-            td.classList.add(
+            td.className=`text-${column.align || "center"}`;
 
-                `text-${column.align || "center"}`
+            const classKey=`__${column.key}`;
 
-            );
+            if(record[classKey]){
 
-            let value = record[column.key];
-
-            if(!column.renderer){
-
-                switch(column.format){
-
-                    case "currency":
-
-                        value = formatCurrency(value);
-
-                        break;
-
-                    case "compactCurrency":
-
-                        value = formatCompactCurrency(value);
-
-                        break;
-
-                    case "number":
-
-                        value = formatNumber(value);
-
-                        break;
-
-                }
+                td.classList.add(
+                    record[classKey]
+                );
 
             }
 
-            if(typeof column.renderer === "function"){
+            let value=record[column.key];
 
-                td.innerHTML = column.renderer(
+            if(typeof column.renderer==="function"){
 
-                    value,
+                td.innerHTML=
 
-                    record
+                    column.renderer(
 
-                );
+                        value,
+
+                        record
+
+                    );
 
             }
 
             else{
 
-                td.textContent = value ?? "-";
+                switch(column.format){
+
+                    case "currency":
+
+                        value=formatCurrency(value);
+
+                        break;
+
+                    case "compactCurrency":
+
+                        value=formatCompactCurrency(value);
+
+                        break;
+
+                    case "number":
+
+                        value=formatNumber(value);
+
+                        break;
+
+                }
+
+                td.textContent=value ?? "-";
 
             }
 
