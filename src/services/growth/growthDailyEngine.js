@@ -3,20 +3,34 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Daily Engine
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import {
     groupByStyle,
-    getMaxSaleDay
+    getMaxSaleDay,
+    getMonthDays
 } from "./growthHelper.js";
 
 export function buildDailyData(base){
 
     const currentMap = groupByStyle(base.currentRows);
 
-    const maxDay = getMaxSaleDay(base.currentRows);
+    // ==========================================
+    // Historical Month = Full Month
+    // Latest Month = MTD
+    // ==========================================
+
+    const isLatestMonth =
+
+        base.currentPeriod === base.latestPeriod;
+
+    const maxDay = isLatestMonth
+
+        ? getMaxSaleDay(base.currentRows)
+
+        : getMonthDays(base.currentRows);
 
     const dayColumns = [];
 
@@ -48,37 +62,53 @@ export function buildDailyData(base){
 
         colors[styleId] = {};
 
+        // ==========================================
+        // Day Sales
+        // ==========================================
+
+        rows.forEach(row=>{
+
+            const day = Number(row.date);
+
+            const qty = Number(row.qty || 0);
+
+            const key = `day_${day}`;
+
+            values[styleId][key] =
+
+                (values[styleId][key] || 0)
+
+                + qty;
+
+        });
+
+        // Fill Missing Days
+
         for(let day=1;day<=maxDay;day++){
 
-            const qty = rows
+            const key = `day_${day}`;
 
-                .filter(r=>Number(r.date)===day)
+            if(values[styleId][key]===undefined){
 
-                .reduce(
+                values[styleId][key]=0;
 
-                    (t,r)=>t+Number(r.qty||0),
-
-                    0
-
-                );
-
-            values[styleId][`day_${day}`] = qty;
+            }
 
         }
 
-        // ==================================
-        // Day on Day Color
-        // ==================================
+        // ==========================================
+        // Day Comparison Color
+        // ==========================================
 
         for(let day=2;day<=maxDay;day++){
 
             const yesterday =
 
-                values[styleId][`day_${day-1}`] || 0;
+                values[styleId][`day_${day-1}`];
 
             const today =
 
-                values[styleId][`day_${day}`] || 0;
+                values[styleId][`day_${day}`];
 
             if(today>yesterday){
 
