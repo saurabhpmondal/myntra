@@ -7,25 +7,13 @@
  * =====================================================
  */
 
-import { renderBusinessKPIRow } from "../../components/business/kpiRow/kpiRow.js";
-
 import { renderMonthWiseUnits } from "../../components/business/monthWiseUnits/monthWiseUnits.js";
-
 import { renderMonthWiseGMV } from "../../components/business/monthWiseGMV/monthWiseGMV.js";
-
 import { renderMonthWiseASP } from "../../components/business/monthWiseASP/monthWiseASP.js";
-
 import { renderFreshnessContribution } from "../../components/business/freshnessContribution/freshnessContribution.js";
-
 import { renderLiveCount } from "../../components/business/liveCount/liveCount.js";
 
 let businessContainer = null;
-
-/**
- * ==========================================
- * Initial Render
- * ==========================================
- */
 
 export async function renderBusiness(target){
 
@@ -35,17 +23,9 @@ export async function renderBusiness(target){
 
 }
 
-/**
- * ==========================================
- * Refresh
- * ==========================================
- */
-
 export async function refreshBusiness(){
 
     if(!businessContainer){
-
-        console.warn("Business container not found.");
 
         return;
 
@@ -53,46 +33,64 @@ export async function refreshBusiness(){
 
     businessContainer.innerHTML = "";
 
-    // KPI Row
+    // ============================
+    // Month Wise Units
+    // ============================
 
-    await addSection(renderBusinessKPIRow);
+    const units = createSection();
 
-    // 6 Month Units
+    businessContainer.appendChild(units);
 
-    await addSection(renderMonthWiseUnits);
+    await renderMonthWiseUnits(units);
 
-    // 6 Month GMV
+    // ============================
+    // Month Wise GMV
+    // ============================
 
-    await addSection(renderMonthWiseGMV);
+    const gmv = createSection();
 
-    // 6 Month ASP
+    businessContainer.appendChild(gmv);
 
-    await addSection(renderMonthWiseASP);
+    await renderMonthWiseGMV(gmv);
 
-    // Freshness
+    // ============================
+    // Month Wise ASP
+    // ============================
 
-    await addSection(renderFreshnessContribution);
+    const asp = createSection();
 
+    businessContainer.appendChild(asp);
+
+    await renderMonthWiseASP(asp);
+
+    // ============================
+    // Freshness Contribution
+    // ============================
+
+    const freshness = createSection();
+
+    businessContainer.appendChild(freshness);
+
+    await renderFreshnessContribution(freshness);
+
+    // ============================
     // Live Count
+    // ============================
 
-    await addSection(renderLiveCount);
+    const live = createSection();
+
+    businessContainer.appendChild(live);
+
+    await renderLiveCount(live);
 
 }
 
-/**
- * ==========================================
- * Section Helper
- * ==========================================
- */
-
-async function addSection(renderer){
+function createSection(){
 
     const section = document.createElement("div");
 
     section.className = "dashboard-section";
 
-    businessContainer.appendChild(section);
-
-    await renderer(section);
+    return section;
 
 }
