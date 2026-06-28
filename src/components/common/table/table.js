@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Common Table Engine
  * Module  : Table Engine
- * Version : V1.2
+ * Version : V2.0
  * =====================================================
  */
 
@@ -21,16 +21,13 @@ export async function renderTable(config){
 
         target: config.target,
 
-        html: "src/components/common/table/table.html",
+        html:"src/components/common/table/table.html",
 
-        css: "src/components/common/table/table.css",
+        css:"src/components/common/table/table.css",
 
         data:{
-
-            title: config.title || "",
-
-            subtitle: config.subtitle || ""
-
+            title:config.title||"",
+            subtitle:config.subtitle||""
         }
 
     });
@@ -38,78 +35,154 @@ export async function renderTable(config){
     const table = config.target.querySelector(".dashboard-card");
 
     renderHeader(
-
         table,
-
-        config.columns || []
-
+        config.columns||[],
+        config.groupHeaders||null
     );
 
     renderBody(
-
         table,
-
-        config.rows || [],
-
-        config.columns || []
-
+        config.rows||[],
+        config.columns||[],
+        config.rowClass,
+        config.cellClass
     );
 
     table.querySelector(".table-info").textContent =
-
         `Showing ${config.rows.length} records`;
 
 }
 
-function renderHeader(table, columns){
+/* ===========================================
+   Header
+=========================================== */
+
+function renderHeader(table,columns,groups){
 
     const head = table.querySelector(".table-head");
 
-    head.innerHTML = "";
+    head.innerHTML="";
 
-    const tr = document.createElement("tr");
+    // Existing behaviour
+    if(!groups || !groups.length){
 
-    columns.forEach(column=>{
-
-        const th = document.createElement("th");
-
-        th.textContent = column.label;
-
-        th.classList.add(
-
-            `text-${column.align || "center"}`
-
-        );
-
-        tr.appendChild(th);
-
-    });
-
-    head.appendChild(tr);
-
-}
-
-function renderBody(table, rows, columns){
-
-    const body = table.querySelector(".table-body");
-
-    body.innerHTML = "";
-
-    rows.forEach(record=>{
-
-        const tr = document.createElement("tr");
+        const tr=document.createElement("tr");
 
         columns.forEach(column=>{
 
-            const td = document.createElement("td");
+            const th=document.createElement("th");
 
-            td.classList.add(
+            th.textContent=column.label;
 
-                `text-${column.align || "center"}`
-
+            th.classList.add(
+                `text-${column.align||"center"}`
             );
 
-            let value = record[column.key];
+            tr.appendChild(th);
+
+        });
+
+        head.appendChild(tr);
+
+        return;
+
+    }
+
+    // Group header row
+
+    const groupRow=document.createElement("tr");
+
+    groups.forEach(group=>{
+
+        const th=document.createElement("th");
+
+        th.textContent=group.label;
+
+        th.colSpan=group.span;
+
+        th.className="group-header";
+
+        groupRow.appendChild(th);
+
+    });
+
+    head.appendChild(groupRow);
+
+    // Normal header row
+
+    const columnRow=document.createElement("tr");
+
+    columns.forEach(column=>{
+
+        const th=document.createElement("th");
+
+        th.textContent=column.label;
+
+        th.classList.add(
+            `text-${column.align||"center"}`
+        );
+
+        columnRow.appendChild(th);
+
+    });
+
+    head.appendChild(columnRow);
+
+}
+
+/* ===========================================
+   Body
+=========================================== */
+
+function renderBody(
+    table,
+    rows,
+    columns,
+    rowClass,
+    cellClass
+){
+
+    const body=table.querySelector(".table-body");
+
+    body.innerHTML="";
+
+    rows.forEach(record=>{
+
+        const tr=document.createElement("tr");
+
+        if(typeof rowClass==="function"){
+
+            const cls=rowClass(record);
+
+            if(cls){
+
+                tr.classList.add(cls);
+
+            }
+
+        }
+
+        columns.forEach(column=>{
+
+            const td=document.createElement("td");
+
+            td.classList.add(
+                `text-${column.align||"center"}`
+            );
+
+            if(typeof cellClass==="function"){
+
+                const cls=cellClass(record,column);
+
+                if(cls){
+
+                    td.classList.add(cls);
+
+                }
+
+            }
+
+            let value=record[column.key];
 
             if(!column.renderer){
 
@@ -117,19 +190,19 @@ function renderBody(table, rows, columns){
 
                     case "currency":
 
-                        value = formatCurrency(value);
+                        value=formatCurrency(value);
 
                         break;
 
                     case "compactCurrency":
 
-                        value = formatCompactCurrency(value);
+                        value=formatCompactCurrency(value);
 
                         break;
 
                     case "number":
 
-                        value = formatNumber(value);
+                        value=formatNumber(value);
 
                         break;
 
@@ -137,21 +210,16 @@ function renderBody(table, rows, columns){
 
             }
 
-            if(typeof column.renderer === "function"){
+            if(typeof column.renderer==="function"){
 
-                td.innerHTML = column.renderer(
-
+                td.innerHTML=column.renderer(
                     value,
-
                     record
-
                 );
 
-            }
+            }else{
 
-            else{
-
-                td.textContent = value ?? "-";
+                td.textContent=value??"-";
 
             }
 
