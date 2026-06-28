@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Report
- * Version : V1.2
+ * Version : V1.3
  * =====================================================
  */
 
@@ -17,90 +17,98 @@ export async function renderGrowth(target){
     target.innerHTML = "";
 
     // =====================================
-    // KPI CARDS
+    // PAGE CONTAINER
+    // =====================================
+
+    const page = document.createElement("div");
+
+    page.className = "growth-page";
+
+    target.appendChild(page);
+
+    // =====================================
+    // KPI SECTION
     // =====================================
 
     const kpiContainer = document.createElement("div");
 
     kpiContainer.className = "growth-kpi-grid";
 
-    report.kpis.forEach(kpi=>{
+    page.appendChild(kpiContainer);
 
-        const card = document.createElement("div");
+    if(Array.isArray(report.kpis)){
 
-        card.className = `growth-kpi-card ${kpi.className}`;
+        report.kpis.forEach(kpi=>{
 
-        card.innerHTML = `
+            const card=document.createElement("div");
 
-            <div class="growth-kpi-title">
+            card.className=`growth-kpi-card ${kpi.className}`;
 
-                ${kpi.title}
+            card.innerHTML=`
 
-            </div>
+                <div class="growth-kpi-title">
 
-            <div class="growth-kpi-value">
+                    ${kpi.title}
 
-                ${kpi.value}
+                </div>
 
-            </div>
+                <div class="growth-kpi-value">
 
-        `;
+                    ${kpi.value}
 
-        kpiContainer.appendChild(card);
+                </div>
 
-    });
+            `;
 
-    target.appendChild(kpiContainer);
+            kpiContainer.appendChild(card);
+
+        });
+
+    }
 
     // =====================================
-    // STYLE LINK
+    // TABLE SECTION
     // =====================================
 
-    const columns = report.columns.map(col=>{
+    const tableContainer=document.createElement("div");
 
-        if(col.key==="styleId"){
+    page.appendChild(tableContainer);
+
+    const columns=report.columns.map(column=>{
+
+        if(column.key==="styleId"){
 
             return{
 
-                ...col,
+                ...column,
 
-                renderer:(value,row)=>{
+                renderer:(value,row)=>`
 
-                    return `
+                    <a
+                        href="${row.styleLink}"
+                        target="_blank"
+                        class="phoenix-style-link"
+                    >
+                        ${value}
+                    </a>
 
-                        <a
-
-                            href="${row.styleLink}"
-
-                            target="_blank"
-
-                            class="phoenix-style-link"
-
-                        >
-
-                            ${value}
-
-                        </a>
-
-                    `;
-
-                }
+                `
 
             };
 
         }
 
-        if(col.key==="growth"){
+        if(column.key==="growth"){
 
             return{
 
-                ...col,
+                ...column,
 
                 renderer:(value)=>{
 
                     if(value==="🟢 NEW"){
 
-                        return `
+                        return`
 
                             <span class="growth-new-badge">
 
@@ -120,11 +128,11 @@ export async function renderGrowth(target){
 
         }
 
-        if(col.key==="rating"){
+        if(column.key==="rating"){
 
             return{
 
-                ...col,
+                ...column,
 
                 renderer:(value)=>
 
@@ -134,11 +142,11 @@ export async function renderGrowth(target){
 
         }
 
-        if(col.key==="drr"){
+        if(column.key==="drr"){
 
             return{
 
-                ...col,
+                ...column,
 
                 renderer:(value)=>
 
@@ -148,13 +156,13 @@ export async function renderGrowth(target){
 
         }
 
-        return col;
+        return column;
 
     });
 
     await renderTable({
 
-        target,
+        target:tableContainer,
 
         title:"Growth Report",
 
