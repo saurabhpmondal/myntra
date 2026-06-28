@@ -3,13 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Lookup Engine
- * Version : V2.0
+ * Version : V1.0
  * =====================================================
  */
 
-import { DataStore } from "../data/dataService.js";
+import { DataStore } from "../dataService.js";
 
-const Lookups={
+const ShipmentLookup={
 
     master:new Map(),
 
@@ -23,35 +23,31 @@ const Lookups={
 
 export function buildShipmentLookups(){
 
-    Lookups.master.clear();
+    ShipmentLookup.master.clear();
 
-    Lookups.rating.clear();
+    ShipmentLookup.rating.clear();
 
-    Lookups.sjit.clear();
+    ShipmentLookup.sjit.clear();
 
-    Lookups.sor.clear();
+    ShipmentLookup.sor.clear();
 
-    buildMasterLookup();
+    buildMaster();
 
-    buildRatingLookup();
+    buildRatings();
 
-    buildStockLookup();
+    buildSjit();
+
+    buildSor();
 
 }
 
-/* ==========================================
-   MASTER
-========================================== */
-
-function buildMasterLookup(){
+function buildMaster(){
 
     DataStore.productMaster.forEach(row=>{
 
         const styleId=String(
 
-            row.style_id ||
-
-            ""
+            row.style_id||""
 
         ).trim();
 
@@ -61,57 +57,49 @@ function buildMasterLookup(){
 
         }
 
-        Lookups.master.set(styleId,{
+        ShipmentLookup.master.set(
 
-            erpSku:
+            styleId,
 
-                row.erp_sku ||
+            {
 
-                "",
+                styleId,
 
-            status:
+                erpSku:
 
-                row.status ||
+                    row.erp_sku||"",
 
-                "",
+                brand:
 
-            launchDate:
+                    row.brand||"",
 
-                row.launch_date ||
+                status:
 
-                "",
+                    row.status||"",
 
-            brand:
+                articleType:
 
-                row.brand ||
+                    row.article_type||"",
 
-                "",
+                launchDate:
 
-            articleType:
+                    row.launch_date||""
 
-                row.article_type ||
+            }
 
-                ""
-
-        });
+        );
 
     });
 
 }
 
-/* ==========================================
-   RATING
-========================================== */
-
-function buildRatingLookup(){
+function buildRatings(){
 
     DataStore.traffic.forEach(row=>{
 
         const styleId=String(
 
-            row.style_id ||
-
-            ""
+            row.style_id||""
 
         ).trim();
 
@@ -121,15 +109,13 @@ function buildRatingLookup(){
 
         }
 
-        Lookups.rating.set(
+        ShipmentLookup.rating.set(
 
             styleId,
 
             Number(
 
-                row.rating ||
-
-                0
+                row.rating||0
 
             )
 
@@ -139,19 +125,13 @@ function buildRatingLookup(){
 
 }
 
-/* ==========================================
-   STOCK
-========================================== */
-
-function buildStockLookup(){
+function buildSjit(){
 
     DataStore.sjitStock.forEach(row=>{
 
         const styleId=String(
 
-            row.style_id ||
-
-            ""
+            row.style_id||""
 
         ).trim();
 
@@ -161,75 +141,23 @@ function buildStockLookup(){
 
         }
 
-        const qty=
+        const qty=Number(
 
-            Number(
+            row.sellable_inventory_count||
 
-                row.sellable_inventory_count ||
+            row.inventory_count||
 
-                row.inventory_count ||
-
-                row.units ||
-
-                0
-
-            );
-
-        Lookups.sjit.set(
-
-            styleId,
-
-            (
-
-                Lookups.sjit.get(styleId)
-
-                ||
-
-                0
-
-            )
-
-            +
-
-            qty
+            0
 
         );
 
-    });
-
-    DataStore.sorStock.forEach(row=>{
-
-        const styleId=String(
-
-            row.style_id ||
-
-            ""
-
-        ).trim();
-
-        if(!styleId){
-
-            return;
-
-        }
-
-        const qty=
-
-            Number(
-
-                row.units ||
-
-                0
-
-            );
-
-        Lookups.sor.set(
+        ShipmentLookup.sjit.set(
 
             styleId,
 
             (
 
-                Lookups.sor.get(styleId)
+                ShipmentLookup.sjit.get(styleId)
 
                 ||
 
@@ -247,15 +175,55 @@ function buildStockLookup(){
 
 }
 
-/* ==========================================
-   GETTERS
-========================================== */
+function buildSor(){
+
+    DataStore.sorStock.forEach(row=>{
+
+        const styleId=String(
+
+            row.style_id||""
+
+        ).trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        ShipmentLookup.sor.set(
+
+            styleId,
+
+            (
+
+                ShipmentLookup.sor.get(styleId)
+
+                ||
+
+                0
+
+            )
+
+            +
+
+            Number(
+
+                row.units||0
+
+            )
+
+        );
+
+    });
+
+}
 
 export function getMaster(styleId){
 
     return(
 
-        Lookups.master.get(
+        ShipmentLookup.master.get(
 
             String(styleId)
 
@@ -273,7 +241,7 @@ export function getRating(styleId){
 
     return(
 
-        Lookups.rating.get(
+        ShipmentLookup.rating.get(
 
             String(styleId)
 
@@ -295,11 +263,15 @@ export function getStock(
 
 ){
 
-    if(shipmentType==="SOR"){
+    if(
+
+        shipmentType==="SOR"
+
+    ){
 
         return(
 
-            Lookups.sor.get(
+            ShipmentLookup.sor.get(
 
                 String(styleId)
 
@@ -315,7 +287,7 @@ export function getStock(
 
     return(
 
-        Lookups.sjit.get(
+        ShipmentLookup.sjit.get(
 
             String(styleId)
 
