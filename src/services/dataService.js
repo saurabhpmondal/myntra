@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Data Service
- * Version : V3.2
+ * Version : V3.3
  * =====================================================
  */
 
@@ -28,17 +28,34 @@ export const DataStore = {
 
 };
 
-async function loadSheet(name,url){
+let completed = 0;
+let totalJobs = 0;
 
-    console.time(name);
+async function loadSheet(job){
+
+    console.time(job.title);
 
     try{
 
-        const data = await loadCSV(url);
+        const data = await loadCSV(job.url);
 
-        console.timeEnd(name);
+        console.timeEnd(job.title);
 
-        console.log(`✅ ${name}: ${data.length}`);
+        completed++;
+
+        const progress = Math.round(
+            5 + (completed / totalJobs) * 90
+        );
+
+        updateSplash(
+
+            progress,
+
+            `${completed}/${totalJobs} Loaded • ${job.title}`
+
+        );
+
+        console.log(`✅ ${job.title}: ${data.length}`);
 
         return data;
 
@@ -46,7 +63,21 @@ async function loadSheet(name,url){
 
     catch(error){
 
-        console.error(`❌ ${name}`,error);
+        console.error(`❌ ${job.title}`,error);
+
+        completed++;
+
+        const progress = Math.round(
+            5 + (completed / totalJobs) * 90
+        );
+
+        updateSplash(
+
+            progress,
+
+            `${completed}/${totalJobs} Loaded • ${job.title} (Failed)`
+
+        );
 
         return [];
 
@@ -64,7 +95,13 @@ export async function initializeData(){
 
     console.log("🚀 Loading Phoenix Data Engine...");
 
-    updateSplash(5,"Connecting to Google Sheets...");
+    updateSplash(
+
+        5,
+
+        "Connecting to Google Sheets..."
+
+    );
 
     const jobs=[
 
@@ -124,25 +161,19 @@ export async function initializeData(){
 
     ];
 
-    const promises = jobs.map((job,index)=>{
+    totalJobs = jobs.length;
 
-        updateSplash(
+    completed = 0;
 
-            10 + (index*8),
+    updateSplash(
 
-            `Loading ${job.title}...`
+        8,
 
-        );
+        `Starting ${totalJobs} Downloads...`
 
-        return loadSheet(
+    );
 
-            job.title,
-
-            job.url
-
-        );
-
-    });
+    const promises = jobs.map(job=>loadSheet(job));
 
     const results = await Promise.allSettled(promises);
 
@@ -172,6 +203,18 @@ export async function initializeData(){
 
     });
 
+    updateSplash(
+
+        96,
+
+        "Building Lookups..."
+
+    );
+
+    buildLookups();
+
+    DataStore.loaded = true;
+
     console.table({
 
         Sales:DataStore.sales.length,
@@ -194,13 +237,13 @@ export async function initializeData(){
 
     });
 
-    updateSplash(98,"Building Lookups...");
+    updateSplash(
 
-    buildLookups();
+        100,
 
-    DataStore.loaded=true;
+        "Launching Phoenix..."
 
-    updateSplash(100,"Launching Phoenix...");
+    );
 
     console.log("✅ Phoenix Ready");
 
