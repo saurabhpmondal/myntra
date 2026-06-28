@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Data Service
- * Version : V3.1
+ * Version : V3.2
  * =====================================================
  */
 
@@ -21,13 +21,38 @@ export const DataStore = {
     sellerStock: [],
     productMaster: [],
     traffic: [],
-
     listings: [],
     inventory: [],
 
     loaded: false
 
 };
+
+async function loadSheet(name,url){
+
+    console.time(name);
+
+    try{
+
+        const data = await loadCSV(url);
+
+        console.timeEnd(name);
+
+        console.log(`✅ ${name}: ${data.length}`);
+
+        return data;
+
+    }
+
+    catch(error){
+
+        console.error(`❌ ${name}`,error);
+
+        return [];
+
+    }
+
+}
 
 export async function initializeData(){
 
@@ -41,71 +66,143 @@ export async function initializeData(){
 
     updateSplash(5,"Connecting to Google Sheets...");
 
-    updateSplash(12,"Loading Sales...");
-    const sales = await loadCSV(Sheets.sales);
+    const jobs=[
 
-    updateSplash(22,"Loading Returns...");
-    const returns = await loadCSV(Sheets.returns);
+        {
+            key:"sales",
+            title:"Sales",
+            url:Sheets.sales
+        },
 
-    updateSplash(32,"Loading SJIT Stock...");
-    const sjitStock = await loadCSV(Sheets.sjitStock);
+        {
+            key:"returns",
+            title:"Returns",
+            url:Sheets.returns
+        },
 
-    updateSplash(42,"Loading SOR Stock...");
-    const sorStock = await loadCSV(Sheets.sorStock);
+        {
+            key:"sjitStock",
+            title:"SJIT Stock",
+            url:Sheets.sjitStock
+        },
 
-    updateSplash(52,"Loading Seller Stock...");
-    const sellerStock = await loadCSV(Sheets.sellerStock);
+        {
+            key:"sorStock",
+            title:"SOR Stock",
+            url:Sheets.sorStock
+        },
 
-    updateSplash(62,"Loading Product Master...");
-    const productMaster = await loadCSV(Sheets.productMaster);
+        {
+            key:"sellerStock",
+            title:"Seller Stock",
+            url:Sheets.sellerStock
+        },
 
-    updateSplash(72,"Loading Traffic...");
-    const traffic = await loadCSV(Sheets.traffic);
+        {
+            key:"productMaster",
+            title:"Product Master",
+            url:Sheets.productMaster
+        },
 
-    updateSplash(84,"Loading Listings...");
-    const listings = await loadCSV(Sheets.listings);
+        {
+            key:"traffic",
+            title:"Traffic",
+            url:Sheets.traffic
+        },
 
-    updateSplash(94,"Loading Inventory...");
-    const inventory = await loadCSV(Sheets.inventory);
+        {
+            key:"listings",
+            title:"Listings",
+            url:Sheets.listings
+        },
 
-    DataStore.sales = sales;
-    DataStore.returns = returns;
-    DataStore.sjitStock = sjitStock;
-    DataStore.sorStock = sorStock;
-    DataStore.sellerStock = sellerStock;
-    DataStore.productMaster = productMaster;
-    DataStore.traffic = traffic;
+        {
+            key:"inventory",
+            title:"Inventory",
+            url:Sheets.inventory
+        }
 
-    DataStore.listings = listings;
-    DataStore.inventory = inventory;
+    ];
 
-    buildLookups();
+    const promises = jobs.map((job,index)=>{
 
-    DataStore.loaded = true;
+        updateSplash(
 
-    console.table({
+            10 + (index*8),
 
-        Sales: sales.length,
+            `Loading ${job.title}...`
 
-        Returns: returns.length,
+        );
 
-        SJIT: sjitStock.length,
+        return loadSheet(
 
-        SOR: sorStock.length,
+            job.title,
 
-        SellerStock: sellerStock.length,
+            job.url
 
-        ProductMaster: productMaster.length,
-
-        Traffic: traffic.length,
-
-        Listings: listings.length,
-
-        Inventory: inventory.length
+        );
 
     });
 
+    const results = await Promise.allSettled(promises);
+
+    results.forEach((result,index)=>{
+
+        const key = jobs[index].key;
+
+        if(result.status==="fulfilled"){
+
+            DataStore[key]=result.value;
+
+        }
+
+        else{
+
+            console.error(
+
+                `❌ Failed : ${jobs[index].title}`,
+
+                result.reason
+
+            );
+
+            DataStore[key]=[];
+
+        }
+
+    });
+
+    console.table({
+
+        Sales:DataStore.sales.length,
+
+        Returns:DataStore.returns.length,
+
+        SJIT:DataStore.sjitStock.length,
+
+        SOR:DataStore.sorStock.length,
+
+        SellerStock:DataStore.sellerStock.length,
+
+        ProductMaster:DataStore.productMaster.length,
+
+        Traffic:DataStore.traffic.length,
+
+        Listings:DataStore.listings.length,
+
+        Inventory:DataStore.inventory.length
+
+    });
+
+    updateSplash(98,"Building Lookups...");
+
+    buildLookups();
+
+    DataStore.loaded=true;
+
     updateSplash(100,"Launching Phoenix...");
+
+    console.log("✅ Phoenix Ready");
 
     return DataStore;
 
