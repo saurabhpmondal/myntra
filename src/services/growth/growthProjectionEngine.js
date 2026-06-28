@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Projection Engine
- * Version : V1.0
+ * Version : V1.2
  * =====================================================
  */
 
@@ -17,7 +17,6 @@ import {
 export function buildProjectionData(base){
 
     const currentMap = groupByStyle(base.currentRows);
-
     const previousMap = groupByStyle(base.previousRows);
 
     const saleDays = Math.max(
@@ -28,84 +27,73 @@ export function buildProjectionData(base){
     const monthDays = getMonthDays(base.currentRows);
 
     const drr = {};
-
     const projection = {};
-
     const growth = {};
+    const isNew = {};
 
     base.styleIds.forEach(styleId=>{
 
         const currentSale = sum(
-
             currentMap[styleId] || [],
-
             "qty"
-
         );
 
         const previousSale = sum(
-
             previousMap[styleId] || [],
-
             "qty"
-
         );
 
         const currentDRR =
-
             currentSale / saleDays;
 
         const projectedSale =
-
             Math.round(
-
                 currentDRR * monthDays
-
             );
 
         let growthPercent = 0;
 
-        if(previousSale>0){
+        // ==============================
+        // NEW STYLE
+        // ==============================
 
-            growthPercent =
+        if(
+            previousSale===0 &&
+            currentSale>0
+        ){
 
-                (
+            isNew[styleId]=true;
+
+        }else{
+
+            isNew[styleId]=false;
+
+            if(previousSale>0){
+
+                growthPercent=
 
                     (
-
-                        projectedSale -
-
+                        (
+                            projectedSale-
+                            previousSale
+                        )
+                        /
                         previousSale
+                    )*100;
 
-                    )
-
-                    /
-
-                    previousSale
-
-                ) * 100;
+            }
 
         }
 
-        drr[styleId] =
+        drr[styleId]=Number(
+            currentDRR.toFixed(2)
+        );
 
-            Number(
+        projection[styleId]=projectedSale;
 
-                currentDRR.toFixed(2)
-
-            );
-
-        projection[styleId] =
-
-            projectedSale;
-
-        growth[styleId] =
-
-            Number(
-
-                growthPercent.toFixed(2)
-
-            );
+        growth[styleId]=Number(
+            growthPercent.toFixed(2)
+        );
 
     });
 
@@ -119,18 +107,17 @@ export function buildProjectionData(base){
 
         projection,
 
-        growth
+        growth,
+
+        isNew
 
     };
 
 }
 
 export function projectionColor(
-
     projection,
-
     previous
-
 ){
 
     if(projection>previous){
@@ -150,10 +137,15 @@ export function projectionColor(
 }
 
 export function growthColor(
-
-    growth
-
+    growth,
+    isNew=false
 ){
+
+    if(isNew){
+
+        return "badge-new";
+
+    }
 
     if(growth>0){
 
