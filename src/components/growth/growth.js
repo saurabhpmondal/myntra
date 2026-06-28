@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Report
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -14,75 +14,156 @@ export async function renderGrowth(target){
 
     const report = getGrowthReport();
 
+    target.innerHTML = "";
+
+    // =====================================
+    // KPI CARDS
+    // =====================================
+
+    const kpiContainer = document.createElement("div");
+
+    kpiContainer.className = "growth-kpi-grid";
+
+    report.kpis.forEach(kpi=>{
+
+        const card = document.createElement("div");
+
+        card.className = `growth-kpi-card ${kpi.className}`;
+
+        card.innerHTML = `
+
+            <div class="growth-kpi-title">
+
+                ${kpi.title}
+
+            </div>
+
+            <div class="growth-kpi-value">
+
+                ${kpi.value}
+
+            </div>
+
+        `;
+
+        kpiContainer.appendChild(card);
+
+    });
+
+    target.appendChild(kpiContainer);
+
+    // =====================================
+    // STYLE LINK
+    // =====================================
+
+    const columns = report.columns.map(col=>{
+
+        if(col.key==="styleId"){
+
+            return{
+
+                ...col,
+
+                renderer:(value,row)=>{
+
+                    return `
+
+                        <a
+
+                            href="${row.styleLink}"
+
+                            target="_blank"
+
+                            class="phoenix-style-link"
+
+                        >
+
+                            ${value}
+
+                        </a>
+
+                    `;
+
+                }
+
+            };
+
+        }
+
+        if(col.key==="growth"){
+
+            return{
+
+                ...col,
+
+                renderer:(value)=>{
+
+                    if(value==="🟢 NEW"){
+
+                        return `
+
+                            <span class="growth-new-badge">
+
+                                🟢 NEW
+
+                            </span>
+
+                        `;
+
+                    }
+
+                    return `${Number(value).toFixed(2)}%`;
+
+                }
+
+            };
+
+        }
+
+        if(col.key==="rating"){
+
+            return{
+
+                ...col,
+
+                renderer:(value)=>
+
+                    Number(value||0).toFixed(1)
+
+            };
+
+        }
+
+        if(col.key==="drr"){
+
+            return{
+
+                ...col,
+
+                renderer:(value)=>
+
+                    Number(value||0).toFixed(2)
+
+            };
+
+        }
+
+        return col;
+
+    });
+
     await renderTable({
 
         target,
 
-        title: "Growth Report",
+        title:"Growth Report",
 
-        subtitle: "Style Wise Day Wise Sales Performance",
+        subtitle:"Style Wise Day Wise Sales Performance",
 
-        columns: report.columns,
+        columns,
 
-        rows: report.rows,
-
-        rowClass: () => "",
-
-        cellClass: (row, column) => {
-
-            // Growth %
-
-            if(column.key === "growth"){
-
-                return row.__growthClass || "";
-
-            }
-
-            // Projection
-
-            if(column.key === "projection"){
-
-                return row.__projectionClass || "";
-
-            }
-
-            // Day Wise
-
-            if(column.key.startsWith("day_")){
-
-                return row[`__${column.key}`] || "";
-
-            }
-
-            return "";
-
-        },
-
-        renderer: (value, column) => {
-
-            if(column.key === "growth"){
-
-                return `${Number(value || 0).toFixed(2)}%`;
-
-            }
-
-            if(column.key === "rating"){
-
-                return Number(value || 0).toFixed(1);
-
-            }
-
-            if(column.key === "drr"){
-
-                return Number(value || 0).toFixed(2);
-
-            }
-
-            return value;
-
-        }
+        rows:report.rows
 
     });
 
 }
-
