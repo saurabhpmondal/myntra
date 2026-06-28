@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Freshness Contribution
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -18,21 +18,53 @@ export async function renderFreshnessContribution(target){
 
         target,
 
-        title: "Freshness Contribution",
+        title:"Freshness Contribution",
 
-        subtitle: "Launch Age Wise Business Performance",
+        subtitle:"Sales for Last 30 Days",
 
-        columns: report.columns,
+        columns:report.columns,
 
-        rows: report.rows,
+        rows:report.rows,
 
-        rowClass: row =>
+        rowClass:row=>{
 
-            row.band === "Grand Total"
+            if(row.band==="Grand Total"){
 
-                ? "table-total"
+                return "table-total";
 
-                : ""
+            }
+
+            return "";
+
+        },
+
+        cellClass:(row,column)=>{
+
+            if(row.band==="Grand Total"){
+
+                return "fw-bold";
+
+            }
+
+            if(column.key==="share"){
+
+                if(row.share>=30){
+
+                    return "text-success";
+
+                }
+
+                if(row.share<10){
+
+                    return "text-danger";
+
+                }
+
+            }
+
+            return "";
+
+        }
 
     });
 
