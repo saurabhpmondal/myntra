@@ -3,12 +3,12 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Report
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import { renderTable } from "../../common/table/table.js";
-import { getGrowthReport } from "../../../services/growth/growthService.js";
+import { renderTable } from "../common/table/table.js";
+import { getGrowthReport } from "../../services/growth/growthService.js";
 
 export async function renderGrowth(target){
 
@@ -18,42 +18,35 @@ export async function renderGrowth(target){
 
         target,
 
-        title:"Growth Report",
+        title: "Growth Report",
 
-        subtitle:"Day Wise Style Performance",
+        subtitle: "Style Wise Day Wise Sales Performance",
 
-        columns:report.columns,
+        columns: report.columns,
 
-        rows:report.rows,
+        rows: report.rows,
 
-        rowClass:()=>"",
+        rowClass: () => "",
 
+        cellClass: (row, column) => {
 
-        cellClass:(row,column)=>{
+            // Growth %
 
-            // ====================================
-            // Growth
-            // ====================================
-
-            if(column.key==="growth"){
+            if(column.key === "growth"){
 
                 return row.__growthClass || "";
 
             }
 
-            // ====================================
             // Projection
-            // ====================================
 
-            if(column.key==="projection"){
+            if(column.key === "projection"){
 
                 return row.__projectionClass || "";
 
             }
 
-            // ====================================
             // Day Wise
-            // ====================================
 
             if(column.key.startsWith("day_")){
 
@@ -65,23 +58,23 @@ export async function renderGrowth(target){
 
         },
 
-        renderer:(value,column)=>{
+        renderer: (value, column) => {
 
-            if(column.key==="growth"){
+            if(column.key === "growth"){
 
-                return `${Number(value).toFixed(2)}%`;
-
-            }
-
-            if(column.key==="rating"){
-
-                return Number(value).toFixed(1);
+                return `${Number(value || 0).toFixed(2)}%`;
 
             }
 
-            if(column.key==="drr"){
+            if(column.key === "rating"){
 
-                return Number(value).toFixed(2);
+                return Number(value || 0).toFixed(1);
+
+            }
+
+            if(column.key === "drr"){
+
+                return Number(value || 0).toFixed(2);
 
             }
 
