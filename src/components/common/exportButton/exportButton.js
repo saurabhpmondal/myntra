@@ -3,45 +3,44 @@
  * Project Phoenix
  * Product : Common Component
  * Module  : Export Button
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
+import { createComponent } from "../../../utils/createComponent.js";
 import { exportExcel } from "../../../utils/exportExcel.js";
 
-export function renderExportButton({
+export async function renderExportButton({
 
     target,
 
-    filename,
+    filename = "Report",
 
-    columns,
+    columns = [],
 
-    rows
+    rows = []
 
 }){
 
-    if(!target){
+    await createComponent({
+
+        target,
+
+        html:"src/components/common/exportButton/exportButton.html",
+
+        css:"src/components/common/exportButton/exportButton.css"
+
+    });
+
+    const button = target.querySelector(".phoenix-export-btn");
+
+    if(!button){
 
         return;
 
     }
 
-    const button=document.createElement("button");
-
-    button.type="button";
-
-    button.className="phoenix-export-btn";
-
-    button.innerHTML=`
-
-        <span>📥</span>
-
-        <span>Export Excel</span>
-
-    `;
-
-    button.onclick=()=>{
+    button.addEventListener("click",()=>{
 
         exportExcel({
 
@@ -53,8 +52,6 @@ export function renderExportButton({
 
         });
 
-    };
-
-    target.appendChild(button);
+    });
 
 }
