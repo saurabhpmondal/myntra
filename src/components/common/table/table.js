@@ -21,13 +21,16 @@ export async function renderTable(config){
 
         target: config.target,
 
-        html:"src/components/common/table/table.html",
+        html: "src/components/common/table/table.html",
 
-        css:"src/components/common/table/table.css",
+        css: "src/components/common/table/table.css",
 
         data:{
-            title:config.title||"",
-            subtitle:config.subtitle||""
+
+            title: config.title || "",
+
+            subtitle: config.subtitle || ""
+
         }
 
     });
@@ -35,82 +38,64 @@ export async function renderTable(config){
     const table = config.target.querySelector(".dashboard-card");
 
     renderHeader(
+
         table,
-        config.columns||[],
-        config.groupHeaders||null
+
+        config.columns || [],
+
+        config.groupHeaders || []
+
     );
 
     renderBody(
+
         table,
-        config.rows||[],
-        config.columns||[],
+
+        config.rows || [],
+
+        config.columns || [],
+
         config.rowClass,
+
         config.cellClass
+
     );
 
     table.querySelector(".table-info").textContent =
+
         `Showing ${config.rows.length} records`;
 
 }
 
-/* ===========================================
-   Header
-=========================================== */
-
-function renderHeader(table,columns,groups){
+function renderHeader(table,columns,groupHeaders){
 
     const head = table.querySelector(".table-head");
 
-    head.innerHTML="";
+    head.innerHTML = "";
 
-    // Existing behaviour
-    if(!groups || !groups.length){
+    if(groupHeaders.length){
 
-        const tr=document.createElement("tr");
+        const groupRow=document.createElement("tr");
 
-        columns.forEach(column=>{
+        groupHeaders.forEach(group=>{
 
             const th=document.createElement("th");
 
-            th.textContent=column.label;
+            th.textContent=group.label;
 
-            th.classList.add(
-                `text-${column.align||"center"}`
-            );
+            th.colSpan=group.span;
 
-            tr.appendChild(th);
+            th.className="group-header";
+
+            groupRow.appendChild(th);
 
         });
 
-        head.appendChild(tr);
-
-        return;
+        head.appendChild(groupRow);
 
     }
 
-    // Group header row
-
-    const groupRow=document.createElement("tr");
-
-    groups.forEach(group=>{
-
-        const th=document.createElement("th");
-
-        th.textContent=group.label;
-
-        th.colSpan=group.span;
-
-        th.className="group-header";
-
-        groupRow.appendChild(th);
-
-    });
-
-    head.appendChild(groupRow);
-
-    // Normal header row
-
-    const columnRow=document.createElement("tr");
+    const tr=document.createElement("tr");
 
     columns.forEach(column=>{
 
@@ -119,27 +104,31 @@ function renderHeader(table,columns,groups){
         th.textContent=column.label;
 
         th.classList.add(
+
             `text-${column.align||"center"}`
+
         );
 
-        columnRow.appendChild(th);
+        tr.appendChild(th);
 
     });
 
-    head.appendChild(columnRow);
+    head.appendChild(tr);
 
 }
 
-/* ===========================================
-   Body
-=========================================== */
-
 function renderBody(
+
     table,
+
     rows,
+
     columns,
+
     rowClass,
+
     cellClass
+
 ){
 
     const body=table.querySelector(".table-body");
@@ -167,7 +156,9 @@ function renderBody(
             const td=document.createElement("td");
 
             td.classList.add(
+
                 `text-${column.align||"center"}`
+
             );
 
             if(typeof cellClass==="function"){
@@ -213,13 +204,18 @@ function renderBody(
             if(typeof column.renderer==="function"){
 
                 td.innerHTML=column.renderer(
+
                     value,
+
                     record
+
                 );
 
-            }else{
+            }
 
-                td.textContent=value??"-";
+            else{
+
+                td.textContent=value ?? "-";
 
             }
 
