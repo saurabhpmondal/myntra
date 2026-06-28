@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Growth Service
- * Version : V1.0
+ * Version : V1.2
  * =====================================================
  */
 
@@ -16,6 +16,7 @@ import {
     projectionColor
 } from "./growthProjectionEngine.js";
 import { buildDailyData } from "./growthDailyEngine.js";
+import { buildGrowthKpis } from "./growthKpiEngine.js";
 
 export function getGrowthReport(){
 
@@ -115,9 +116,14 @@ export function getGrowthReport(){
             r=>String(r.style_id)===styleId
         );
 
-        const first = currentRows[0] ||
-            base.previousRows.find(r=>String(r.style_id)===styleId) ||
-            base.previous2Rows.find(r=>String(r.style_id)===styleId);
+        const first =
+            currentRows[0] ||
+            base.previousRows.find(
+                r=>String(r.style_id)===styleId
+            ) ||
+            base.previous2Rows.find(
+                r=>String(r.style_id)===styleId
+            );
 
         if(!first){
 
@@ -125,29 +131,49 @@ export function getGrowthReport(){
 
         }
 
-        const row = {
+        const previousSale =
+            months.previousValues[styleId] || 0;
+
+        const currentSale =
+            months.values[styleId] || 0;
+
+        const isNew =
+            previousSale===0 &&
+            currentSale>0;
+
+        const row={
 
             styleId,
+
+            styleLink:
+                `https://www.myntra.com/${styleId}`,
 
             erpSku:lookup.erpSku,
 
             brand:first.brand || "",
 
-            rating:lookup.rating,
+            rating:lookup.rating || 0,
 
-            status:lookup.status,
+            status:lookup.status || "",
 
             previous2:
                 months.previous2Values[styleId] || 0,
 
             previous:
-                months.previousValues[styleId] || 0,
+                previousSale,
 
             current:
-                months.values[styleId] || 0,
+                currentSale,
 
             growth:
+                isNew
+                    ? "🟢 NEW"
+                    : (projection.growth[styleId] || 0),
+
+            growthValue:
                 projection.growth[styleId] || 0,
+
+            isNew,
 
             drr:
                 projection.drr[styleId] || 0,
@@ -157,13 +183,14 @@ export function getGrowthReport(){
 
             __growthClass:
                 growthColor(
-                    projection.growth[styleId]
+                    projection.growth[styleId],
+                    isNew
                 ),
 
             __projectionClass:
                 projectionColor(
                     projection.projection[styleId],
-                    months.previousValues[styleId]
+                    previousSale
                 )
 
         };
@@ -190,7 +217,11 @@ export function getGrowthReport(){
 
     );
 
+    const kpis = buildGrowthKpis(rows);
+
     return{
+
+        kpis,
 
         columns,
 
