@@ -85,6 +85,29 @@ export async function renderGrowth(target){
 
     }
 
+// =====================================
+// ACTION BAR
+// =====================================
+
+const actionBar = document.createElement("div");
+
+actionBar.className = "growth-action-bar";
+
+page.appendChild(actionBar);
+
+await renderExportButton({
+
+    target: actionBar,
+
+    filename: "Growth_Report",
+
+    columns: report.columns,
+
+    rows: report.rows
+
+});
+
+
     // =====================================
     // TABLE SECTION
     // =====================================
