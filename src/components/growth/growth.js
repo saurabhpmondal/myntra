@@ -14,6 +14,24 @@ export async function renderGrowth(target){
 
     const report = getGrowthReport();
 
+    // =====================================
+    // Load Growth CSS (Only Once)
+    // =====================================
+
+    if(!document.getElementById("growth-css")){
+
+        const link = document.createElement("link");
+
+        link.id = "growth-css";
+
+        link.rel = "stylesheet";
+
+        link.href = "src/components/growth/growth.css";
+
+        document.head.appendChild(link);
+
+    }
+
     target.innerHTML = "";
 
     // =====================================
