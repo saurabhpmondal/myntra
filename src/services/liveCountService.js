@@ -3,159 +3,57 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Live Count Service
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
 import { DataStore } from "./dataService.js";
 
-export function getLiveCount(selectedDate = null){
+export function getLiveCount() {
 
-    const listings = DataStore.listings.filter(row=>
+    const listings = DataStore.listings.filter(row =>
 
-        String(row.article_type || "").toUpperCase()==="SAREES" &&
+        String(row.article_type || "").toUpperCase() === "SAREES" &&
 
-        String(row.style_status_description || "").toUpperCase()==="ACTIVE" &&
+        String(row.style_status_description || "").toUpperCase() === "ACTIVE" &&
 
-        String(row.listing_status_description || "").toUpperCase()==="ACTIVE"
+        String(row.listing_status_description || "").toUpperCase() === "ACTIVE"
 
     );
 
     const inventory = DataStore.inventory;
 
-    // =========================================
-    // Available Snapshot Dates
-    // =========================================
-
-    const dates = [
+    const brands = [
 
         ...new Set(
 
-            inventory.map(r=>r.snapshot_date)
-
-        )
-
-    ].sort((a,b)=>parseDate(a)-parseDate(b));
-
-    const latestDate = dates.length
-
-        ? dates[dates.length-1]
-
-        : null;
-
-    const reportDate = selectedDate || latestDate;
-
-    if(!reportDate){
-
-        return{
-
-            columns:[],
-
-            rows:[],
-
-            previous:{}
-
-        };
-
-    }
-
-    // =========================================
-    // If selected snapshot not available
-    // =========================================
-
-    if(!dates.includes(reportDate)){
-
-        return{
-
-            columns:[],
-
-            rows:[],
-
-            previous:{}
-
-        };
-
-    }
-
-    const previousDate =
-
-        dates.indexOf(reportDate)>0
-
-            ? dates[dates.indexOf(reportDate)-1]
-
-            : null;
-
-    const currentInventory = inventory.filter(
-
-        r=>r.snapshot_date===reportDate
-
-    );
-
-    const previousInventory = previousDate
-
-        ? inventory.filter(
-
-            r=>r.snapshot_date===previousDate
-
-        )
-
-        : [];
-
-    const currentStock={};
-
-    currentInventory.forEach(r=>{
-
-        currentStock[r.style_id]=(currentStock[r.style_id]||0)
-
-            +Number(r.inventory_count||0);
-
-    });
-
-    const previousStock={};
-
-    previousInventory.forEach(r=>{
-
-        previousStock[r.style_id]=(previousStock[r.style_id]||0)
-
-            +Number(r.inventory_count||0);
-
-    });
-
-    const brands=[
-
-        ...new Set(
-
-            listings.map(r=>r.brand)
+            listings.map(r => r.brand)
 
         )
 
     ].sort();
 
-    const columns=[
+    const columns = [
 
         {
-
-            key:"date",
-
-            label:"Date",
-
-            align:"left"
-
+            key: "date",
+            label: "Date",
+            align: "left"
         }
 
     ];
 
-    brands.forEach(brand=>{
+    brands.forEach(brand => {
 
         columns.push({
 
-            key:brand,
+            key: brand,
 
-            label:brand,
+            label: brand,
 
-            align:"center",
+            align: "center",
 
-            format:"number"
+            format: "number"
 
         });
 
@@ -163,116 +61,158 @@ export function getLiveCount(selectedDate = null){
 
     columns.push({
 
-        key:"total",
+        key: "total",
 
-        label:"Total Live",
+        label: "Total Live",
 
-        align:"center",
+        align: "center",
 
-        format:"number"
+        format: "number"
 
     });
 
-    const row={
+    // =====================================
+    // Snapshot Dates (Current Month Only)
+    // =====================================
 
-        date:reportDate,
+    const latestDate = inventory.reduce((latest, row) => {
 
-        total:0
+        if (!latest) return row.snapshot_date;
 
-    };
+        return parseDate(row.snapshot_date) > parseDate(latest)
 
-    const previous={
+            ? row.snapshot_date
 
-        total:0
+            : latest;
 
-    };
+    }, null);
 
-    brands.forEach(brand=>{
+    if (!latestDate) {
 
-        const brandStyles = listings.filter(
+        return {
 
-            r=>r.brand===brand
+            columns,
 
-        );
+            rows: []
 
-        let current=0;
+        };
 
-        let last=0;
+    }
 
-        const countedCurrent=new Set();
+    const latest = parseDate(latestDate);
 
-        const countedPrevious=new Set();
+    const currentMonth = latest.getMonth();
 
-        brandStyles.forEach(style=>{
+    const currentYear = latest.getFullYear();
 
-            const id=String(style.style_id);
+    const snapshotDates = [
 
-            if(
+        ...new Set(
 
-                Number(currentStock[id]||0)>0 &&
+            inventory
 
-                !countedCurrent.has(id)
+                .filter(r => {
 
-            ){
+                    const d = parseDate(r.snapshot_date);
 
-                countedCurrent.add(id);
+                    return (
 
-                current++;
+                        d.getMonth() === currentMonth &&
 
-            }
+                        d.getFullYear() === currentYear
 
-            if(
+                    );
 
-                Number(previousStock[id]||0)>0 &&
+                })
 
-                !countedPrevious.has(id)
+                .map(r => r.snapshot_date)
 
-            ){
+        )
 
-                countedPrevious.add(id);
+    ].sort((a, b) => parseDate(a) - parseDate(b));
 
-                last++;
+    const rows = [];
 
-            }
+    snapshotDates.forEach(date => {
+
+        const stockMap = {};
+
+        inventory
+
+            .filter(r => r.snapshot_date === date)
+
+            .forEach(r => {
+
+                stockMap[r.style_id] =
+
+                    (stockMap[r.style_id] || 0) +
+
+                    Number(r.inventory_count || 0);
+
+            });
+
+        const row = {
+
+            date,
+
+            total: 0
+
+        };
+
+        brands.forEach(brand => {
+
+            let count = 0;
+
+            const counted = new Set();
+
+            listings
+
+                .filter(r => r.brand === brand)
+
+                .forEach(style => {
+
+                    const id = String(style.style_id);
+
+                    if (
+
+                        Number(stockMap[id] || 0) > 0 &&
+
+                        !counted.has(id)
+
+                    ) {
+
+                        counted.add(id);
+
+                        count++;
+
+                    }
+
+                });
+
+            row[brand] = count;
+
+            row.total += count;
 
         });
 
-        row[brand]=current;
-
-        previous[brand]=last;
-
-        row.total+=current;
-
-        previous.total+=last;
+        rows.push(row);
 
     });
 
-    return{
-
-        date:reportDate,
-
-        previousDate,
+    return {
 
         columns,
 
-        rows:[row],
-
-        previous
+        rows
 
     };
 
 }
 
-function parseDate(value){
+function parseDate(value) {
 
-    if(!value){
+    const [d, m, y] = value.split("-").map(Number);
 
-        return new Date(0);
-
-    }
-
-    const [d,m,y]=value.split("-").map(Number);
-
-    return new Date(y,m-1,d);
+    return new Date(y, m - 1, d);
 
 }
