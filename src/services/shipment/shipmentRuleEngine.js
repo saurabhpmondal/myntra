@@ -3,11 +3,11 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Rule Engine
- * Version : V2.0
+ * Version : V1.0
  * =====================================================
  */
 
-const SOR_BRANDS = [
+const SOR_BRANDS=[
 
     "KALINI",
 
@@ -21,7 +21,7 @@ function isSorBrand(brand){
 
         String(
 
-            brand || ""
+            brand||""
 
         )
 
@@ -35,101 +35,81 @@ function isSorBrand(brand){
 
 export function applyShipmentRules(
 
-    record,
+    row,
 
     shipmentType
 
 ){
 
-    record.shipmentReason = "";
+    row.shipmentReason="";
 
-    record.recallReason = "";
+    const status=String(
 
-    /* ==========================================
-       CONTINUE ONLY
-    ========================================== */
+        row.status||""
 
-    if(
+    )
 
-        String(
+    .trim()
 
-            record.status || ""
-
-        )
-
-        .trim()
-
-        .toUpperCase()
-
-        !==
-
-        "CONTINUE"
-
-    ){
-
-        record.shipment = 0;
-
-        record.shipmentReason =
-
-            "Non Continue Style";
-
-    }
-
-    /* ==========================================
-       RETURN %
-    ========================================== */
+    .toUpperCase();
 
     if(
 
-        record.returnPercentage > 35
+        status!=="CONTINUE"
 
     ){
 
-        record.shipment = 0;
+        row.shipment=0;
 
-        record.shipmentReason =
+        row.shipmentReason=
 
-            "Return > 35%";
+            "Non Continue";
 
     }
 
-    /* ==========================================
-       RATING
-    ========================================== */
+    if(
+
+        row.returnPercentage>35
+
+    ){
+
+        row.shipment=0;
+
+        row.shipmentReason=
+
+            "High Return %";
+
+    }
 
     if(
 
         Number(
 
-            record.rating || 0
+            row.rating||0
 
-        ) < 3.8
+        )<3.8
 
     ){
 
-        record.shipment = 0;
+        row.shipment=0;
 
-        record.shipmentReason =
+        row.shipmentReason=
 
-            "Rating < 3.8";
+            "Low Rating";
 
     }
 
-    /* ==========================================
-       BRAND RULE
-    ========================================== */
-
-    const sorBrand =
+    const sorBrand=
 
         isSorBrand(
 
-            record.brand
+            row.brand
 
         );
 
     if(
 
-        shipmentType === "SJIT"
+        shipmentType==="SJIT"
 
         &&
 
@@ -137,9 +117,9 @@ export function applyShipmentRules(
 
     ){
 
-        record.shipment = 0;
+        row.shipment=0;
 
-        record.shipmentReason =
+        row.shipmentReason=
 
             "SOR Brand";
 
@@ -147,7 +127,7 @@ export function applyShipmentRules(
 
     if(
 
-        shipmentType === "SOR"
+        shipmentType==="SOR"
 
         &&
 
@@ -155,42 +135,14 @@ export function applyShipmentRules(
 
     ){
 
-        record.shipment = 0;
+        row.shipment=0;
 
-        record.shipmentReason =
+        row.shipmentReason=
 
             "SJIT Brand";
 
     }
 
-    /* ==========================================
-       SHIPMENT / RECALL
-    ========================================== */
-
-    if(
-
-        record.shipment > 0
-
-    ){
-
-        record.recall = 0;
-
-        record.recallReason = "";
-
-    }
-
-    if(
-
-        record.recall > 0
-
-    ){
-
-        record.shipment = 0;
-
-        record.shipmentReason = "";
-
-    }
-
-    return record;
+    return row;
 
 }
