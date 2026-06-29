@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Builder
- * Version : V5.1
+ * Version : V5.2
  * =====================================================
  */
 
@@ -45,15 +45,30 @@ export function buildShipmentData(
 
             style.brand =
                 row.brand || "";
+
         }
 
     });
 
     // ==========================================
     // RETURNS
+    // Count ONLY Customer Returns
+    // Ignore RTO
     // ==========================================
 
     returns.forEach(row=>{
+
+        if(
+
+            String(row.type || "")
+                .trim()
+                .toUpperCase() !== "RETURN"
+
+        ){
+
+            return;
+
+        }
 
         const styleId = String(
             row.style_id || ""
