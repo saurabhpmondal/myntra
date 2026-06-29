@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V1.4
+ * Version : V1.5
  * =====================================================
  */
 
@@ -11,6 +11,7 @@ import { renderDashboard } from "../pages/dashboard/dashboard.js";
 import { renderDailySales } from "../pages/dailySales/dailySales.js";
 import { renderBusiness } from "../pages/business/business.js";
 import { renderGrowthPage } from "../pages/growth/growth.js";
+import { renderShipment } from "../pages/shipment/shipment.js";
 import { renderAds } from "../components/ads/ads.js";
 
 let content = null;
@@ -64,6 +65,10 @@ export async function openPage(page){
             break;
 
         case "shipment":
+
+            await renderShipment(content);
+
+            break;
 
         case "surge":
 
