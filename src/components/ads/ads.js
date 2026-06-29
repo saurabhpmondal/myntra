@@ -13,7 +13,7 @@ import { generateAdsReport } from "../../services/ads/adsService.js";
 
 import { renderTable } from "../common/table/table.js";
 
-import { renderKpiCards } from "../common/kpiCards/kpiCards.js";
+import { renderAdsKpis } from "./renderAdsKpis.js";
 
 import { renderLineChart } from "../common/chart/chart.js";
 
