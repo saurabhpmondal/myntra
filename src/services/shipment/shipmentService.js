@@ -85,6 +85,12 @@ export function generateShipment(config){
 
     );
 
+
+// DEBUG
+
+console.log("Filtered Sales");
+
+console.log(sales.slice(0,5));
     // ==========================================
     // Filter Returns
     // ==========================================
@@ -108,6 +114,12 @@ export function generateShipment(config){
     });
 
     console.groupEnd();
+
+// DEBUG
+
+console.log("Filtered Sales");
+
+console.log(sales.slice(0,5));
 
     // ==========================================
     // Build Raw Data
