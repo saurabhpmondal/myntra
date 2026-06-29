@@ -3,11 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Controls
- * Version : V5.0
+ * Version : V5.1
  * =====================================================
  */
 
 import { createComponent } from "../../utils/createComponent.js";
+
+import { generateShipment } from "../../services/shipment/shipmentService.js";
+
+import { refreshShipmentReport } from "./shipmentReport.js";
 
 export async function renderShipmentControls(target){
 
@@ -35,24 +39,82 @@ function bindEvents(target){
 
         );
 
-    if(button){
+    if(!button){
 
-        button.addEventListener(
-
-            "click",
-
-            ()=>{
-
-                console.log(
-
-                    "Generate Shipment"
-
-                );
-
-            }
-
-        );
+        return;
 
     }
+
+    button.addEventListener(
+
+        "click",
+
+        async ()=>{
+
+            button.disabled = true;
+
+            button.textContent =
+
+                "Generating...";
+
+            const config = {
+
+                saleDays:Number(
+
+                    target.querySelector(
+
+                        "#saleDays"
+
+                    ).value
+
+                ),
+
+                targetCover:Number(
+
+                    target.querySelector(
+
+                        "#targetCover"
+
+                    ).value
+
+                ),
+
+                recallTrigger:Number(
+
+                    target.querySelector(
+
+                        "#recallTrigger"
+
+                    ).value
+
+                )
+
+            };
+
+            console.table(config);
+
+            generateShipment(
+
+                config
+
+            );
+
+            await refreshShipmentReport();
+
+            target.querySelector(
+
+                "#shipmentActions"
+
+            ).style.display="flex";
+
+            button.disabled=false;
+
+            button.textContent=
+
+                "Generate Shipment";
+
+        }
+
+    );
 
 }
