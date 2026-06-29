@@ -59,11 +59,11 @@ export function generateShipment(config){
 
     shipmentConfig = {
 
-        saleDays:Number(config.saleDays),
+        saleDays: Number(config.saleDays),
 
-        targetCover:Number(config.targetCover),
+        targetCover: Number(config.targetCover),
 
-        recallTrigger:Number(config.recallTrigger)
+        recallTrigger: Number(config.recallTrigger)
 
     };
 
@@ -101,16 +101,16 @@ export function generateShipment(config){
 
     console.table({
 
-        Sales:sales.length,
+        Sales: sales.length,
 
-        Returns:returns.length
+        Returns: returns.length
 
     });
 
     console.groupEnd();
 
     // ==========================================
-    // Build Shipment Data
+    // Build Raw Data
     // ==========================================
 
     const rawData = buildShipmentData(
@@ -146,7 +146,7 @@ export function generateShipment(config){
     );
 
     // ==========================================
-    // Apply Rules
+    // Apply Business Rules
     // ==========================================
 
     shipmentData = applyShipmentRules(
@@ -183,23 +183,19 @@ export function generateShipment(config){
 
     console.table({
 
-        Styles:shipmentData.length,
+        Styles: shipmentData.length,
 
-        Shipment:shipmentCount,
+        Shipment: shipmentCount,
 
-        Recall:recallCount,
+        Recall: recallCount,
 
-        NoShipment:noShipmentCount
+        NoShipment: noShipmentCount
 
     });
 
     console.groupEnd();
 
-    console.timeEnd(
-
-        "Shipment Generation"
-
-    );
+    console.timeEnd("Shipment Generation");
 
     return shipmentData;
 
@@ -235,4 +231,10 @@ export function getShipmentConfig(){
  * =====================================================
  */
 
-export function clearShipment
+export function clearShipmentData(){
+
+    shipmentData = [];
+
+    shipmentConfig = null;
+
+}
