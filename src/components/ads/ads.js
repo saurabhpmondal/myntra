@@ -1,0 +1,202 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Module  : Ads Dashboard
+ * Version : V1.0
+ * =====================================================
+ */
+
+import { createComponent } from "../../utils/createComponent.js";
+
+import { generateAdsReport } from "../../services/ads/adsService.js";
+
+import { renderTable } from "../common/table/table.js";
+
+import { renderKpiCards } from "../common/kpiCards/kpiCards.js";
+
+import { renderLineChart } from "../common/chart/chart.js";
+
+export async function renderAds(target){
+
+    await createComponent({
+
+        target,
+
+        html:"src/components/ads/ads.html",
+
+        css:"src/components/ads/ads.css"
+
+    });
+
+    await loadAds(target);
+
+}
+
+async function loadAds(target){
+
+    const report=
+
+        generateAdsReport();
+
+    await renderAdsKpis(
+
+        target,
+
+        report.kpis
+
+    );
+
+    await renderAdsChart(
+
+        target,
+
+        report.chart
+
+    );
+
+    await renderAdsReports(
+
+        target,
+
+        report.reports
+
+    );
+
+}
+
+async function renderAdsKpis(
+
+    target,
+
+    kpis
+
+){
+
+    await renderKpiCards({
+
+        target:
+
+            target.querySelector(
+
+                "#ads-kpis"
+
+            ),
+
+        cards:kpis
+
+    });
+
+}
+
+async function renderAdsChart(
+
+    target,
+
+    chart
+
+){
+
+    await renderLineChart({
+
+        target:
+
+            target.querySelector(
+
+                "#ads-chart"
+
+            ),
+
+        labels:
+
+            chart.labels,
+
+        series:
+
+            chart.series
+
+    });
+
+}
+
+async function renderAdsReports(
+
+    target,
+
+    reports
+
+){
+
+    await renderTable({
+
+        target:
+
+            target.querySelector(
+
+                "#ads-daily-report"
+
+            ),
+
+        title:
+
+            reports.daily.title,
+
+        columns:
+
+            reports.daily.columns,
+
+        rows:
+
+            reports.daily.rows
+
+    });
+
+    await renderTable({
+
+        target:
+
+            target.querySelector(
+
+                "#ads-campaign-report"
+
+            ),
+
+        title:
+
+            reports.campaign.title,
+
+        columns:
+
+            reports.campaign.columns,
+
+        rows:
+
+            reports.campaign.rows
+
+    });
+
+    await renderTable({
+
+        target:
+
+            target.querySelector(
+
+                "#ads-adgroup-report"
+
+            ),
+
+        title:
+
+            reports.adgroup.title,
+
+        columns:
+
+            reports.adgroup.columns,
+
+        rows:
+
+            reports.adgroup.rows
+
+    });
+
+}
