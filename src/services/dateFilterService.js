@@ -3,31 +3,89 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Date Filter Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 function parseDate(value){
 
-    if(!value){
+    if(value===null || value===undefined){
 
         return null;
 
     }
 
-    const text = String(value).trim();
+    // Handles:
+    // 20260629
+    // "20260629"
+    // "2026-06-29"
+    // Date object
 
-    if(text.length !== 8){
+    if(value instanceof Date){
+
+        return new Date(
+
+            value.getFullYear(),
+
+            value.getMonth(),
+
+            value.getDate()
+
+        );
+
+    }
+
+    let text = String(value).trim();
+
+    // yyyy-mm-dd
+
+    if(text.includes("-")){
+
+        const date = new Date(text);
+
+        if(!isNaN(date)){
+
+            return new Date(
+
+                date.getFullYear(),
+
+                date.getMonth(),
+
+                date.getDate()
+
+            );
+
+        }
+
+    }
+
+    // yyyyMMdd
+
+    text = text.replace(/\D/g,"");
+
+    if(text.length!==8){
 
         return null;
 
     }
 
-    const year = Number(text.substring(0,4));
+    const year = Number(
 
-    const month = Number(text.substring(4,6));
+        text.substring(0,4)
 
-    const day = Number(text.substring(6,8));
+    );
+
+    const month = Number(
+
+        text.substring(4,6)
+
+    );
+
+    const day = Number(
+
+        text.substring(6,8)
+
+    );
 
     return new Date(
 
@@ -41,13 +99,17 @@ function parseDate(value){
 
 }
 
-function latestDate(records){
+export function getLatestDate(records){
 
     let latest = null;
 
     records.forEach(record=>{
 
-        const date = parseDate(record.date);
+        const date = parseDate(
+
+            record.date
+
+        );
 
         if(!date){
 
@@ -55,9 +117,15 @@ function latestDate(records){
 
         }
 
-        if(!latest || date > latest){
+        if(
 
-            latest = date;
+            latest===null ||
+
+            date>latest
+
+        ){
+
+            latest=date;
 
         }
 
@@ -75,21 +143,43 @@ export function filterByDays(
 
 ){
 
-    if(!records?.length){
+    if(
+
+        !Array.isArray(records) ||
+
+        records.length===0
+
+    ){
 
         return [];
 
     }
 
-    const endDate = latestDate(records);
+    const latestDate =
 
-    if(!endDate){
+        getLatestDate(records);
+
+    if(!latestDate){
 
         return [];
 
     }
 
-    const startDate = new Date(endDate);
+    const startDate =
+
+        new Date(latestDate);
+
+    startDate.setHours(
+
+        0,0,0,0
+
+    );
+
+    latestDate.setHours(
+
+        23,59,59,999
+
+    );
 
     startDate.setDate(
 
@@ -97,7 +187,7 @@ export function filterByDays(
 
         -
 
-        days
+        Number(days)
 
         +
 
@@ -121,9 +211,9 @@ export function filterByDays(
 
         return(
 
-            date >= startDate &&
+            date>=startDate &&
 
-            date <= endDate
+            date<=latestDate
 
         );
 
@@ -131,8 +221,74 @@ export function filterByDays(
 
 }
 
-export function getLatestDate(records){
+export function getPeriodInfo(
 
-    return latestDate(records);
+    records,
+
+    days
+
+){
+
+    const endDate =
+
+        getLatestDate(records);
+
+    if(!endDate){
+
+        return null;
+
+    }
+
+    const startDate =
+
+        new Date(endDate);
+
+    startDate.setDate(
+
+        startDate.getDate()
+
+        -
+
+        Number(days)
+
+        +
+
+        1
+
+    );
+
+    return{
+
+        startDate,
+
+        endDate
+
+    };
+
+}
+
+export function formatDate(date){
+
+    if(!date){
+
+        return "";
+
+    }
+
+    return date.toLocaleDateString(
+
+        "en-IN",
+
+        {
+
+            day:"2-digit",
+
+            month:"short",
+
+            year:"numeric"
+
+        }
+
+    );
 
 }
