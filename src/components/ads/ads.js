@@ -97,25 +97,17 @@ async function renderAdsChart(
 
 ){
 
-    await renderLineChart({
+    renderAdsChart(
 
-        target:
+    target.querySelector(
 
-            target.querySelector(
+        "#ads-chart"
 
-                "#ads-chart"
+    ),
 
-            ),
+    chart
 
-        labels:
-
-            chart.labels,
-
-        series:
-
-            chart.series
-
-    });
+);
 
 }
 
