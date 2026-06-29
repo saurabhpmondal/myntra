@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Executive Filter Bar
- * Version : V1.3
+ * Version : V1.4
  * =====================================================
  */
 
@@ -25,11 +25,11 @@ import {
     getPeriodLabel
 } from "../../services/periodService.js";
 
-import { refreshDashboard } from "../../pages/dashboard/dashboard.js";
+import { refreshCurrentPage } from "../../app/pageManager.js";
 
 let filterRoot = null;
 
-export async function renderFilterBar(target) {
+export async function renderFilterBar(target){
 
     filterRoot = target;
 
@@ -37,9 +37,9 @@ export async function renderFilterBar(target) {
 
         target,
 
-        html: "src/components/filterBar/filterBar.html",
+        html:"src/components/filterBar/filterBar.html",
 
-        css: "src/components/filterBar/filterBar.css"
+        css:"src/components/filterBar/filterBar.css"
 
     });
 
@@ -72,7 +72,7 @@ export async function renderFilterBar(target) {
    Helpers
 ===================================== */
 
-function $(id) {
+function $(id){
 
     return filterRoot.querySelector(`#${id}`);
 
@@ -82,7 +82,7 @@ function $(id) {
    Period
 ===================================== */
 
-function buildPeriodList() {
+function buildPeriodList(){
 
     const select = $("filter-period");
 
@@ -90,26 +90,35 @@ function buildPeriodList() {
 
     const periods = new Map();
 
-    DataStore.sales.forEach(row => {
+    DataStore.sales.forEach(row=>{
 
         const key = getPeriodKey(
+
             row.month,
+
             row.year
+
         );
 
         periods.set(
+
             key,
+
             getPeriodLabel(
+
                 row.month,
+
                 row.year
+
             )
+
         );
 
     });
 
     [...periods.entries()]
-        .sort((a, b) => b[0] - a[0])
-        .forEach(([key, label]) => {
+        .sort((a,b)=>b[0]-a[0])
+        .forEach(([key,label])=>{
 
             const option = document.createElement("option");
 
@@ -127,7 +136,7 @@ function buildPeriodList() {
    Dropdowns
 ===================================== */
 
-function buildSelect(id, list) {
+function buildSelect(id,list){
 
     const select = $(id);
 
@@ -143,7 +152,7 @@ function buildSelect(id, list) {
 
     [...list]
         .sort()
-        .forEach(item => {
+        .forEach(item=>{
 
             const option = document.createElement("option");
 
@@ -161,7 +170,7 @@ function buildSelect(id, list) {
    Sync UI
 ===================================== */
 
-function syncUI() {
+function syncUI(){
 
     $("filter-period").value = FilterState.period;
 
@@ -179,43 +188,51 @@ function syncUI() {
    Events
 ===================================== */
 
-function bindEvents() {
+function bindEvents(){
 
-    $("applyFilters").onclick = () => {
+    $("applyFilters").onclick = async ()=>{
 
         updateFilters({
 
-            period: Number(
+            period:Number(
+
                 $("filter-period").value
+
             ),
 
             brand:
+
                 $("filter-brand").value,
 
             category:
+
                 $("filter-category").value,
 
             erpStatus:
+
                 $("filter-status").value,
 
             search:
+
                 $("filter-search")
+
                     .value
+
                     .trim()
 
         });
 
-        refreshDashboard();
+        await refreshCurrentPage();
 
     };
 
-    $("resetFilters").onclick = () => {
+    $("resetFilters").onclick = async ()=>{
 
         resetFilters();
 
         syncUI();
 
-        refreshDashboard();
+        await refreshCurrentPage();
 
     };
 
