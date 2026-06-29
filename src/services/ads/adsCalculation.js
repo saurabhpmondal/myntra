@@ -3,85 +3,47 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Calculation Engine
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 export function calculateAdsMetrics(row){
 
-    const impressions=
+    const impressions = Number(row.impressions || 0);
 
-        Number(row.impressions||0);
+    const clicks = Number(row.clicks || 0);
 
-    const clicks=
+    const spend = Number(row.ad_spend || 0);
 
-        Number(row.clicks||0);
+    const units = Number(row.units_sold_total || 0);
 
-    const spend=
+    const revenue = Number(row.total_revenue || 0);
 
-        Number(row.ad_spend||0);
+    const directRevenue = Number(row.direct_revenue || 0);
 
-    const units=
+    const ctr =
 
-        Number(row.units_sold_total||0);
+        impressions === 0
 
-    const revenue=
+            ? 0
 
-        Number(row.total_revenue||0);
+            : (clicks / impressions) * 100;
 
-    const directRevenue=
+    const cvr =
 
-        Number(row.direct_revenue||0);
+        clicks === 0
 
-    const ctr=
+            ? 0
 
-        impressions===0
+            : (units / clicks) * 100;
 
-        ?
+    const roi =
 
-        0
+        spend === 0
 
-        :
+            ? 0
 
-        (
-
-            clicks/
-
-            impressions
-
-        )*100;
-
-    const cvr=
-
-        clicks===0
-
-        ?
-
-        0
-
-        :
-
-        (
-
-            units/
-
-            clicks
-
-        )*100;
-
-    const roi=
-
-        spend===0
-
-        ?
-
-        0
-
-        :
-
-        directRevenue/
-
-        spend;
+            : revenue / spend;
 
     return{
 
@@ -107,91 +69,47 @@ export function calculateAdsMetrics(row){
 
 }
 
-export function mergeAdsMetrics(
+export function mergeAdsMetrics(target, source){
 
-    target,
+    target.impressions += source.impressions;
 
-    source
+    target.clicks += source.clicks;
 
-){
+    target.spend += source.spend;
 
-    target.impressions+=
+    target.units += source.units;
 
-        source.impressions;
+    target.revenue += source.revenue;
 
-    target.clicks+=
-
-        source.clicks;
-
-    target.spend+=
-
-        source.spend;
-
-    target.units+=
-
-        source.units;
-
-    target.revenue+=
-
-        source.revenue;
-
-    target.directRevenue+=
-
-        source.directRevenue;
+    target.directRevenue += source.directRevenue;
 
 }
 
 export function finalizeAdsMetrics(row){
 
-    row.ctr=
+    row.ctr =
 
-        row.impressions===0
+        row.impressions === 0
 
-        ?
+            ? 0
 
-        0
+            : (row.clicks / row.impressions) * 100;
 
-        :
+    row.cvr =
 
-        (
+        row.clicks === 0
 
-            row.clicks/
+            ? 0
 
-            row.impressions
+            : (row.units / row.clicks) * 100;
 
-        )*100;
+    row.roi =
 
-    row.cvr=
+        row.spend === 0
 
-        row.clicks===0
+            ? 0
 
-        ?
-
-        0
-
-        :
-
-        (
-
-            row.units/
-
-            row.clicks
-
-        )*100;
-
-    row.roi=
-
-        row.spend===0
-
-        ?
-
-        0
-
-        :
-
-        row.directRevenue/
-
-        row.spend;
+            : row.revenue / row.spend;
 
     return row;
 
