@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads KPI Engine
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -17,15 +17,9 @@ import {
 
 } from "./adsCalculation.js";
 
-export function buildAdsKpis(
+export function buildAdsKpis(dailyRows){
 
-    dailyRows
-
-){
-
-    const total=
-
-        createEmptyAdsMetrics();
+    const total = createEmptyAdsMetrics();
 
     dailyRows.forEach(row=>{
 
@@ -39,131 +33,95 @@ export function buildAdsKpis(
 
     });
 
-    finalizeAdsMetrics(
+    finalizeAdsMetrics(total);
 
-        total
-
-    );
-
-    return[
+    return [
 
         {
 
-            title:
+            title:"Impressions",
 
-                "Impressions",
+            value:total.impressions,
 
-            value:
+            icon:"eye",
 
-                total.impressions,
-
-            className:
-
-                "primary"
+            className:"primary"
 
         },
 
         {
 
-            title:
+            title:"Clicks",
 
-                "Clicks",
+            value:total.clicks,
 
-            value:
+            icon:"mouse-pointer-click",
 
-                total.clicks,
-
-            className:
-
-                "info"
+            className:"info"
 
         },
 
         {
 
-            title:
+            title:"CTR",
 
-                "CTR",
+            value:`${total.ctr.toFixed(2)}%`,
 
-            value:
+            icon:"percent",
 
-                `${total.ctr.toFixed(2)}%`,
-
-            className:
-
-                "warning"
+            className:"warning"
 
         },
 
         {
 
-            title:
+            title:"Units Sold",
 
-                "Units Sold",
+            value:total.units,
 
-            value:
+            icon:"shopping-cart",
 
-                total.units,
-
-            className:
-
-                "success"
+            className:"success"
 
         },
 
         {
 
-            title:
+            title:"Revenue",
 
-                "Revenue",
+            value:total.revenue,
 
-            value:
+            prefix:"₹",
 
-                total.revenue,
+            icon:"indian-rupee",
 
-            prefix:
-
-                "₹",
-
-            className:
-
-                "success"
+            className:"success"
 
         },
 
         {
 
-            title:
+            title:"Spend",
 
-                "Spend",
+            value:total.spend,
 
-            value:
+            prefix:"₹",
 
-                total.spend,
+            icon:"wallet",
 
-            prefix:
-
-                "₹",
-
-            className:
-
-                "danger"
+            className:"danger"
 
         },
 
         {
 
-            title:
+            title:"ROI",
 
-                "ROI",
+            value:total.roi.toFixed(2),
 
-            value:
+            icon:"trending-up",
 
-                total.roi.toFixed(2),
-
-            className:
-
-                "primary"
+            className:"primary"
 
         }
 
