@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Calculation Engine
- * Version : V5.0
+ * Version : V5.1
  * =====================================================
  */
 
@@ -17,31 +17,43 @@ export function calculateShipmentData(
 
     return rows.map(row=>{
 
-        const gross =
+        const gross = Number(
 
-            Number(row.gross || 0);
+            row.gross || 0
 
-        const returns =
+        );
 
-            Number(row.returns || 0);
+        const returns = Number(
 
-        const stock =
+            row.returns || 0
 
-            Number(row.stock || 0);
+        );
 
-        const net =
+        const stock = Number(
 
-            Math.max(
+            row.stock || 0
 
-                0,
+        );
 
-                gross - returns
+        // =====================================
+        // Net Sale
+        // =====================================
 
-            );
+        const net = Math.max(
+
+            0,
+
+            gross - returns
+
+        );
+
+        // =====================================
+        // Return %
+        // =====================================
 
         const returnPercent =
 
-            gross===0
+            gross === 0
 
             ?
 
@@ -49,11 +61,15 @@ export function calculateShipmentData(
 
             :
 
-            (returns/gross)*100;
+            (returns / gross) * 100;
+
+        // =====================================
+        // DRR
+        // =====================================
 
         const drr =
 
-            config.saleDays===0
+            net === 0
 
             ?
 
@@ -61,11 +77,15 @@ export function calculateShipmentData(
 
             :
 
-            net/config.saleDays;
+            net / config.saleDays;
+
+        // =====================================
+        // Stock Cover
+        // =====================================
 
         const sc =
 
-            drr===0
+            drr === 0
 
             ?
 
@@ -73,15 +93,27 @@ export function calculateShipmentData(
 
             :
 
-            stock/drr;
+            stock / drr;
 
-        const projection =
+        // =====================================
+        // Projection
+        // =====================================
 
-            (drr*config.targetCover)
+        const projection = Math.max(
 
-            -
+            0,
 
-            stock;
+            Math.round(
+
+                (drr * config.targetCover)
+
+                -
+
+                stock
+
+            )
+
+        );
 
         return{
 
@@ -96,6 +128,8 @@ export function calculateShipmentData(
             returnPercent,
 
             drr,
+
+            stock,
 
             sc,
 
