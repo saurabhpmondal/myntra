@@ -3,9 +3,33 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Columns
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
+
+const formatNumber = value=>
+
+    Number(value || 0)
+
+        .toLocaleString("en-IN");
+
+const formatCurrency = value=>
+
+    "₹"+
+
+    Math.round(
+
+        Number(value || 0)
+
+    ).toLocaleString("en-IN");
+
+const formatPercent = value=>
+
+    `${Number(value || 0).toFixed(2)}%`;
+
+const formatDecimal = value=>
+
+    Number(value || 0).toFixed(2);
 
 export function getDailyAdsColumns(){
 
@@ -23,7 +47,9 @@ export function getDailyAdsColumns(){
 
             key:"spend",
 
-            label:"Spend"
+            label:"Spend",
+
+            renderer:formatCurrency
 
         },
 
@@ -31,7 +57,9 @@ export function getDailyAdsColumns(){
 
             key:"impressions",
 
-            label:"Impressions"
+            label:"Impressions",
+
+            renderer:formatNumber
 
         },
 
@@ -39,7 +67,9 @@ export function getDailyAdsColumns(){
 
             key:"clicks",
 
-            label:"Clicks"
+            label:"Clicks",
+
+            renderer:formatNumber
 
         },
 
@@ -49,9 +79,7 @@ export function getDailyAdsColumns(){
 
             label:"CTR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -61,9 +89,7 @@ export function getDailyAdsColumns(){
 
             label:"CVR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -71,7 +97,9 @@ export function getDailyAdsColumns(){
 
             key:"units",
 
-            label:"Units Sold"
+            label:"Units Sold",
+
+            renderer:formatNumber
 
         },
 
@@ -79,7 +107,9 @@ export function getDailyAdsColumns(){
 
             key:"revenue",
 
-            label:"Revenue"
+            label:"Revenue",
+
+            renderer:formatCurrency
 
         },
 
@@ -89,9 +119,7 @@ export function getDailyAdsColumns(){
 
             label:"ROI",
 
-            renderer:value=>
-
-                Number(value).toFixed(2)
+            renderer:formatDecimal
 
         }
 
@@ -115,7 +143,9 @@ export function getCampaignAdsColumns(){
 
             key:"spend",
 
-            label:"Spend"
+            label:"Spend",
+
+            renderer:formatCurrency
 
         },
 
@@ -123,7 +153,9 @@ export function getCampaignAdsColumns(){
 
             key:"impressions",
 
-            label:"Impressions"
+            label:"Impressions",
+
+            renderer:formatNumber
 
         },
 
@@ -131,7 +163,9 @@ export function getCampaignAdsColumns(){
 
             key:"clicks",
 
-            label:"Clicks"
+            label:"Clicks",
+
+            renderer:formatNumber
 
         },
 
@@ -141,9 +175,7 @@ export function getCampaignAdsColumns(){
 
             label:"CTR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -153,9 +185,7 @@ export function getCampaignAdsColumns(){
 
             label:"CVR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -163,7 +193,9 @@ export function getCampaignAdsColumns(){
 
             key:"units",
 
-            label:"Units Sold"
+            label:"Units Sold",
+
+            renderer:formatNumber
 
         },
 
@@ -171,7 +203,9 @@ export function getCampaignAdsColumns(){
 
             key:"revenue",
 
-            label:"Revenue"
+            label:"Revenue",
+
+            renderer:formatCurrency
 
         },
 
@@ -181,9 +215,7 @@ export function getCampaignAdsColumns(){
 
             label:"ROI",
 
-            renderer:value=>
-
-                Number(value).toFixed(2)
+            renderer:formatDecimal
 
         }
 
@@ -207,7 +239,9 @@ export function getAdgroupAdsColumns(){
 
             key:"spend",
 
-            label:"Spend"
+            label:"Spend",
+
+            renderer:formatCurrency
 
         },
 
@@ -215,7 +249,9 @@ export function getAdgroupAdsColumns(){
 
             key:"impressions",
 
-            label:"Impressions"
+            label:"Impressions",
+
+            renderer:formatNumber
 
         },
 
@@ -223,7 +259,9 @@ export function getAdgroupAdsColumns(){
 
             key:"clicks",
 
-            label:"Clicks"
+            label:"Clicks",
+
+            renderer:formatNumber
 
         },
 
@@ -233,9 +271,7 @@ export function getAdgroupAdsColumns(){
 
             label:"CTR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -245,9 +281,7 @@ export function getAdgroupAdsColumns(){
 
             label:"CVR",
 
-            renderer:value=>
-
-                `${Number(value).toFixed(2)}%`
+            renderer:formatPercent
 
         },
 
@@ -255,7 +289,9 @@ export function getAdgroupAdsColumns(){
 
             key:"units",
 
-            label:"Units Sold"
+            label:"Units Sold",
+
+            renderer:formatNumber
 
         },
 
@@ -263,7 +299,9 @@ export function getAdgroupAdsColumns(){
 
             key:"revenue",
 
-            label:"Revenue"
+            label:"Revenue",
+
+            renderer:formatCurrency
 
         },
 
@@ -273,9 +311,7 @@ export function getAdgroupAdsColumns(){
 
             label:"ROI",
 
-            renderer:value=>
-
-                Number(value).toFixed(2)
+            renderer:formatDecimal
 
         }
 
