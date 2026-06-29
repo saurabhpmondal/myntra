@@ -3,13 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Service
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
 import { DataStore } from "../dataService.js";
 
 import { FilterState } from "../filterService.js";
+
+import { getPeriodKey } from "../periodService.js";
 
 import { consolidateAds } from "./adsConsolidator.js";
 
@@ -103,25 +105,27 @@ export function generateAdsReport(){
 
 function getFilteredAds(){
 
-    if(
+    const ads = DataStore.ads || [];
 
-        !FilterState.period
+    if(!FilterState.period){
 
-    ){
-
-        return DataStore.ads;
+        return ads;
 
     }
 
-    return DataStore.ads.filter(row=>{
-
-        const period =
-
-            `${row.month}-${row.year}`;
+    return ads.filter(row=>{
 
         return(
 
-            period===
+            getPeriodKey(
+
+                row.month,
+
+                row.year
+
+            )
+
+            ===
 
             FilterState.period
 
