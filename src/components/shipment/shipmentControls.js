@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Controls
- * Version : V5.1
+ * Version : V5.2
  * =====================================================
  */
 
@@ -31,61 +31,45 @@ export async function renderShipmentControls(target){
 
 function bindEvents(target){
 
-    const button =
+    const generateButton =
 
-        target.querySelector(
+        target.querySelector("#generateShipment");
 
-            "#generateShipment"
+    if(!generateButton){
 
-        );
-
-    if(!button){
+        console.error("Generate Shipment button not found.");
 
         return;
 
     }
 
-    button.addEventListener(
+    generateButton.onclick = async ()=>{
 
-        "click",
+        generateButton.disabled = true;
 
-        async ()=>{
+        generateButton.textContent =
 
-            button.disabled = true;
+            "Generating...";
 
-            button.textContent =
+        try{
 
-                "Generating...";
-
-            const config = {
+            const config={
 
                 saleDays:Number(
 
-                    target.querySelector(
-
-                        "#saleDays"
-
-                    ).value
+                    target.querySelector("#saleDays").value
 
                 ),
 
                 targetCover:Number(
 
-                    target.querySelector(
-
-                        "#targetCover"
-
-                    ).value
+                    target.querySelector("#targetCover").value
 
                 ),
 
                 recallTrigger:Number(
 
-                    target.querySelector(
-
-                        "#recallTrigger"
-
-                    ).value
+                    target.querySelector("#recallTrigger").value
 
                 )
 
@@ -93,28 +77,44 @@ function bindEvents(target){
 
             console.table(config);
 
-            generateShipment(
-
-                config
-
-            );
+            generateShipment(config);
 
             await refreshShipmentReport();
 
-            target.querySelector(
+            const actions=
 
-                "#shipmentActions"
+                target.querySelector("#shipmentActions");
 
-            ).style.display="flex";
+            if(actions){
 
-            button.disabled=false;
+                actions.style.display="flex";
 
-            button.textContent=
+            }
+
+        }
+
+        catch(error){
+
+            console.error(
+
+                "Shipment Generation Failed",
+
+                error
+
+            );
+
+        }
+
+        finally{
+
+            generateButton.disabled=false;
+
+            generateButton.textContent=
 
                 "Generate Shipment";
 
         }
 
-    );
+    };
 
 }
