@@ -70,7 +70,15 @@ export const Sheets = {
     // ==========================================
 
     inventory:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_-6UqSlJOryIiFpP51m4raSp-Vo5S2NZYTSzYU4RNWfpkvPMGfF_JT39WSBdbc4OwCwpVB1FpSMpq/pub?gid=654272602&single=true&output=csv"
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ_-6UqSlJOryIiFpP51m4raSp-Vo5S2NZYTSzYU4RNWfpkvPMGfF_JT39WSBdbc4OwCwpVB1FpSMpq/pub?gid=654272602&single=true&output=csv", 
+
+
+// ==========================================
+// Ads (CDR)
+// ==========================================
+
+ads:
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1175680150&single=true&output=csv"
 
 };
 
