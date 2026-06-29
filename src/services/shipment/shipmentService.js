@@ -157,6 +157,16 @@ export function generateShipment(config){
 
     );
 
+shipmentData = shipmentData.filter(row =>
+
+    Number(row.gross || 0) > 0 ||
+
+    Number(row.shipment || 0) > 0 ||
+
+    Number(row.recall || 0) > 0
+
+);
+
     // ==========================================
     // Sort by Gross Sale
     // ==========================================
