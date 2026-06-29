@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Rule Engine
- * Version : V5.0
+ * Version : V5.1
  * =====================================================
  */
 
@@ -17,14 +17,14 @@ export function applyShipmentRules(
 
     return rows.map(row=>{
 
-        let shipment = 0;
+        let shipment = row.projection;
 
         let recall = 0;
 
         let remark = "";
 
         // =====================================
-        // Recall Check (Highest Priority)
+        // Recall (Highest Priority)
         // =====================================
 
         if(
@@ -55,43 +55,29 @@ export function applyShipmentRules(
 
             );
 
-            remark =
-
-                "Recall Generated";
-
             return{
 
                 ...row,
 
-                shipment,
+                shipment:0,
 
                 recall,
 
-                remark
+                remark:"Recall Generated"
 
             };
 
         }
 
         // =====================================
-        // Projection
+        // No Projection
         // =====================================
 
-        shipment =
+        if(
 
-            Math.max(
+            shipment===0
 
-                0,
-
-                Math.round(
-
-                    row.projection
-
-                )
-
-            );
-
-        if(shipment===0){
+        ){
 
             return{
 
@@ -101,9 +87,7 @@ export function applyShipmentRules(
 
                 recall:0,
 
-                remark:
-
-                    "No Projection Required"
+                remark:"No Projection Required"
 
             };
 
@@ -117,9 +101,13 @@ export function applyShipmentRules(
 
             String(
 
-                row.erpStatus
+                row.erpStatus || ""
 
-            ).toUpperCase()
+            )
+
+            .trim()
+
+            .toUpperCase()
 
             !==
 
@@ -135,9 +123,7 @@ export function applyShipmentRules(
 
                 recall:0,
 
-                remark:
-
-                    "ERP Status: Non Continue"
+                remark:"ERP Status : Non Continue"
 
             };
 
@@ -149,9 +135,7 @@ export function applyShipmentRules(
 
         if(
 
-            row.returnPercent >
-
-            35
+            row.returnPercent > 35
 
         ){
 
@@ -163,9 +147,7 @@ export function applyShipmentRules(
 
                 recall:0,
 
-                remark:
-
-                    "High Return % (>35%)"
+                remark:"High Return % (>35%)"
 
             };
 
@@ -191,9 +173,7 @@ export function applyShipmentRules(
 
                 recall:0,
 
-                remark:
-
-                    "Low Rating (<3.8)"
+                remark:"Low Rating (<3.8)"
 
             };
 
@@ -217,7 +197,25 @@ export function applyShipmentRules(
 
         if(
 
-            brand==="KALINI" ||
+            brand==="KALINI"
+
+        ){
+
+            return{
+
+                ...row,
+
+                shipment:0,
+
+                recall:0,
+
+                remark:"Brand Restricted (Kalini)"
+
+            };
+
+        }
+
+        if(
 
             brand==="MITERA"
 
@@ -231,16 +229,14 @@ export function applyShipmentRules(
 
                 recall:0,
 
-                remark:
-
-                    `Brand Restricted (${row.brand})`
+                remark:"Brand Restricted (Mitera)"
 
             };
 
         }
 
         // =====================================
-        // Ready
+        // Shipment Approved
         // =====================================
 
         return{
@@ -251,9 +247,7 @@ export function applyShipmentRules(
 
             recall:0,
 
-            remark:
-
-                "Shipment Recommended"
+            remark:"Shipment Recommended"
 
         };
 
