@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Controls
- * Version : V5.0
+ * Version : V5.1
  * =====================================================
  */
 
@@ -21,11 +21,11 @@
 
     display:flex;
 
-    flex-wrap:wrap;
-
     align-items:flex-end;
 
-    gap:20px;
+    flex-wrap:wrap;
+
+    gap:16px;
 
 }
 
@@ -47,7 +47,7 @@
 
     font-weight:600;
 
-    color:var(--text-secondary);
+    color:#6b7280;
 
 }
 
@@ -57,31 +57,27 @@
 
     padding:0 12px;
 
-    border:1px solid var(--border-color);
+    border:1px solid #dcdfe6;
 
     border-radius:8px;
 
-    background:#fff;
+    background:#ffffff;
 
     font-size:14px;
 
     outline:none;
 
-    transition:.2s;
-
 }
 
 .shipment-field select:focus{
 
-    border-color:var(--primary-color);
+    border-color:#ff3b7f;
 
 }
 
 .shipment-button{
 
-    display:flex;
-
-    align-items:flex-end;
+    margin-top:auto;
 
 }
 
@@ -89,19 +85,23 @@
 
     height:42px;
 
+    min-width:180px;
+
     padding:0 24px;
 
     border:none;
 
     border-radius:8px;
 
-    cursor:pointer;
+    background:#ff3b7f;
 
-    background:var(--primary-color);
+    color:#ffffff;
 
-    color:#fff;
+    font-size:14px;
 
     font-weight:600;
+
+    cursor:pointer;
 
     transition:.2s;
 
@@ -109,7 +109,15 @@
 
 .shipment-button button:hover{
 
-    opacity:.9;
+    background:#e83072;
+
+}
+
+.shipment-button button:disabled{
+
+    background:#bfbfbf;
+
+    cursor:not-allowed;
 
 }
 
@@ -117,15 +125,15 @@
 
     display:flex;
 
-    justify-content:space-between;
-
     align-items:center;
 
     gap:16px;
 
+    margin-top:20px;
+
     padding-top:20px;
 
-    border-top:1px solid var(--border-color);
+    border-top:1px solid #ececec;
 
 }
 
@@ -137,19 +145,19 @@
 
     padding:0 14px;
 
-    border:1px solid var(--border-color);
+    border:1px solid #dcdfe6;
 
     border-radius:8px;
 
-    outline:none;
-
     font-size:14px;
+
+    outline:none;
 
 }
 
 #shipmentSearch:focus{
 
-    border-color:var(--primary-color);
+    border-color:#ff3b7f;
 
 }
 
@@ -163,19 +171,19 @@
 
     border-radius:8px;
 
-    cursor:pointer;
-
     background:#16a34a;
 
-    color:#fff;
+    color:#ffffff;
 
     font-weight:600;
+
+    cursor:pointer;
 
 }
 
 #exportShipment:hover{
 
-    opacity:.9;
+    background:#15803d;
 
 }
 
@@ -189,17 +197,9 @@
 
     }
 
-    .shipment-field{
+    .shipment-field,
 
-        width:100%;
-
-    }
-
-    .shipment-button{
-
-        width:100%;
-
-    }
+    .shipment-button,
 
     .shipment-button button{
 
