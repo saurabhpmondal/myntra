@@ -3,29 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import { DataStore } from "../dataService.js";
 
-import {
+import { FilterState } from "../filterService.js";
 
-    consolidateAds
+import { consolidateAds } from "./adsConsolidator.js";
 
-} from "./adsConsolidator.js";
+import { buildAdsKpis } from "./adsKpi.js";
 
-import {
-
-    buildAdsKpis
-
-} from "./adsKpi.js";
-
-import {
-
-    buildAdsChart
-
-} from "./adsChart.js";
+import { buildAdsChart } from "./adsChart.js";
 
 import {
 
@@ -37,37 +27,11 @@ import {
 
 } from "./adsColumns.js";
 
-export function generateAdsReport(options={}){
+export function generateAdsReport(){
 
-    const saleDays=
+    const ads = getFilteredAds();
 
-        Number(
-
-            options.saleDays||30
-
-        );
-
-    const consolidated=
-
-        consolidateAds(
-
-            DataStore.cdr,
-
-            saleDays
-
-        );
-
-    const daily=
-
-        consolidated.daily;
-
-    const campaign=
-
-        consolidated.campaign;
-
-    const adgroup=
-
-        consolidated.adgroup;
+    const consolidated = consolidateAds(ads);
 
     return{
 
@@ -75,7 +39,7 @@ export function generateAdsReport(options={}){
 
             buildAdsKpis(
 
-                daily
+                consolidated.daily
 
             ),
 
@@ -83,7 +47,7 @@ export function generateAdsReport(options={}){
 
             buildAdsChart(
 
-                daily
+                consolidated.daily
 
             ),
 
@@ -91,9 +55,7 @@ export function generateAdsReport(options={}){
 
             daily:{
 
-                title:
-
-                    "Daily Ads Spend",
+                title:"Daily Ads Spend",
 
                 columns:
 
@@ -101,15 +63,13 @@ export function generateAdsReport(options={}){
 
                 rows:
 
-                    daily
+                    consolidated.daily
 
             },
 
             campaign:{
 
-                title:
-
-                    "Campaign Report",
+                title:"Campaign Report",
 
                 columns:
 
@@ -117,15 +77,13 @@ export function generateAdsReport(options={}){
 
                 rows:
 
-                    campaign
+                    consolidated.campaign
 
             },
 
             adgroup:{
 
-                title:
-
-                    "Ad Group Report",
+                title:"Ad Group Report",
 
                 columns:
 
@@ -133,12 +91,42 @@ export function generateAdsReport(options={}){
 
                 rows:
 
-                    adgroup
+                    consolidated.adgroup
 
             }
 
         }
 
     };
+
+}
+
+function getFilteredAds(){
+
+    if(
+
+        !FilterState.period
+
+    ){
+
+        return DataStore.ads;
+
+    }
+
+    return DataStore.ads.filter(row=>{
+
+        const period =
+
+            `${row.month}-${row.year}`;
+
+        return(
+
+            period===
+
+            FilterState.period
+
+        );
+
+    });
 
 }
