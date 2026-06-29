@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Controls
- * Version : V5.2
+ * Version : V5.3
  * =====================================================
  */
 
@@ -41,9 +41,9 @@ function bindEvents(target){
 
         target.querySelector("#generateShipment");
 
-const exportButton =
+    const exportButton =
 
-    target.querySelector("#exportShipment");
+        target.querySelector("#exportShipment");
 
     if(!generateButton){
 
@@ -91,13 +91,13 @@ const exportButton =
 
             await refreshShipmentReport();
 
-            const actions=
+            const actions =
 
                 target.querySelector("#shipmentActions");
 
             if(actions){
 
-                actions.style.display="flex";
+                actions.style.display = "flex";
 
             }
 
@@ -117,14 +117,28 @@ const exportButton =
 
         finally{
 
-            generateButton.disabled=false;
+            generateButton.disabled = false;
 
-            generateButton.textContent=
+            generateButton.textContent =
 
                 "Generate Shipment";
 
         }
 
     };
+
+    // ==========================================
+    // Export
+    // ==========================================
+
+    if(exportButton){
+
+        exportButton.onclick = ()=>{
+
+            exportShipmentReport();
+
+        };
+
+    }
 
 }
