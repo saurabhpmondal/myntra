@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Dashboard
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -35,21 +35,27 @@ export async function renderAds(target){
 
 async function loadAds(target){
 
-    const report=
-
-        generateAdsReport();
+    const report = generateAdsReport();
 
     await renderAdsKpis(
 
-        target,
+        target.querySelector(
+
+            "#ads-kpis"
+
+        ),
 
         report.kpis
 
     );
 
-    await renderAdsChart(
+    renderAdsChart(
 
-        target,
+        target.querySelector(
+
+            "#ads-chart"
+
+        ),
 
         report.chart
 
@@ -62,52 +68,6 @@ async function loadAds(target){
         report.reports
 
     );
-
-}
-
-async function renderAdsKpis(
-
-    target,
-
-    kpis
-
-){
-
-    await renderKpiCards({
-
-        target:
-
-            target.querySelector(
-
-                "#ads-kpis"
-
-            ),
-
-        cards:kpis
-
-    });
-
-}
-
-async function renderAdsChart(
-
-    target,
-
-    chart
-
-){
-
-    renderAdsChart(
-
-    target.querySelector(
-
-        "#ads-chart"
-
-    ),
-
-    chart
-
-);
 
 }
 
