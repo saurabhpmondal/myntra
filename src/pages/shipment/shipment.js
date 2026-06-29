@@ -8,7 +8,6 @@
  */
 
 import { renderShipmentControls } from "../../components/shipment/shipmentControls.js";
-
 import { renderShipmentReport } from "../../components/shipment/shipmentReport.js";
 
 let shipmentContainer = null;
@@ -19,46 +18,28 @@ export async function renderShipment(target){
 
     shipmentContainer.innerHTML = "";
 
-    const controls = createSection();
+    // ==========================================
+    // Controls
+    // ==========================================
 
-    shipmentContainer.appendChild(
+    const controls = document.createElement("div");
 
-        controls
+    controls.className = "dashboard-section";
 
-    );
+    shipmentContainer.appendChild(controls);
 
-    await renderShipmentControls(
+    await renderShipmentControls(controls);
 
-        controls
+    // ==========================================
+    // Report
+    // ==========================================
 
-    );
+    const report = document.createElement("div");
 
-    const report = createSection();
+    report.className = "dashboard-section";
 
-    shipmentContainer.appendChild(
+    shipmentContainer.appendChild(report);
 
-        report
-
-    );
-
-    await renderShipmentReport(
-
-        report
-
-    );
-
-}
-
-function createSection(){
-
-    const section =
-
-        document.createElement("div");
-
-    section.className =
-
-        "dashboard-section";
-
-    return section;
+    await renderShipmentReport(report);
 
 }
