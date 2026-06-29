@@ -189,6 +189,12 @@ export async function searchShipmentReport(keyword){
  * ==========================================
  */
 
+/**
+ * ==========================================
+ * Export Shipment Report
+ * ==========================================
+ */
+
 export function exportShipmentReport(){
 
     if(!filteredRows.length){
@@ -199,74 +205,14 @@ export function exportShipmentReport(){
 
     }
 
-    const columns = getShipmentColumns();
+    exportExcel({
 
-    const headers = columns.map(
+        filename:"SJIT Shipment Recommendation",
 
-        column=>column.label
+        columns:getShipmentColumns(),
 
-    );
-
-    const csv = [];
-
-    csv.push(
-
-        headers.join(",")
-
-    );
-
-    filteredRows.forEach(row=>{
-
-        const values = columns.map(column=>{
-
-            const value = row[column.key];
-
-            if(value===undefined || value===null){
-
-                return "";
-
-            }
-
-            return `"${String(value).replace(/"/g,'""')}"`;
-
-        });
-
-        csv.push(
-
-            values.join(",")
-
-        );
+        rows:filteredRows
 
     });
-
-    const blob = new Blob(
-
-        [csv.join("\n")],
-
-        {
-
-            type:"text/csv;charset=utf-8;"
-
-        }
-
-    );
-
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-
-    link.href = url;
-
-    link.download =
-
-        "SJIT_Shipment_Recommendation.csv";
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
 
 }
