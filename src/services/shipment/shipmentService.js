@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Service
- * Version : V5.2
+ * Version : V5.3
  * =====================================================
  */
 
@@ -59,11 +59,11 @@ export function generateShipment(config){
 
     shipmentConfig = {
 
-        saleDays: Number(config.saleDays),
+        saleDays:Number(config.saleDays),
 
-        targetCover: Number(config.targetCover),
+        targetCover:Number(config.targetCover),
 
-        recallTrigger: Number(config.recallTrigger)
+        recallTrigger:Number(config.recallTrigger)
 
     };
 
@@ -85,12 +85,6 @@ export function generateShipment(config){
 
     );
 
-
-// DEBUG
-
-console.log("Filtered Sales");
-
-console.log(sales.slice(0,5));
     // ==========================================
     // Filter Returns
     // ==========================================
@@ -107,22 +101,16 @@ console.log(sales.slice(0,5));
 
     console.table({
 
-        Sales: sales.length,
+        Sales:sales.length,
 
-        Returns: returns.length
+        Returns:returns.length
 
     });
 
     console.groupEnd();
 
-// DEBUG
-
-console.log("Filtered Sales");
-
-console.log(sales.slice(0,5));
-
     // ==========================================
-    // Build Raw Data
+    // Build Shipment Data
     // ==========================================
 
     const rawData = buildShipmentData(
@@ -158,7 +146,7 @@ console.log(sales.slice(0,5));
     );
 
     // ==========================================
-    // Apply Business Rules
+    // Apply Rules
     // ==========================================
 
     shipmentData = applyShipmentRules(
@@ -170,24 +158,50 @@ console.log(sales.slice(0,5));
     );
 
     // ==========================================
+    // Sort by Gross Sale
+    // ==========================================
+
+    shipmentData.sort((a,b)=>{
+
+        const grossA = Number(a.gross || 0);
+
+        const grossB = Number(b.gross || 0);
+
+        if(grossA !== grossB){
+
+            return grossB - grossA;
+
+        }
+
+        return String(a.styleId || "")
+
+            .localeCompare(
+
+                String(b.styleId || "")
+
+            );
+
+    });
+
+    // ==========================================
     // Summary
     // ==========================================
 
     const shipmentCount = shipmentData.filter(
 
-        row => row.shipment > 0
+        row=>row.shipment>0
 
     ).length;
 
     const recallCount = shipmentData.filter(
 
-        row => row.recall > 0
+        row=>row.recall>0
 
     ).length;
 
     const noShipmentCount = shipmentData.filter(
 
-        row => row.shipment === 0
+        row=>row.shipment===0
 
     ).length;
 
@@ -195,13 +209,13 @@ console.log(sales.slice(0,5));
 
     console.table({
 
-        Styles: shipmentData.length,
+        Styles:shipmentData.length,
 
-        Shipment: shipmentCount,
+        Shipment:shipmentCount,
 
-        Recall: recallCount,
+        Recall:recallCount,
 
-        NoShipment: noShipmentCount
+        NoShipment:noShipmentCount
 
     });
 
@@ -245,8 +259,8 @@ export function getShipmentConfig(){
 
 export function clearShipmentData(){
 
-    shipmentData = [];
+    shipmentData=[];
 
-    shipmentConfig = null;
+    shipmentConfig=null;
 
 }
