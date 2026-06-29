@@ -35,6 +35,15 @@ export const Navigation = [
         filter:true
     },
 
+
+{
+        id:"sor-shipment",
+        title:"SOR Shipment",
+        icon:"package-plus",
+        filter:true
+    },
+
+
     {
         id:"surge",
         title:"Surge",
