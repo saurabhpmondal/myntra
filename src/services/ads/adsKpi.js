@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads KPI Engine
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -41,7 +41,8 @@ export function buildAdsKpis(dailyRows){
 
             title:"Impressions",
 
-            value:total.impressions,
+            value:Number(total.impressions)
+                .toLocaleString("en-IN"),
 
             icon:"eye",
 
@@ -53,7 +54,8 @@ export function buildAdsKpis(dailyRows){
 
             title:"Clicks",
 
-            value:total.clicks,
+            value:Number(total.clicks)
+                .toLocaleString("en-IN"),
 
             icon:"mouse-pointer-click",
 
@@ -65,7 +67,7 @@ export function buildAdsKpis(dailyRows){
 
             title:"CTR",
 
-            value:`${total.ctr.toFixed(2)}%`,
+            value:`${Number(total.ctr).toFixed(2)}%`,
 
             icon:"percent",
 
@@ -77,7 +79,8 @@ export function buildAdsKpis(dailyRows){
 
             title:"Units Sold",
 
-            value:total.units,
+            value:Number(total.units)
+                .toLocaleString("en-IN"),
 
             icon:"shopping-cart",
 
@@ -89,7 +92,9 @@ export function buildAdsKpis(dailyRows){
 
             title:"Revenue",
 
-            value:total.revenue,
+            value:Math.round(
+                Number(total.revenue)
+            ).toLocaleString("en-IN"),
 
             prefix:"₹",
 
@@ -103,7 +108,9 @@ export function buildAdsKpis(dailyRows){
 
             title:"Spend",
 
-            value:total.spend,
+            value:Math.round(
+                Number(total.spend)
+            ).toLocaleString("en-IN"),
 
             prefix:"₹",
 
@@ -117,7 +124,8 @@ export function buildAdsKpis(dailyRows){
 
             title:"ROI",
 
-            value:total.roi.toFixed(2),
+            value:Number(total.roi)
+                .toFixed(2),
 
             icon:"trending-up",
 
