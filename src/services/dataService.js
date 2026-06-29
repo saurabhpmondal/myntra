@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Data Service
- * Version : V3.3
+ * Version : V3.4
  * =====================================================
  */
 
@@ -23,6 +23,7 @@ export const DataStore = {
     traffic: [],
     listings: [],
     inventory: [],
+    ads: [],
 
     loaded: false
 
@@ -44,7 +45,9 @@ async function loadSheet(job){
         completed++;
 
         const progress = Math.round(
+
             5 + (completed / totalJobs) * 90
+
         );
 
         updateSplash(
@@ -63,12 +66,14 @@ async function loadSheet(job){
 
     catch(error){
 
-        console.error(`❌ ${job.title}`,error);
+        console.error(`❌ ${job.title}`, error);
 
         completed++;
 
         const progress = Math.round(
+
             5 + (completed / totalJobs) * 90
+
         );
 
         updateSplash(
@@ -103,60 +108,106 @@ export async function initializeData(){
 
     );
 
-    const jobs=[
+    const jobs = [
 
         {
+
             key:"sales",
+
             title:"Sales",
+
             url:Sheets.sales
+
         },
 
         {
+
             key:"returns",
+
             title:"Returns",
+
             url:Sheets.returns
+
         },
 
         {
+
             key:"sjitStock",
+
             title:"SJIT Stock",
+
             url:Sheets.sjitStock
+
         },
 
         {
+
             key:"sorStock",
+
             title:"SOR Stock",
+
             url:Sheets.sorStock
+
         },
 
         {
+
             key:"sellerStock",
+
             title:"Seller Stock",
+
             url:Sheets.sellerStock
+
         },
 
         {
+
             key:"productMaster",
+
             title:"Product Master",
+
             url:Sheets.productMaster
+
         },
 
         {
+
             key:"traffic",
+
             title:"Traffic",
+
             url:Sheets.traffic
+
         },
 
         {
+
             key:"listings",
+
             title:"Listings",
+
             url:Sheets.listings
+
         },
 
         {
+
             key:"inventory",
+
             title:"Inventory",
+
             url:Sheets.inventory
+
+        },
+
+        {
+
+            key:"ads",
+
+            title:"Ads",
+
+            url:Sheets.ads
+
         }
 
     ];
@@ -173,9 +224,17 @@ export async function initializeData(){
 
     );
 
-    const promises = jobs.map(job=>loadSheet(job));
+    const promises = jobs.map(
 
-    const results = await Promise.allSettled(promises);
+        job => loadSheet(job)
+
+    );
+
+    const results = await Promise.allSettled(
+
+        promises
+
+    );
 
     results.forEach((result,index)=>{
 
@@ -183,7 +242,7 @@ export async function initializeData(){
 
         if(result.status==="fulfilled"){
 
-            DataStore[key]=result.value;
+            DataStore[key] = result.value;
 
         }
 
@@ -197,7 +256,7 @@ export async function initializeData(){
 
             );
 
-            DataStore[key]=[];
+            DataStore[key] = [];
 
         }
 
@@ -233,7 +292,9 @@ export async function initializeData(){
 
         Listings:DataStore.listings.length,
 
-        Inventory:DataStore.inventory.length
+        Inventory:DataStore.inventory.length,
+
+        Ads:DataStore.ads.length
 
     });
 
@@ -250,4 +311,3 @@ export async function initializeData(){
     return DataStore;
 
 }
-
