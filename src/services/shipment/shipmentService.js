@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Service
- * Version : V5.1
+ * Version : V5.2
  * =====================================================
  */
 
@@ -17,19 +17,45 @@ import { calculateShipmentData } from "./shipmentCalculation.js";
 
 import { applyShipmentRules } from "./shipmentRules.js";
 
+import { validateShipmentData } from "./shipmentValidator.js";
+
 let shipmentData = [];
 
 let shipmentConfig = null;
 
 /**
- * ==========================================
+ * =====================================================
  * Generate Shipment
- * ==========================================
+ * =====================================================
  */
 
 export function generateShipment(config){
 
     console.time("Shipment Generation");
+
+    // ==========================================
+    // Validate Data
+    // ==========================================
+
+    const validation = validateShipmentData();
+
+    if(!validation.valid){
+
+        console.error("Shipment Validation Failed");
+
+        console.table(validation.errors);
+
+        alert(validation.errors.join("\n"));
+
+        console.timeEnd("Shipment Generation");
+
+        return [];
+
+    }
+
+    // ==========================================
+    // Config
+    // ==========================================
 
     shipmentConfig = {
 
@@ -41,57 +67,63 @@ export function generateShipment(config){
 
     };
 
+    console.group("Shipment Config");
+
+    console.table(shipmentConfig);
+
+    console.groupEnd();
+
     // ==========================================
-    // Filter Sales & Returns
+    // Filter Sales
     // ==========================================
 
-    const sales =
+    const sales = filterByDays(
 
-        filterByDays(
+        DataStore.sales,
 
-            DataStore.sales,
+        shipmentConfig.saleDays
 
-            shipmentConfig.saleDays
+    );
 
-        );
+    // ==========================================
+    // Filter Returns
+    // ==========================================
 
-    const returns =
+    const returns = filterByDays(
 
-        filterByDays(
+        DataStore.returns,
 
-            DataStore.returns,
+        shipmentConfig.saleDays
 
-            shipmentConfig.saleDays
+    );
 
-        );
+    console.group("Filtered Records");
 
     console.table({
 
         Sales:sales.length,
 
-        Returns:returns.length,
-
-        SaleDays:shipmentConfig.saleDays
+        Returns:returns.length
 
     });
+
+    console.groupEnd();
 
     // ==========================================
     // Build Shipment Data
     // ==========================================
 
-    const rawData =
+    const rawData = buildShipmentData(
 
-        buildShipmentData(
+        sales,
 
-            sales,
+        returns
 
-            returns
-
-        );
+    );
 
     console.log(
 
-        `Builder : ${rawData.length} Styles`
+        `Builder Completed : ${rawData.length} Styles`
 
     );
 
@@ -99,19 +131,17 @@ export function generateShipment(config){
     // Calculate Metrics
     // ==========================================
 
-    const calculated =
+    const calculated = calculateShipmentData(
 
-        calculateShipmentData(
+        rawData,
 
-            rawData,
+        shipmentConfig
 
-            shipmentConfig
-
-        );
+    );
 
     console.log(
 
-        "Calculation Complete"
+        "Calculation Engine Completed"
 
     );
 
@@ -119,37 +149,51 @@ export function generateShipment(config){
     // Apply Rules
     // ==========================================
 
-    shipmentData =
+    shipmentData = applyShipmentRules(
 
-        applyShipmentRules(
+        calculated,
 
-            calculated,
+        shipmentConfig
 
-            shipmentConfig
+    );
 
-        );
+    // ==========================================
+    // Summary
+    // ==========================================
+
+    const shipmentCount = shipmentData.filter(
+
+        row => row.shipment > 0
+
+    ).length;
+
+    const recallCount = shipmentData.filter(
+
+        row => row.recall > 0
+
+    ).length;
+
+    const noShipmentCount = shipmentData.filter(
+
+        row => row.shipment === 0
+
+    ).length;
+
+    console.group("Shipment Summary");
 
     console.table({
 
         Styles:shipmentData.length,
 
-        Shipment:
+        Shipment:shipmentCount,
 
-            shipmentData.filter(
+        Recall:recallCount,
 
-                x=>x.shipment>0
-
-            ).length,
-
-        Recall:
-
-            shipmentData.filter(
-
-                x=>x.recall>0
-
-            ).length
+        NoShipment:noShipmentCount
 
     });
+
+    console.groupEnd();
 
     console.timeEnd(
 
@@ -162,9 +206,9 @@ export function generateShipment(config){
 }
 
 /**
- * ==========================================
+ * =====================================================
  * Shipment Data
- * ==========================================
+ * =====================================================
  */
 
 export function getShipmentData(){
@@ -174,9 +218,9 @@ export function getShipmentData(){
 }
 
 /**
- * ==========================================
+ * =====================================================
  * Shipment Config
- * ==========================================
+ * =====================================================
  */
 
 export function getShipmentConfig(){
@@ -186,15 +230,9 @@ export function getShipmentConfig(){
 }
 
 /**
- * ==========================================
- * Clear
- * ==========================================
+ * =====================================================
+ * Clear Shipment
+ * =====================================================
  */
 
-export function clearShipmentData(){
-
-    shipmentData=[];
-
-    shipmentConfig=null;
-
-}
+export function clearShipment
