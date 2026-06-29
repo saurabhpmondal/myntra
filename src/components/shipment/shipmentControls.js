@@ -11,7 +11,13 @@ import { createComponent } from "../../utils/createComponent.js";
 
 import { generateShipment } from "../../services/shipment/shipmentService.js";
 
-import { refreshShipmentReport } from "./shipmentReport.js";
+import {
+
+    refreshShipmentReport,
+
+    exportShipmentReport
+
+} from "./shipmentReport.js";
 
 export async function renderShipmentControls(target){
 
@@ -34,6 +40,10 @@ function bindEvents(target){
     const generateButton =
 
         target.querySelector("#generateShipment");
+
+const exportButton =
+
+    target.querySelector("#exportShipment");
 
     if(!generateButton){
 
