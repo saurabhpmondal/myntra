@@ -9,202 +9,180 @@
 
 import { DataStore } from "../dataService.js";
 
-export function buildShipmentData(config){
+export function buildShipmentData(){
 
     const styles = {};
 
-    buildSales(styles, config.saleDays);
+    // ==========================================
+    // Sales
+    // ==========================================
 
-    buildReturns(styles, config.saleDays);
+    DataStore.sales.forEach(row=>{
 
-    buildStock(styles);
+        const styleId = String(row.style_id || "").trim();
 
-    buildRatings(styles);
+        if(!styleId){
 
-    buildMaster(styles);
+            return;
+
+        }
+
+        if(!styles[styleId]){
+
+            styles[styleId] = createStyle(styleId);
+
+        }
+
+        styles[styleId].gross +=
+
+            Number(row.qty || 0);
+
+        if(!styles[styleId].brand){
+
+            styles[styleId].brand = row.brand || "";
+
+        }
+
+    });
+
+    // ==========================================
+    // Returns
+    // ==========================================
+
+    DataStore.returns.forEach(row=>{
+
+        const styleId = String(row.style_id || "").trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        if(!styles[styleId]){
+
+            styles[styleId] = createStyle(styleId);
+
+        }
+
+        styles[styleId].returns +=
+
+            1;
+
+    });
+
+    // ==========================================
+    // SJIT Stock
+    // ==========================================
+
+    DataStore.sjitStock.forEach(row=>{
+
+        const styleId = String(row.style_id || "").trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        if(!styles[styleId]){
+
+            styles[styleId] = createStyle(styleId);
+
+        }
+
+        styles[styleId].stock +=
+
+            Number(row.stock_units || 0);
+
+    });
+
+    // ==========================================
+    // Product Master
+    // ==========================================
+
+    DataStore.productMaster.forEach(row=>{
+
+        const styleId = String(row.style_id || "").trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        if(!styles[styleId]){
+
+            styles[styleId] = createStyle(styleId);
+
+        }
+
+        styles[styleId].erpSku =
+
+            row.erp_sku || "";
+
+        styles[styleId].erpStatus =
+
+            row.status || "";
+
+        styles[styleId].launchDate =
+
+            row.launch_date || "";
+
+    });
+
+    // ==========================================
+    // Traffic Rating
+    // ==========================================
+
+    DataStore.traffic.forEach(row=>{
+
+        const styleId = String(row.style_id || "").trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        if(!styles[styleId]){
+
+            styles[styleId] = createStyle(styleId);
+
+        }
+
+        styles[styleId].rating =
+
+            Number(row.rating || 0);
+
+    });
 
     return Object.values(styles);
 
 }
 
-function getStyle(styles, styleId){
+function createStyle(styleId){
 
-    if(!styles[styleId]){
+    return{
 
-        styles[styleId]={
+        styleId,
 
-            styleId,
+        erpSku:"",
 
-            erpSku:"",
+        erpStatus:"",
 
-            erpStatus:"",
+        brand:"",
 
-            brand:"",
+        launchDate:"",
 
-            launchDate:"",
+        rating:0,
 
-            rating:0,
+        gross:0,
 
-            gross:0,
+        returns:0,
 
-            returns:0,
+        stock:0
 
-            stock:0
-
-        };
-
-    }
-
-    return styles[styleId];
-
-}
-
-function buildSales(styles){
-
-    DataStore.sales.forEach(row=>{
-
-        const style=
-
-            getStyle(
-
-                styles,
-
-                row.style_id
-
-            );
-
-        style.brand=
-
-            row.brand||
-
-            style.brand;
-
-        style.gross+=
-
-            Number(
-
-                row.qty||0
-
-            );
-
-    });
-
-}
-
-function buildReturns(styles){
-
-    DataStore.returns.forEach(row=>{
-
-        const style=
-
-            getStyle(
-
-                styles,
-
-                row.style_id
-
-            );
-
-        style.returns++;
-
-    });
-
-}
-
-function buildStock(styles){
-
-    DataStore.sjitStock.forEach(row=>{
-
-        const style=
-
-            getStyle(
-
-                styles,
-
-                row.style_id
-
-            );
-
-        style.stock+=
-
-            Number(
-
-                row.stock_units||0
-
-            );
-
-    });
-
-}
-
-function buildRatings(styles){
-
-    DataStore.traffic.forEach(row=>{
-
-        const style=
-
-            getStyle(
-
-                styles,
-
-                row.style_id
-
-            );
-
-        style.rating=
-
-            Number(
-
-                row.rating||0
-
-            );
-
-    });
-
-}
-
-function buildMaster(styles){
-
-    DataStore.productMaster.forEach(row=>{
-
-        const style=
-
-            getStyle(
-
-                styles,
-
-                row.style_id
-
-            );
-
-        style.erpSku=
-
-            row.erp_sku||
-
-            "";
-
-        style.erpStatus=
-
-            row.status||
-
-            "";
-
-        style.launchDate=
-
-            row.launch_date||
-
-            "";
-
-        if(!style.brand){
-
-            style.brand=
-
-                row.brand||
-
-                "";
-
-        }
-
-    });
+    };
 
 }
