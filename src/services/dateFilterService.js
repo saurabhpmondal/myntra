@@ -3,95 +3,54 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Date Filter Service
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
-function parseDate(value){
+const MONTH_MAP = {
 
-    if(value===null || value===undefined){
+    JAN:0,
+    FEB:1,
+    MAR:2,
+    APR:3,
+    MAY:4,
+    JUNE:5,
+    JULY:6,
+    AUG:7,
+    SEP:8,
+    OCT:9,
+    NOV:10,
+    DEC:11
 
-        return null;
+};
 
-    }
+function buildDate(row){
 
-    // Handles:
-    // 20260629
-    // "20260629"
-    // "2026-06-29"
-    // Date object
+    const day = Number(row.date);
 
-    if(value instanceof Date){
+    const month = MONTH_MAP[
+        String(row.month || "")
+            .trim()
+            .toUpperCase()
+    ];
 
-        return new Date(
+    const year = Number(row.year);
 
-            value.getFullYear(),
-
-            value.getMonth(),
-
-            value.getDate()
-
-        );
-
-    }
-
-    let text = String(value).trim();
-
-    // yyyy-mm-dd
-
-    if(text.includes("-")){
-
-        const date = new Date(text);
-
-        if(!isNaN(date)){
-
-            return new Date(
-
-                date.getFullYear(),
-
-                date.getMonth(),
-
-                date.getDate()
-
-            );
-
-        }
-
-    }
-
-    // yyyyMMdd
-
-    text = text.replace(/\D/g,"");
-
-    if(text.length!==8){
+    if(
+        !day ||
+        month === undefined ||
+        !year
+    ){
 
         return null;
 
     }
-
-    const year = Number(
-
-        text.substring(0,4)
-
-    );
-
-    const month = Number(
-
-        text.substring(4,6)
-
-    );
-
-    const day = Number(
-
-        text.substring(6,8)
-
-    );
 
     return new Date(
 
         year,
 
-        month-1,
+        month,
 
         day
 
@@ -103,13 +62,9 @@ export function getLatestDate(records){
 
     let latest = null;
 
-    records.forEach(record=>{
+    records.forEach(row=>{
 
-        const date = parseDate(
-
-            record.date
-
-        );
+        const date = buildDate(row);
 
         if(!date){
 
@@ -118,14 +73,11 @@ export function getLatestDate(records){
         }
 
         if(
-
             latest===null ||
-
             date>latest
-
         ){
 
-            latest=date;
+            latest = date;
 
         }
 
@@ -144,64 +96,41 @@ export function filterByDays(
 ){
 
     if(
-
-        !Array.isArray(records) ||
-
+        !records ||
         records.length===0
-
     ){
 
         return [];
 
     }
 
-    const latestDate =
+    const latest = getLatestDate(records);
 
-        getLatestDate(records);
-
-    if(!latestDate){
+    if(!latest){
 
         return [];
 
     }
 
-    const startDate =
+    const start = new Date(latest);
 
-        new Date(latestDate);
+    start.setHours(0,0,0,0);
 
-    startDate.setHours(
+    latest.setHours(23,59,59,999);
 
-        0,0,0,0
+    start.setDate(
 
-    );
+        start.getDate()
 
-    latestDate.setHours(
+        - Number(days)
 
-        23,59,59,999
-
-    );
-
-    startDate.setDate(
-
-        startDate.getDate()
-
-        -
-
-        Number(days)
-
-        +
-
-        1
+        + 1
 
     );
 
-    return records.filter(record=>{
+    return records.filter(row=>{
 
-        const date = parseDate(
-
-            record.date
-
-        );
+        const date = buildDate(row);
 
         if(!date){
 
@@ -211,84 +140,11 @@ export function filterByDays(
 
         return(
 
-            date>=startDate &&
-
-            date<=latestDate
+            date>=start &&
+            date<=latest
 
         );
 
     });
-
-}
-
-export function getPeriodInfo(
-
-    records,
-
-    days
-
-){
-
-    const endDate =
-
-        getLatestDate(records);
-
-    if(!endDate){
-
-        return null;
-
-    }
-
-    const startDate =
-
-        new Date(endDate);
-
-    startDate.setDate(
-
-        startDate.getDate()
-
-        -
-
-        Number(days)
-
-        +
-
-        1
-
-    );
-
-    return{
-
-        startDate,
-
-        endDate
-
-    };
-
-}
-
-export function formatDate(date){
-
-    if(!date){
-
-        return "";
-
-    }
-
-    return date.toLocaleDateString(
-
-        "en-IN",
-
-        {
-
-            day:"2-digit",
-
-            month:"short",
-
-            year:"numeric"
-
-        }
-
-    );
 
 }
