@@ -3,23 +3,28 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Builder
- * Version : V5.0
+ * Version : V5.1
  * =====================================================
  */
 
 import { DataStore } from "../dataService.js";
 
-export function buildShipmentData(){
+export function buildShipmentData(
+    sales,
+    returns
+){
 
     const styles = {};
 
     // ==========================================
-    // Sales
+    // SALES
     // ==========================================
 
-    DataStore.sales.forEach(row=>{
+    sales.forEach(row=>{
 
-        const styleId = String(row.style_id || "").trim();
+        const styleId = String(
+            row.style_id || ""
+        ).trim();
 
         if(!styleId){
 
@@ -27,31 +32,32 @@ export function buildShipmentData(){
 
         }
 
-        if(!styles[styleId]){
+        const style = getStyle(
+            styles,
+            styleId
+        );
 
-            styles[styleId] = createStyle(styleId);
+        style.gross += Number(
+            row.qty || 0
+        );
 
-        }
+        if(!style.brand){
 
-        styles[styleId].gross +=
-
-            Number(row.qty || 0);
-
-        if(!styles[styleId].brand){
-
-            styles[styleId].brand = row.brand || "";
-
+            style.brand =
+                row.brand || "";
         }
 
     });
 
     // ==========================================
-    // Returns
+    // RETURNS
     // ==========================================
 
-    DataStore.returns.forEach(row=>{
+    returns.forEach(row=>{
 
-        const styleId = String(row.style_id || "").trim();
+        const styleId = String(
+            row.style_id || ""
+        ).trim();
 
         if(!styleId){
 
@@ -59,25 +65,24 @@ export function buildShipmentData(){
 
         }
 
-        if(!styles[styleId]){
+        const style = getStyle(
+            styles,
+            styleId
+        );
 
-            styles[styleId] = createStyle(styleId);
-
-        }
-
-        styles[styleId].returns +=
-
-            1;
+        style.returns += 1;
 
     });
 
     // ==========================================
-    // SJIT Stock
+    // SJIT STOCK
     // ==========================================
 
     DataStore.sjitStock.forEach(row=>{
 
-        const styleId = String(row.style_id || "").trim();
+        const styleId = String(
+            row.style_id || ""
+        ).trim();
 
         if(!styleId){
 
@@ -85,25 +90,26 @@ export function buildShipmentData(){
 
         }
 
-        if(!styles[styleId]){
+        const style = getStyle(
+            styles,
+            styleId
+        );
 
-            styles[styleId] = createStyle(styleId);
-
-        }
-
-        styles[styleId].stock +=
-
-            Number(row.stock_units || 0);
+        style.stock += Number(
+            row.sellable_inventory_count || 0
+        );
 
     });
 
     // ==========================================
-    // Product Master
+    // PRODUCT MASTER
     // ==========================================
 
     DataStore.productMaster.forEach(row=>{
 
-        const styleId = String(row.style_id || "").trim();
+        const styleId = String(
+            row.style_id || ""
+        ).trim();
 
         if(!styleId){
 
@@ -111,33 +117,38 @@ export function buildShipmentData(){
 
         }
 
-        if(!styles[styleId]){
+        const style = getStyle(
+            styles,
+            styleId
+        );
 
-            styles[styleId] = createStyle(styleId);
-
-        }
-
-        styles[styleId].erpSku =
-
+        style.erpSku =
             row.erp_sku || "";
 
-        styles[styleId].erpStatus =
-
+        style.erpStatus =
             row.status || "";
 
-        styles[styleId].launchDate =
-
+        style.launchDate =
             row.launch_date || "";
+
+        if(!style.brand){
+
+            style.brand =
+                row.brand || "";
+
+        }
 
     });
 
     // ==========================================
-    // Traffic Rating
+    // TRAFFIC
     // ==========================================
 
     DataStore.traffic.forEach(row=>{
 
-        const styleId = String(row.style_id || "").trim();
+        const styleId = String(
+            row.style_id || ""
+        ).trim();
 
         if(!styleId){
 
@@ -145,44 +156,58 @@ export function buildShipmentData(){
 
         }
 
-        if(!styles[styleId]){
+        const style = getStyle(
+            styles,
+            styleId
+        );
 
-            styles[styleId] = createStyle(styleId);
-
-        }
-
-        styles[styleId].rating =
-
-            Number(row.rating || 0);
+        style.rating = Number(
+            row.rating || 0
+        );
 
     });
 
-    return Object.values(styles);
+    return Object.values(
+        styles
+    );
 
 }
 
-function createStyle(styleId){
+function getStyle(
+    styles,
+    styleId
+){
 
-    return{
+    if(!styles[styleId]){
 
-        styleId,
+        styles[styleId] = {
 
-        erpSku:"",
+            // Identity
 
-        erpStatus:"",
+            styleId,
 
-        brand:"",
+            erpSku:"",
 
-        launchDate:"",
+            erpStatus:"",
 
-        rating:0,
+            brand:"",
 
-        gross:0,
+            launchDate:"",
 
-        returns:0,
+            rating:0,
 
-        stock:0
+            // Raw Metrics
 
-    };
+            gross:0,
+
+            returns:0,
+
+            stock:0
+
+        };
+
+    }
+
+    return styles[styleId];
 
 }
