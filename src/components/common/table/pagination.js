@@ -3,13 +3,19 @@
  * Project Phoenix
  * Product : Common Table Engine
  * Module  : Pagination Engine
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-const PAGE_SIZE = 50;
+const DEFAULT_PAGE_SIZE = 50;
 
-export function createPagination(rows){
+export function createPagination(
+
+    rows,
+
+    pageSize = DEFAULT_PAGE_SIZE
+
+){
 
     return{
 
@@ -17,7 +23,7 @@ export function createPagination(rows){
 
         page:1,
 
-        pageSize:PAGE_SIZE,
+        pageSize,
 
         totalRows:rows.length,
 
@@ -27,7 +33,7 @@ export function createPagination(rows){
 
             Math.ceil(
 
-                rows.length/PAGE_SIZE
+                rows.length/pageSize
 
             )
 
@@ -39,7 +45,9 @@ export function createPagination(rows){
 
 export function getVisibleRows(state){
 
-    const start=(state.page-1)*state.pageSize;
+    const start =
+
+        (state.page-1)*state.pageSize;
 
     return state.rows.slice(
 
@@ -53,7 +61,11 @@ export function getVisibleRows(state){
 
 export function nextPage(state){
 
-    if(state.page<state.totalPages){
+    if(
+
+        state.page < state.totalPages
+
+    ){
 
         state.page++;
 
@@ -65,7 +77,11 @@ export function nextPage(state){
 
 export function previousPage(state){
 
-    if(state.page>1){
+    if(
+
+        state.page > 1
+
+    ){
 
         state.page--;
 
@@ -95,15 +111,25 @@ export function getPageInfo(state){
 
     }
 
-    const start=(state.page-1)*state.pageSize+1;
+    const start =
 
-    const end=Math.min(
+        (state.page-1)
 
-        state.page*state.pageSize,
+        *state.pageSize
 
-        state.totalRows
+        +1;
 
-    );
+    const end =
+
+        Math.min(
+
+            state.page
+
+            *state.pageSize,
+
+            state.totalRows
+
+        );
 
     return{
 
