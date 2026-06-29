@@ -3,13 +3,11 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Ads Consolidator
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import {
-
-    filterAdsByDays,
 
     buildSystemDate,
 
@@ -29,39 +27,17 @@ import {
 
 } from "./adsCalculation.js";
 
-export function consolidateAds(
+export function consolidateAds(rows){
 
-    rows,
+    const dailyMap = new Map();
 
-    saleDays
+    const campaignMap = new Map();
 
-){
+    const adgroupMap = new Map();
 
-    const filteredRows=
+    rows.forEach(row=>{
 
-        filterAdsByDays(
-
-            rows,
-
-            saleDays
-
-        );
-
-    const dailyMap=
-
-        new Map();
-
-    const campaignMap=
-
-        new Map();
-
-    const adgroupMap=
-
-        new Map();
-
-    filteredRows.forEach(row=>{
-
-        const metrics=
+        const metrics =
 
             calculateAdsMetrics(row);
 
@@ -101,7 +77,7 @@ export function consolidateAds(
 
         daily:
 
-            finalizeMap(
+            finalizeDaily(
 
                 dailyMap
 
@@ -109,7 +85,7 @@ export function consolidateAds(
 
         campaign:
 
-            finalizeMap(
+            finalizeRows(
 
                 campaignMap
 
@@ -117,7 +93,7 @@ export function consolidateAds(
 
         adgroup:
 
-            finalizeMap(
+            finalizeRows(
 
                 adgroupMap
 
@@ -137,7 +113,7 @@ function consolidateDaily(
 
 ){
 
-    const key=
+    const key =
 
         buildSystemDate(row);
 
@@ -153,13 +129,11 @@ function consolidateDaily(
 
             {
 
+                systemDate:key,
+
                 date:
 
-                    formatDisplayDate(
-
-                        key
-
-                    ),
+                    formatDisplayDate(key),
 
                 ...createEmptyAdsMetrics()
 
@@ -189,7 +163,7 @@ function consolidateCampaign(
 
 ){
 
-    const key=
+    const key =
 
         row.campaign_id;
 
@@ -241,7 +215,7 @@ function consolidateAdgroup(
 
 ){
 
-    const key=
+    const key =
 
         row.adgroup_id;
 
@@ -283,11 +257,7 @@ function consolidateAdgroup(
 
 }
 
-function finalizeMap(
-
-    map
-
-){
+function finalizeDaily(map){
 
     return Array
 
@@ -297,13 +267,39 @@ function finalizeMap(
 
         )
 
-        .map(row=>
+        .map(finalizeAdsMetrics)
 
-            finalizeAdsMetrics(
+        .sort(
 
-                row
+            (a,b)=>
 
-            )
+                a.systemDate.localeCompare(
+
+                    b.systemDate
+
+                )
+
+        );
+
+}
+
+function finalizeRows(map){
+
+    return Array
+
+        .from(
+
+            map.values()
+
+        )
+
+        .map(finalizeAdsMetrics)
+
+        .sort(
+
+            (a,b)=>
+
+                b.spend-a.spend
 
         );
 
