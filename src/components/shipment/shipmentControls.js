@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Shipment Controls
- * Version : V5.2
+ * Version : V5.3
  * =====================================================
  */
 
@@ -11,7 +11,17 @@ import { createComponent } from "../../utils/createComponent.js";
 
 import { generateShipment } from "../../services/shipment/shipmentService.js";
 
-import { refreshShipmentReport } from "./shipmentReport.js";
+import {
+
+    refreshShipmentReport,
+
+    searchShipmentReport,
+
+    exportShipmentReport
+
+} from "./shipmentReport.js";
+
+let searchTimer = null;
 
 export async function renderShipmentControls(target){
 
@@ -35,86 +45,66 @@ function bindEvents(target){
 
         target.querySelector("#generateShipment");
 
+    const searchBox =
+
+        target.querySelector("#shipmentSearch");
+
+    const exportButton =
+
+        target.querySelector("#exportShipment");
+
+    const actions =
+
+        target.querySelector("#shipmentActions");
+
     if(!generateButton){
 
-        console.error("Generate Shipment button not found.");
+        console.error(
+
+            "Generate Shipment button not found."
+
+        );
 
         return;
 
     }
 
-    generateButton.onclick = async ()=>{
+    // ==========================================
+    // Search (300ms Debounce)
+    // ==========================================
 
-        generateButton.disabled = true;
+    if(searchBox){
 
-        generateButton.textContent =
+        searchBox.oninput = ()=>{
 
-            "Generating...";
+            clearTimeout(searchTimer);
 
-        try{
+            searchTimer = setTimeout(async ()=>{
 
-            const config={
+                await searchShipmentReport(
 
-                saleDays:Number(
+                    searchBox.value
 
-                    target.querySelector("#saleDays").value
+                );
 
-                ),
+            },300);
 
-                targetCover:Number(
+        };
 
-                    target.querySelector("#targetCover").value
+    }
 
-                ),
+    // ==========================================
+    // Export
+    // ==========================================
 
-                recallTrigger:Number(
+    if(exportButton){
 
-                    target.querySelector("#recallTrigger").value
+        exportButton.onclick = ()=>{
 
-                )
+            exportShipmentReport();
 
-            };
+        };
 
-            console.table(config);
-
-            generateShipment(config);
-
-            await refreshShipmentReport();
-
-            const actions=
-
-                target.querySelector("#shipmentActions");
-
-            if(actions){
-
-                actions.style.display="flex";
-
-            }
-
-        }
-
-        catch(error){
-
-            console.error(
-
-                "Shipment Generation Failed",
-
-                error
-
-            );
-
-        }
-
-        finally{
-
-            generateButton.disabled=false;
-
-            generateButton.textContent=
-
-                "Generate Shipment";
-
-        }
-
-    };
+    }
 
 }
