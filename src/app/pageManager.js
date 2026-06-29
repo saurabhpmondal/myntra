@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V1.6
+ * Version : V1.7
  * =====================================================
  */
 
@@ -12,14 +12,27 @@ import { renderDailySales } from "../pages/dailySales/dailySales.js";
 import { renderBusiness } from "../pages/business/business.js";
 import { renderGrowthPage } from "../pages/growth/growth.js";
 import { renderShipment } from "../pages/shipment/shipment.js";
-import { renderSorShipment } from "../pages/sorShipment/sorShipment.js";
 import { renderAds } from "../components/ads/ads.js";
 
 let content = null;
 
+let currentPage = "dashboard";
+
 export function initializePageManager(container){
 
     content = container;
+
+}
+
+export function getCurrentPage(){
+
+    return currentPage;
+
+}
+
+export async function refreshCurrentPage(){
+
+    await openPage(currentPage);
 
 }
 
@@ -32,6 +45,8 @@ export async function openPage(page){
         return;
 
     }
+
+    currentPage = page;
 
     switch(page){
 
@@ -62,12 +77,6 @@ export async function openPage(page){
         case "shipment":
 
             await renderShipment(content);
-
-            break;
-
-        case "sor-shipment":
-
-            await renderSorShipment(content);
 
             break;
 
