@@ -15,7 +15,7 @@ import { renderTable } from "../common/table/table.js";
 
 import { renderAdsKpis } from "./renderAdsKpis.js";
 
-import { renderLineChart } from "../common/chart/chart.js";
+import { renderAdsChart } from "./renderAdsChart.js";
 
 export async function renderAds(target){
 
