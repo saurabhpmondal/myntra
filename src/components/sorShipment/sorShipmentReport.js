@@ -3,13 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SOR Shipment Report
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { createComponent } from "../../utils/createComponent.js";
 
 import { renderTable } from "../common/table/table.js";
+
+import { renderShipmentKpis } from "../shipment/shipmentKpis.js";
 
 import { getShipmentData } from "../../services/sorShipment/sorShipmentService.js";
 
@@ -22,12 +24,6 @@ let reportTarget = null;
 let reportRows = [];
 
 let filteredRows = [];
-
-/**
- * =====================================================
- * Render
- * =====================================================
- */
 
 export async function renderSorShipmentReport(target){
 
@@ -44,12 +40,6 @@ export async function renderSorShipmentReport(target){
     });
 
 }
-
-/**
- * =====================================================
- * Refresh
- * =====================================================
- */
 
 export async function refreshSorShipmentReport(rows=null){
 
@@ -73,23 +63,41 @@ export async function refreshSorShipmentReport(rows=null){
 
     }
 
-    await renderSorShipmentTable();
+    await renderSorShipment();
 
 }
 
-/**
- * =====================================================
- * Render Table
- * =====================================================
- */
+async function renderSorShipment(){
 
-async function renderSorShipmentTable(){
+    reportTarget.innerHTML=`
 
-    reportTarget.innerHTML="";
+        <div id="shipmentKpiContainer"></div>
+
+        <div id="shipmentTableContainer"></div>
+
+    `;
+
+    renderShipmentKpis(
+
+        reportTarget.querySelector(
+
+            "#shipmentKpiContainer"
+
+        ),
+
+        filteredRows,
+
+        "Total SOR Stock"
+
+    );
 
     await renderTable({
 
-        target:reportTarget,
+        target:reportTarget.querySelector(
+
+            "#shipmentTableContainer"
+
+        ),
 
         title:"SOR Shipment Recommendation",
 
@@ -105,25 +113,23 @@ async function renderSorShipmentTable(){
 
 }
 
-/**
- * =====================================================
- * Search
- * =====================================================
- */
-
 export async function searchSorShipmentReport(keyword){
 
     const search=String(
 
         keyword||""
 
-    ).trim().toLowerCase();
+    )
+
+    .trim()
+
+    .toLowerCase();
 
     if(!search){
 
         filteredRows=[...reportRows];
 
-        await renderSorShipmentTable();
+        await renderSorShipment();
 
         return;
 
@@ -135,31 +141,25 @@ export async function searchSorShipmentReport(keyword){
 
             String(row.styleId||"")
 
-            .toLowerCase()
+                .toLowerCase()
 
-            .includes(search)
+                .includes(search)
 
             ||
 
             String(row.erpSku||"")
 
-            .toLowerCase()
+                .toLowerCase()
 
-            .includes(search)
+                .includes(search)
 
         );
 
     });
 
-    await renderSorShipmentTable();
+    await renderSorShipment();
 
 }
-
-/**
- * =====================================================
- * Export
- * =====================================================
- */
 
 export function exportSorShipmentReport(){
 
@@ -182,4 +182,3 @@ export function exportSorShipmentReport(){
     });
 
 }
-
