@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye Search
- * Version : V2.1
+ * Version : V2.2
  * =====================================================
  */
 
@@ -18,6 +18,8 @@ import { renderStyleSelector } from "../selector/styleSelector.js";
 import { renderHeroPanel } from "../hero/heroPanel.js";
 
 import { renderOverviewPanel } from "../overview/overviewPanel.js";
+
+import { renderSalesPanel } from "../sales/salesPanel.js";
 
 export async function renderStyleSearch(target){
 
@@ -224,11 +226,7 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(
-
-        heroSection
-
-    );
+    target.appendChild(heroSection);
 
     await renderHeroPanel(
 
@@ -250,15 +248,33 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(
-
-        overviewSection
-
-    );
+    target.appendChild(overviewSection);
 
     await renderOverviewPanel(
 
         overviewSection,
+
+        context
+
+    );
+
+    // ==========================================
+    // Sales Intelligence
+    // ==========================================
+
+    const salesSection =
+
+        document.createElement("div");
+
+    salesSection.className =
+
+        "dashboard-section";
+
+    target.appendChild(salesSection);
+
+    await renderSalesPanel(
+
+        salesSection,
 
         context
 
