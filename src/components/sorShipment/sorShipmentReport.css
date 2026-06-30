@@ -54,3 +54,43 @@
     font-size:15px;
 
 }
+
+.shipment-kpi-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    gap:16px;
+
+    margin-bottom:20px;
+
+}
+
+.shipment-kpi-card{
+
+    padding:18px;
+
+    text-align:center;
+
+}
+
+.shipment-kpi-title{
+
+    font-size:13px;
+
+    color:#6B7280;
+
+    margin-bottom:10px;
+
+}
+
+.shipment-kpi-value{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
