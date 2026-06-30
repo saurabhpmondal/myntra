@@ -12,7 +12,7 @@ import { renderDailySales } from "../pages/dailySales/dailySales.js";
 import { renderBusiness } from "../pages/business/business.js";
 import { renderGrowthPage } from "../pages/growth/growth.js";
 import { renderShipment } from "../pages/shipment/shipment.js";
-import { renderSorShipment } from "../pages/shipment/sorShipment.js";
+import { renderSorShipment } from "../pages/sorShipment/sorShipment.js";
 import { renderAds } from "../components/ads/ads.js";
 
 let content = null;
