@@ -11,13 +11,13 @@ import { DataStore } from "../dataService.js";
 
 import { filterByDays } from "../dateFilterService.js";
 
-import { buildShipmentData } from "./shipmentBuilder.js";
+import { buildShipmentData } from "./sorShipmentBuilder.js";
 
-import { calculateShipmentData } from "./shipmentCalculation.js";
+import { calculateShipmentData } from "./sorShipmentCalculation.js";
 
-import { applyShipmentRules } from "./shipmentRules.js";
+import { applyShipmentRules } from "./sorShipmentRules.js";
 
-import { validateShipmentData } from "./shipmentValidator.js";
+import { validateShipmentData } from "./sorShipmentValidator.js";
 
 let shipmentData = [];
 
@@ -157,15 +157,15 @@ export function generateShipment(config){
 
     );
 
-shipmentData = shipmentData.filter(row =>
+    shipmentData = shipmentData.filter(row =>
 
-    Number(row.gross || 0) > 0 ||
+        Number(row.gross || 0) > 0 ||
 
-    Number(row.shipment || 0) > 0 ||
+        Number(row.shipment || 0) > 0 ||
 
-    Number(row.recall || 0) > 0
+        Number(row.recall || 0) > 0
 
-);
+    );
 
     // ==========================================
     // Sort by Gross Sale
@@ -269,9 +269,8 @@ export function getShipmentConfig(){
 
 export function clearShipmentData(){
 
-    shipmentData=[];
+    shipmentData = [];
 
-    shipmentConfig=null;
+    shipmentConfig = null;
 
 }
-
