@@ -1,33 +1,72 @@
-.filterbar{
-
-    min-height:68px;
+.filter-bar{
 
     display:flex;
 
-    align-items:center;
+    justify-content:space-between;
 
-    gap:12px;
+    align-items:flex-end;
 
-    padding:14px 24px;
+    gap:20px;
 
-    background:#ffffff;
+    padding:18px 24px;
 
-    border-bottom:1px solid #E5E7EB;
+    background:#fff;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
 
     flex-wrap:wrap;
 
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+
 }
 
-.filterbar select,
-.filterbar input{
+.filter-grid{
 
-    height:40px;
+    display:grid;
 
-    padding:0 14px;
+    grid-template-columns:
+
+        repeat(5,minmax(170px,1fr));
+
+    gap:16px;
+
+    flex:1;
+
+}
+
+.filter-item{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+}
+
+.filter-item label{
+
+    font-size:12px;
+
+    font-weight:600;
+
+    color:#6B7280;
+
+}
+
+.filter-item select,
+
+.filter-item input{
+
+    height:42px;
 
     border:1px solid #D1D5DB;
 
     border-radius:8px;
+
+    padding:0 12px;
 
     font-size:14px;
 
@@ -35,17 +74,27 @@
 
 }
 
-.filterbar input{
+.search-box{
 
-    width:260px;
+    min-width:240px;
 
 }
 
-.filterbar button{
+.filter-actions{
 
-    height:40px;
+    display:flex;
 
-    padding:0 16px;
+    align-items:flex-end;
+
+    gap:10px;
+
+}
+
+.filter-actions button{
+
+    height:42px;
+
+    padding:0 18px;
 
     border:none;
 
@@ -53,26 +102,36 @@
 
     cursor:pointer;
 
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
     font-weight:600;
+
+    transition:.2s;
 
 }
 
-#btnReset{
+.secondary{
 
     background:#F3F4F6;
 
+    color:#374151;
+
 }
 
-#btnRefresh{
+.secondary:hover{
+
+    background:#E5E7EB;
+
+}
+
+.primary{
 
     background:#FF3F6C;
 
     color:#fff;
+
+}
+
+.primary:hover{
+
+    background:#E6365E;
 
 }
