@@ -11,30 +11,22 @@ import { createComponent } from "../../utils/createComponent.js";
 
 import { renderTable } from "../common/table/table.js";
 
-import { getSorShipmentData } from "../../services/sorShipment/sorShipmentService.js";
+import { getShipmentData } from "../../services/sorShipment/sorShipmentService.js";
 
-import { getSorShipmentColumns } from "../../services/sorShipment/sorShipmentColumns.js";
+import { getShipmentColumns } from "../../services/sorShipment/sorShipmentColumns.js";
 
 import { exportExcel } from "../../utils/exportExcel.js";
 
 let reportTarget = null;
 
-/**
- * Master dataset
- */
-
 let reportRows = [];
-
-/**
- * Current filtered dataset
- */
 
 let filteredRows = [];
 
 /**
- * ==========================================
+ * =====================================================
  * Render
- * ==========================================
+ * =====================================================
  */
 
 export async function renderSorShipmentReport(target){
@@ -54,12 +46,12 @@ export async function renderSorShipmentReport(target){
 }
 
 /**
- * ==========================================
- * Refresh Report
- * ==========================================
+ * =====================================================
+ * Refresh
+ * =====================================================
  */
 
-export async function refreshSorShipmentReport(rows = null){
+export async function refreshSorShipmentReport(rows=null){
 
     if(!reportTarget){
 
@@ -69,15 +61,15 @@ export async function refreshSorShipmentReport(rows = null){
 
     if(rows===null){
 
-        reportRows = [...getSorShipmentData()];
+        reportRows=[...getShipmentData()];
 
-        filteredRows = [...reportRows];
+        filteredRows=[...reportRows];
 
     }
 
     else{
 
-        filteredRows = [...rows];
+        filteredRows=[...rows];
 
     }
 
@@ -86,14 +78,14 @@ export async function refreshSorShipmentReport(rows = null){
 }
 
 /**
- * ==========================================
+ * =====================================================
  * Render Table
- * ==========================================
+ * =====================================================
  */
 
 async function renderSorShipmentTable(){
 
-    reportTarget.innerHTML = "";
+    reportTarget.innerHTML="";
 
     await renderTable({
 
@@ -103,7 +95,7 @@ async function renderSorShipmentTable(){
 
         subtitle:`${filteredRows.length.toLocaleString("en-IN")} Styles`,
 
-        columns:getSorShipmentColumns(),
+        columns:getShipmentColumns(),
 
         rows:filteredRows,
 
@@ -114,38 +106,22 @@ async function renderSorShipmentTable(){
 }
 
 /**
- * ==========================================
- * Get Current Rows
- * ==========================================
- */
-
-export function getFilteredSorShipmentRows(){
-
-    return [...filteredRows];
-
-}
-
-/**
- * ==========================================
- * Search Shipment Report
- * ==========================================
+ * =====================================================
+ * Search
+ * =====================================================
  */
 
 export async function searchSorShipmentReport(keyword){
 
-    const search = String(
+    const search=String(
 
-        keyword || ""
+        keyword||""
 
-    )
-
-    .trim()
-
-    .toLowerCase();
+    ).trim().toLowerCase();
 
     if(!search){
 
-        filteredRows = [...reportRows];
+        filteredRows=[...reportRows];
 
         await renderSorShipmentTable();
 
@@ -153,25 +129,23 @@ export async function searchSorShipmentReport(keyword){
 
     }
 
-    filteredRows = reportRows.filter(row=>{
-
-        const styleId = String(
-
-            row.styleId || ""
-
-        ).toLowerCase();
-
-        const erpSku = String(
-
-            row.erpSku || ""
-
-        ).toLowerCase();
+    filteredRows=reportRows.filter(row=>{
 
         return(
 
-            styleId.includes(search) ||
+            String(row.styleId||"")
 
-            erpSku.includes(search)
+            .toLowerCase()
+
+            .includes(search)
+
+            ||
+
+            String(row.erpSku||"")
+
+            .toLowerCase()
+
+            .includes(search)
 
         );
 
@@ -182,9 +156,9 @@ export async function searchSorShipmentReport(keyword){
 }
 
 /**
- * ==========================================
- * Export Shipment Report
- * ==========================================
+ * =====================================================
+ * Export
+ * =====================================================
  */
 
 export function exportSorShipmentReport(){
@@ -201,7 +175,7 @@ export function exportSorShipmentReport(){
 
         filename:"SOR Shipment Recommendation",
 
-        columns:getSorShipmentColumns(),
+        columns:getShipmentColumns(),
 
         rows:filteredRows
 
