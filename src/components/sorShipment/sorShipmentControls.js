@@ -2,32 +2,32 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Shipment Controls
- * Version : V5.3
+ * Module  : SOR Shipment Controls
+ * Version : V1.0
  * =====================================================
  */
 
 import { createComponent } from "../../utils/createComponent.js";
 
-import { generateShipment } from "../../services/shipment/shipmentService.js";
+import { generateSorShipment } from "../../services/sorShipment/sorShipmentService.js";
 
 import {
 
-    refreshShipmentReport,
+    refreshSorShipmentReport,
 
-    exportShipmentReport
+    exportSorShipmentReport
 
-} from "./shipmentReport.js";
+} from "./sorShipmentReport.js";
 
-export async function renderShipmentControls(target){
+export async function renderSorShipmentControls(target){
 
     await createComponent({
 
         target,
 
-        html:"src/components/shipment/shipmentControls.html",
+        html:"src/components/sorShipment/sorShipmentControls.html",
 
-        css:"src/components/shipment/shipmentControls.css"
+        css:"src/components/sorShipment/sorShipmentControls.css"
 
     });
 
@@ -87,9 +87,9 @@ function bindEvents(target){
 
             console.table(config);
 
-            generateShipment(config);
+            generateSorShipment(config);
 
-            await refreshShipmentReport();
+            await refreshSorShipmentReport();
 
             const actions =
 
@@ -107,7 +107,7 @@ function bindEvents(target){
 
             console.error(
 
-                "Shipment Generation Failed",
+                "SOR Shipment Generation Failed",
 
                 error
 
@@ -135,7 +135,7 @@ function bindEvents(target){
 
         exportButton.onclick = ()=>{
 
-            exportShipmentReport();
+            exportSorShipmentReport();
 
         };
 
