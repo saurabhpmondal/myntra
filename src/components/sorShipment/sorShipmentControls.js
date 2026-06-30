@@ -9,7 +9,7 @@
 
 import { createComponent } from "../../utils/createComponent.js";
 
-import { generateSorShipment } from "../../services/sorShipment/sorShipmentService.js";
+import { generateShipment } from "../../services/sorShipment/sorShipmentService.js";
 
 import {
 
