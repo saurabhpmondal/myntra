@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Executive Filter Bar
- * Version : V1.4
+ * Version : V1.1
  * =====================================================
  */
 
@@ -21,17 +21,14 @@ import {
 import { DataStore } from "../../services/dataService.js";
 
 import {
+    getLatestPeriod,
     getPeriodKey,
     getPeriodLabel
 } from "../../services/periodService.js";
 
-import { refreshCurrentPage } from "../../app/pageManager.js";
-
-let filterRoot = null;
+import { refreshDashboard } from "../../pages/dashboard/dashboard.js";
 
 export async function renderFilterBar(target){
-
-    filterRoot = target;
 
     await createComponent({
 
@@ -45,73 +42,49 @@ export async function renderFilterBar(target){
 
     initializeFilters();
 
-    buildPeriodList();
+    populatePeriods();
 
-    buildSelect(
+    populateSelect(
         "filter-brand",
-        LookupStore.brands
+        LookupStore.brands,
+        "All"
     );
 
-    buildSelect(
+    populateSelect(
         "filter-category",
-        LookupStore.categories
+        LookupStore.categories,
+        "All"
     );
 
-    buildSelect(
+    populateSelect(
         "filter-status",
-        LookupStore.erpStatuses
+        LookupStore.erpStatuses,
+        "All"
     );
 
-    syncUI();
-
-    bindEvents();
+    attachEvents();
 
 }
 
-/* =====================================
-   Helpers
-===================================== */
+function populatePeriods(){
 
-function $(id){
-
-    return filterRoot.querySelector(`#${id}`);
-
-}
-
-/* =====================================
-   Period
-===================================== */
-
-function buildPeriodList(){
-
-    const select = $("filter-period");
-
-    select.innerHTML = "";
+    const select = document.getElementById("filter-period");
 
     const periods = new Map();
 
     DataStore.sales.forEach(row=>{
 
         const key = getPeriodKey(
-
             row.month,
-
             row.year
-
         );
 
         periods.set(
-
             key,
-
             getPeriodLabel(
-
                 row.month,
-
                 row.year
-
             )
-
         );
 
     });
@@ -120,120 +93,90 @@ function buildPeriodList(){
         .sort((a,b)=>b[0]-a[0])
         .forEach(([key,label])=>{
 
-            const option = document.createElement("option");
+            const option=document.createElement("option");
 
-            option.value = key;
+            option.value=key;
 
-            option.textContent = label;
-
-            select.appendChild(option);
-
-        });
-
-}
-
-/* =====================================
-   Dropdowns
-===================================== */
-
-function buildSelect(id,list){
-
-    const select = $(id);
-
-    select.innerHTML = "";
-
-    const option = document.createElement("option");
-
-    option.value = "All";
-
-    option.textContent = "All";
-
-    select.appendChild(option);
-
-    [...list]
-        .sort()
-        .forEach(item=>{
-
-            const option = document.createElement("option");
-
-            option.value = item;
-
-            option.textContent = item;
+            option.textContent=label;
 
             select.appendChild(option);
 
         });
 
-}
+    const latest=getLatestPeriod(DataStore.sales);
 
-/* =====================================
-   Sync UI
-===================================== */
+    if(latest){
 
-function syncUI(){
+        select.value=latest.key;
 
-    $("filter-period").value = FilterState.period;
-
-    $("filter-brand").value = FilterState.brand;
-
-    $("filter-category").value = FilterState.category;
-
-    $("filter-status").value = FilterState.erpStatus;
-
-    $("filter-search").value = FilterState.search;
+    }
 
 }
 
-/* =====================================
-   Events
-===================================== */
+function populateSelect(id,list,first){
 
-function bindEvents(){
+    const select=document.getElementById(id);
 
-    $("applyFilters").onclick = async ()=>{
+    select.innerHTML="";
 
-        updateFilters({
+    const all=document.createElement("option");
 
-            period:Number(
+    all.value="All";
 
-                $("filter-period").value
+    all.textContent=first;
 
-            ),
+    select.appendChild(all);
 
-            brand:
+    list.forEach(item=>{
 
-                $("filter-brand").value,
+        const option=document.createElement("option");
 
-            category:
+        option.value=item;
 
-                $("filter-category").value,
+        option.textContent=item;
 
-            erpStatus:
+        select.appendChild(option);
 
-                $("filter-status").value,
+    });
 
-            search:
+}
 
-                $("filter-search")
+function attachEvents(){
 
-                    .value
+    document
+        .getElementById("applyFilters")
+        .addEventListener("click",()=>{
 
-                    .trim()
+            updateFilters({
+
+                period:Number(document.getElementById("filter-period").value),
+
+                brand:document.getElementById("filter-brand").value,
+
+                category:document.getElementById("filter-category").value,
+
+                erpStatus:document.getElementById("filter-status").value,
+
+                search:document.getElementById("filter-search").value.trim()
+
+            });
+
+            refreshDashboard();
 
         });
 
-        await refreshCurrentPage();
+    document
+        .getElementById("resetFilters")
+        .addEventListener("click",()=>{
 
-    };
+            resetFilters();
 
-    $("resetFilters").onclick = async ()=>{
+            renderFilterBar(
+                document.querySelector(".filter-container")
+            );
 
-        resetFilters();
+            refreshDashboard();
 
-        syncUI();
-
-        await refreshCurrentPage();
-
-    };
+        });
 
 }
