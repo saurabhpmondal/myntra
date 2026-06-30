@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Executive Filter Bar
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
@@ -26,7 +26,7 @@ import {
     getPeriodLabel
 } from "../../services/periodService.js";
 
-import { refreshDashboard } from "../../pages/dashboard/dashboard.js";
+import { refreshCurrentPage } from "../../app/pageManager.js";
 
 export async function renderFilterBar(target){
 
@@ -62,13 +62,36 @@ export async function renderFilterBar(target){
         "All"
     );
 
+    syncUI();
+
     attachEvents();
+
+}
+
+function syncUI(){
+
+    document.getElementById("filter-period").value =
+        FilterState.period;
+
+    document.getElementById("filter-brand").value =
+        FilterState.brand;
+
+    document.getElementById("filter-category").value =
+        FilterState.category;
+
+    document.getElementById("filter-status").value =
+        FilterState.erpStatus;
+
+    document.getElementById("filter-search").value =
+        FilterState.search;
 
 }
 
 function populatePeriods(){
 
     const select = document.getElementById("filter-period");
+
+    select.innerHTML = "";
 
     const periods = new Map();
 
@@ -103,6 +126,14 @@ function populatePeriods(){
 
         });
 
+    if(FilterState.period){
+
+        select.value = FilterState.period;
+
+        return;
+
+    }
+
     const latest=getLatestPeriod(DataStore.sales);
 
     if(latest){
@@ -127,17 +158,19 @@ function populateSelect(id,list,first){
 
     select.appendChild(all);
 
-    list.forEach(item=>{
+    [...list]
+        .sort()
+        .forEach(item=>{
 
-        const option=document.createElement("option");
+            const option=document.createElement("option");
 
-        option.value=item;
+            option.value=item;
 
-        option.textContent=item;
+            option.textContent=item;
 
-        select.appendChild(option);
+            select.appendChild(option);
 
-    });
+        });
 
 }
 
@@ -145,38 +178,44 @@ function attachEvents(){
 
     document
         .getElementById("applyFilters")
-        .addEventListener("click",()=>{
+        .onclick = async ()=>{
 
             updateFilters({
 
-                period:Number(document.getElementById("filter-period").value),
+                period:Number(
+                    document.getElementById("filter-period").value
+                ),
 
-                brand:document.getElementById("filter-brand").value,
+                brand:
+                    document.getElementById("filter-brand").value,
 
-                category:document.getElementById("filter-category").value,
+                category:
+                    document.getElementById("filter-category").value,
 
-                erpStatus:document.getElementById("filter-status").value,
+                erpStatus:
+                    document.getElementById("filter-status").value,
 
-                search:document.getElementById("filter-search").value.trim()
+                search:
+                    document.getElementById("filter-search")
+                        .value
+                        .trim()
 
             });
 
-            refreshDashboard();
+            await refreshCurrentPage();
 
-        });
+        };
 
     document
         .getElementById("resetFilters")
-        .addEventListener("click",()=>{
+        .onclick = async ()=>{
 
             resetFilters();
 
-            renderFilterBar(
-                document.querySelector(".filter-container")
-            );
+            syncUI();
 
-            refreshDashboard();
+            await refreshCurrentPage();
 
-        });
+        };
 
 }
