@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -20,6 +20,15 @@ let pageContainer = null;
 export async function renderStyleEye(target){
 
     pageContainer = target;
+
+    // Hide global filter bar
+    const filterBar = document.getElementById("filterbar");
+
+    if(filterBar){
+
+        filterBar.style.display = "none";
+
+    }
 
     await refreshStyleEye();
 
@@ -48,5 +57,24 @@ export async function refreshStyleEye(){
     pageContainer.appendChild(searchSection);
 
     await renderStyleSearch(searchSection);
+
+}
+
+/**
+ * ==========================================
+ * Cleanup
+ * Called when leaving Style Eye
+ * ==========================================
+ */
+
+export function destroyStyleEye(){
+
+    const filterBar = document.getElementById("filterbar");
+
+    if(filterBar){
+
+        filterBar.style.display = "";
+
+    }
 
 }
