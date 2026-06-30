@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Style Selector
- * Version : V1.0
+ * Module  : Premium Style Selector
+ * Version : V2.1
  * =====================================================
  */
 
@@ -11,8 +11,8 @@ import { createComponent } from "../../../utils/createComponent.js";
 
 export async function renderStyleSelector(
     target,
-    styles=[],
-    onSelect=null
+    styles = [],
+    onSelect = null
 ){
 
     await createComponent({
@@ -25,98 +25,240 @@ export async function renderStyleSelector(
 
     });
 
+    document.getElementById("selectorSubtitle").textContent =
+
+        `${styles.length} style${styles.length>1?"s":""} found. Select one to continue with Deep Dive.`;
+
+    document.getElementById("selectorCount").textContent =
+
+        `${styles.length} Result${styles.length>1?"s":""}`;
+
     const container =
 
-        target.querySelector(
+        document.getElementById(
 
-            "#styleSelectorContainer"
+            "styleSelectorContainer"
 
         );
 
-    container.innerHTML = `
-
-<div class="style-selector-title">
-
-Multiple Styles Found
-
-</div>
-
-<div class="style-selector-grid">
-
-${styles.map(style=>`
+    container.innerHTML = styles.map(style=>`
 
 <div class="style-selector-card">
 
-<div class="style-selector-brand">
+    <div class="style-selector-top">
 
-${style.brand}
+        <div class="style-selector-image">
+
+            Image Coming Soon
+
+        </div>
+
+        <div class="style-selector-content">
+
+            <div class="style-selector-brand">
+
+                <h3>
+
+                    ${style.brand || "-"}
+
+                </h3>
+
+                <div class="style-selector-status">
+
+                    ${style.erpStatus || "-"}
+
+                </div>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    Style ID
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ${style.styleId || "-"}
+
+                </span>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    ERP SKU
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ${style.erpSku || "-"}
+
+                </span>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    Launch Date
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ${style.launchDate || "-"}
+
+                </span>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    Launch Age
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ${style.launchAge ?? "-"}
+
+                </span>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    Rating
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ⭐ ${style.rating ?? "-"}
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="style-selector-divider"></div>
+
+    <div class="style-selector-kpis">
+
+        <div class="selector-kpi">
+
+            <div class="selector-kpi-label">
+
+                MRP
+
+            </div>
+
+            <div class="selector-kpi-value">
+
+                ${style.mrp || "-"}
+
+            </div>
+
+        </div>
+
+        <div class="selector-kpi">
+
+            <div class="selector-kpi-label">
+
+                TP
+
+            </div>
+
+            <div class="selector-kpi-value">
+
+                ${style.tp || "-"}
+
+            </div>
+
+        </div>
+
+        <div class="selector-kpi">
+
+            <div class="selector-kpi-label">
+
+                Category
+
+            </div>
+
+            <div class="selector-kpi-value">
+
+                ${style.category || "-"}
+
+            </div>
+
+        </div>
+
+        <div class="selector-kpi">
+
+            <div class="selector-kpi-label">
+
+                Brand
+
+            </div>
+
+            <div class="selector-kpi-value">
+
+                ${style.brand || "-"}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="style-selector-footer">
+
+        <button
+            class="style-selector-button"
+            data-style="${style.styleId}">
+
+            Deep Dive →
+
+        </button>
+
+    </div>
 
 </div>
 
-<div class="style-selector-item">
-
-<b>Style ID</b><br>
-
-${style.styleId}
-
-</div>
-
-<div class="style-selector-item">
-
-<b>ERP SKU</b><br>
-
-${style.erpSku}
-
-</div>
-
-<div class="style-selector-item">
-
-<b>Status</b><br>
-
-${style.erpStatus}
-
-</div>
-
-<button
-
-class="style-selector-button"
-
-data-style="${style.styleId}"
-
->
-
-Deep Dive
-
-</button>
-
-</div>
-
-`).join("")}
-
-</div>
-
-`;
+`).join("");
 
     container
-    .querySelectorAll(
-        ".style-selector-button"
-    )
-    .forEach(button=>{
+        .querySelectorAll(".style-selector-button")
+        .forEach(button=>{
 
-        button.onclick=()=>{
+            button.onclick=()=>{
 
-            if(typeof onSelect==="function"){
+                if(typeof onSelect==="function"){
 
-                onSelect(
+                    onSelect(
 
-                    button.dataset.style
+                        button.dataset.style
 
-                );
+                    );
 
-            }
+                }
 
-        };
+            };
 
-    });
+        });
 
 }
