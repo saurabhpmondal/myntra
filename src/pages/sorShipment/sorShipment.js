@@ -2,17 +2,17 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Shipment Page
- * Version : V5.0
+ * Module  : SOR Shipment Page
+ * Version : V1.0
  * =====================================================
  */
 
-import { renderShipmentControls } from "../../components/shipment/shipmentControls.js";
-import { renderShipmentReport } from "../../components/shipment/shipmentReport.js";
+import { renderSorShipmentControls } from "../../components/sorShipment/sorShipmentControls.js";
+import { renderSorShipmentReport } from "../../components/sorShipment/sorShipmentReport.js";
 
 let shipmentContainer = null;
 
-export async function renderShipment(target){
+export async function renderSorShipment(target){
 
     shipmentContainer = target;
 
@@ -28,7 +28,7 @@ export async function renderShipment(target){
 
     shipmentContainer.appendChild(controls);
 
-    await renderShipmentControls(controls);
+    await renderSorShipmentControls(controls);
 
     // ==========================================
     // Report
@@ -40,6 +40,6 @@ export async function renderShipment(target){
 
     shipmentContainer.appendChild(report);
 
-    await renderShipmentReport(report);
+    await renderSorShipmentReport(report);
 
 }
