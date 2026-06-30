@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V1.8
+ * Version : V1.9
  * =====================================================
  */
 
@@ -13,7 +13,10 @@ import { renderBusiness } from "../pages/business/business.js";
 import { renderGrowthPage } from "../pages/growth/growth.js";
 import { renderShipment } from "../pages/shipment/shipment.js";
 import { renderSorShipment } from "../pages/sorShipment/sorShipment.js";
-import { renderStyleEye } from "../pages/styleEye/styleEye.js";
+import {
+    renderStyleEye,
+    destroyStyleEye
+} from "../pages/styleEye/styleEye.js";
 import { renderAds } from "../components/ads/ads.js";
 
 let content = null;
@@ -45,6 +48,16 @@ export async function openPage(page){
         console.error("Page Manager not initialized.");
 
         return;
+
+    }
+
+    // ==========================================
+    // Cleanup previous page
+    // ==========================================
+
+    if(currentPage === "style-eye"){
+
+        destroyStyleEye();
 
     }
 
@@ -129,14 +142,4 @@ function comingSoon(page){
 
     content.innerHTML = `
 
-        <div class="dashboard-card" style="padding:60px;text-align:center;">
-
-            <h2>${title}</h2>
-
-            <p>This module is under development.</p>
-
-        </div>
-
-    `;
-
-}
+        <div class="dashboard-card" style="padding:60px;text-align
