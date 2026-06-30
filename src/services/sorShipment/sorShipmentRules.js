@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Shipment Rule Engine
- * Version : V5.1
+ * Module  : SOR Shipment Rule Engine
+ * Version : V1.0
  * =====================================================
  */
 
@@ -21,10 +21,8 @@ export function applyShipmentRules(
 
         let recall = 0;
 
-        let remark = "";
-
         // =====================================
-        // Recall (Highest Priority)
+        // Recall
         // =====================================
 
         if(
@@ -73,11 +71,7 @@ export function applyShipmentRules(
         // No Projection
         // =====================================
 
-        if(
-
-            shipment===0
-
-        ){
+        if(shipment===0){
 
             return{
 
@@ -99,11 +93,7 @@ export function applyShipmentRules(
 
         if(
 
-            String(
-
-                row.erpStatus || ""
-
-            )
+            String(row.erpStatus || "")
 
             .trim()
 
@@ -174,62 +164,6 @@ export function applyShipmentRules(
                 recall:0,
 
                 remark:"Low Rating (<3.8)"
-
-            };
-
-        }
-
-        // =====================================
-        // Restricted Brands
-        // =====================================
-
-        const brand =
-
-            String(
-
-                row.brand || ""
-
-            )
-
-            .trim()
-
-            .toUpperCase();
-
-        if(
-
-            brand==="KALINI"
-
-        ){
-
-            return{
-
-                ...row,
-
-                shipment:0,
-
-                recall:0,
-
-                remark:"Brand Restricted (Kalini)"
-
-            };
-
-        }
-
-        if(
-
-            brand==="MITERA"
-
-        ){
-
-            return{
-
-                ...row,
-
-                shipment:0,
-
-                recall:0,
-
-                remark:"Brand Restricted (Mitera)"
 
             };
 
