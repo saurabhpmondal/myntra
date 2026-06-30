@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye Search
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -16,6 +16,8 @@ import { buildStyleContext } from "../../../services/styleEye/styleContextBuilde
 import { renderStyleSelector } from "../selector/styleSelector.js";
 
 import { renderHeroPanel } from "../hero/heroPanel.js";
+
+import { renderOverviewPanel } from "../overview/overviewPanel.js";
 
 export async function renderStyleSearch(target){
 
@@ -36,17 +38,14 @@ export async function renderStyleSearch(target){
 function bindEvents(target){
 
     const searchBox =
-
         target.querySelector("#styleEyeSearch");
 
     const button =
-
         target.querySelector("#deepDiveButton");
 
     button.onclick = async ()=>{
 
         const keyword =
-
             searchBox.value.trim();
 
         if(!keyword){
@@ -89,7 +88,7 @@ function bindEvents(target){
 
                 case "MULTIPLE":
 
-                    target.innerHTML="";
+                    target.innerHTML = "";
 
                     await renderStyleSelector(
 
@@ -127,6 +126,10 @@ function bindEvents(target){
 
                     break;
 
+                default:
+
+                    break;
+
             }
 
         }
@@ -135,7 +138,7 @@ function bindEvents(target){
 
             console.error(
 
-                "Style Eye Search",
+                "Style Eye Search Failed",
 
                 error
 
@@ -151,9 +154,9 @@ function bindEvents(target){
 
         finally{
 
-            button.disabled=false;
+            button.disabled = false;
 
-            button.textContent="🔍 Deep Dive";
+            button.textContent = "🔍 Deep Dive";
 
         }
 
@@ -199,7 +202,7 @@ async function openStyle(
 
         alert(
 
-            "Unable to build style context."
+            "Unable to build Style Context."
 
         );
 
@@ -207,11 +210,11 @@ async function openStyle(
 
     }
 
-    target.innerHTML="";
+    target.innerHTML = "";
 
-    // -----------------------------------------
+    // ==========================================
     // Hero Panel
-    // -----------------------------------------
+    // ==========================================
 
     const heroSection =
 
@@ -235,43 +238,29 @@ async function openStyle(
 
     );
 
-    // -----------------------------------------
-    // Placeholder
-    // -----------------------------------------
+    // ==========================================
+    // Overview Panel
+    // ==========================================
 
-    const placeholder =
+    const overviewSection =
 
         document.createElement("div");
 
-    placeholder.className =
+    overviewSection.className =
 
-        "dashboard-card";
-
-    placeholder.style.padding="40px";
-
-    placeholder.style.textAlign="center";
-
-    placeholder.style.marginTop="24px";
-
-    placeholder.innerHTML=`
-
-<h2>
-
-Overview Panel
-
-</h2>
-
-<p>
-
-🚀 Coming in the next phase...
-
-</p>
-
-`;
+        "dashboard-section";
 
     target.appendChild(
 
-        placeholder
+        overviewSection
+
+    );
+
+    await renderOverviewPanel(
+
+        overviewSection,
+
+        context
 
     );
 
