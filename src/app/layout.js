@@ -9,7 +9,7 @@
 
 import { renderSidebar } from "../components/sidebar/sidebar.js";
 import { renderHeader } from "../components/header/header.js";
-import { renderFilterBar } from "../components/filterbar/filterbar.js";
+import { renderFilterBar } from "../components/filterBar/filterBar.js";
 import { renderCommandPalette } from "../components/commandPalette/commandPalette.js";
 
 import {
