@@ -87,7 +87,7 @@ function bindEvents(target){
 
             console.table(config);
 
-            generateSorShipment(config);
+            generateShipment(config);
 
             await refreshSorShipmentReport();
 
