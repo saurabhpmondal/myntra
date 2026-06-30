@@ -142,4 +142,14 @@ function comingSoon(page){
 
     content.innerHTML = `
 
-        <div class="dashboard-card" style="padding:60px;text-align
+        <div class="dashboard-card" style="padding:60px;text-align:center;">
+
+            <h2>${title}</h2>
+
+            <p>This module is under development.</p>
+
+        </div>
+
+    `;
+
+}
