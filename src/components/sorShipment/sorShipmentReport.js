@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Shipment Report
- * Version : V5.2
+ * Module  : SOR Shipment Report
+ * Version : V1.0
  * =====================================================
  */
 
@@ -11,9 +11,9 @@ import { createComponent } from "../../utils/createComponent.js";
 
 import { renderTable } from "../common/table/table.js";
 
-import { getShipmentData } from "../../services/shipment/shipmentService.js";
+import { getSorShipmentData } from "../../services/sorShipment/sorShipmentService.js";
 
-import { getShipmentColumns } from "../../services/shipment/shipmentColumns.js";
+import { getSorShipmentColumns } from "../../services/sorShipment/sorShipmentColumns.js";
 
 import { exportExcel } from "../../utils/exportExcel.js";
 
@@ -37,7 +37,7 @@ let filteredRows = [];
  * ==========================================
  */
 
-export async function renderShipmentReport(target){
+export async function renderSorShipmentReport(target){
 
     reportTarget = target;
 
@@ -45,9 +45,9 @@ export async function renderShipmentReport(target){
 
         target,
 
-        html:"src/components/shipment/shipmentReport.html",
+        html:"src/components/sorShipment/sorShipmentReport.html",
 
-        css:"src/components/shipment/shipmentReport.css"
+        css:"src/components/sorShipment/sorShipmentReport.css"
 
     });
 
@@ -59,7 +59,7 @@ export async function renderShipmentReport(target){
  * ==========================================
  */
 
-export async function refreshShipmentReport(rows = null){
+export async function refreshSorShipmentReport(rows = null){
 
     if(!reportTarget){
 
@@ -69,7 +69,7 @@ export async function refreshShipmentReport(rows = null){
 
     if(rows===null){
 
-        reportRows = [...getShipmentData()];
+        reportRows = [...getSorShipmentData()];
 
         filteredRows = [...reportRows];
 
@@ -81,7 +81,7 @@ export async function refreshShipmentReport(rows = null){
 
     }
 
-    await renderShipmentTable();
+    await renderSorShipmentTable();
 
 }
 
@@ -91,7 +91,7 @@ export async function refreshShipmentReport(rows = null){
  * ==========================================
  */
 
-async function renderShipmentTable(){
+async function renderSorShipmentTable(){
 
     reportTarget.innerHTML = "";
 
@@ -99,11 +99,11 @@ async function renderShipmentTable(){
 
         target:reportTarget,
 
-        title:"SJIT Shipment Recommendation",
+        title:"SOR Shipment Recommendation",
 
         subtitle:`${filteredRows.length.toLocaleString("en-IN")} Styles`,
 
-        columns:getShipmentColumns(),
+        columns:getSorShipmentColumns(),
 
         rows:filteredRows,
 
@@ -119,7 +119,7 @@ async function renderShipmentTable(){
  * ==========================================
  */
 
-export function getFilteredShipmentRows(){
+export function getFilteredSorShipmentRows(){
 
     return [...filteredRows];
 
@@ -131,7 +131,7 @@ export function getFilteredShipmentRows(){
  * ==========================================
  */
 
-export async function searchShipmentReport(keyword){
+export async function searchSorShipmentReport(keyword){
 
     const search = String(
 
@@ -143,18 +143,16 @@ export async function searchShipmentReport(keyword){
 
     .toLowerCase();
 
-    // Empty Search
     if(!search){
 
         filteredRows = [...reportRows];
 
-        await renderShipmentTable();
+        await renderSorShipmentTable();
 
         return;
 
     }
 
-    // Filter
     filteredRows = reportRows.filter(row=>{
 
         const styleId = String(
@@ -179,7 +177,7 @@ export async function searchShipmentReport(keyword){
 
     });
 
-    await renderShipmentTable();
+    await renderSorShipmentTable();
 
 }
 
@@ -189,13 +187,7 @@ export async function searchShipmentReport(keyword){
  * ==========================================
  */
 
-/**
- * ==========================================
- * Export Shipment Report
- * ==========================================
- */
-
-export function exportShipmentReport(){
+export function exportSorShipmentReport(){
 
     if(!filteredRows.length){
 
@@ -207,9 +199,9 @@ export function exportShipmentReport(){
 
     exportExcel({
 
-        filename:"SJIT Shipment Recommendation",
+        filename:"SOR Shipment Recommendation",
 
-        columns:getShipmentColumns(),
+        columns:getSorShipmentColumns(),
 
         rows:filteredRows
 
