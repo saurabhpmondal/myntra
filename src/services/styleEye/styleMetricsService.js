@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Metrics Service
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -11,7 +11,7 @@ import { DataStore } from "../dataService.js";
 
 /**
  * =====================================================
- * Build Metrics
+ * Build Style Metrics
  * =====================================================
  */
 
@@ -19,29 +19,65 @@ export function buildStyleMetrics(styleId){
 
     styleId = String(styleId || "").trim();
 
-    // ==========================================
+    // =================================================
+    // Product Master
+    // =================================================
+
+    const product =
+
+        DataStore.productMaster.find(row=>
+
+            String(row.style_id || "").trim()===styleId
+
+        ) || {};
+
+    const erpSku =
+
+        String(product.erp_sku || "").trim();
+
+    // =================================================
     // Sales
-    // ==========================================
+    // =================================================
 
-    const sales = DataStore.sales.filter(row=>
+    const sales =
 
-        String(row.style_id || "").trim()===styleId
+        DataStore.sales.filter(row=>
 
-    );
+            String(row.style_id || "").trim()===styleId
 
-    const sale90D = sales.reduce(
+        );
 
-        (sum,row)=>
+    const sale90D =
 
-            sum + Number(row.qty || 0),
+        sales.reduce(
 
-        0
+            (sum,row)=>
 
-    );
+                sum+
 
-    // ==========================================
+                Number(row.qty || 0),
+
+            0
+
+        );
+
+    const salesValue =
+
+        sales.reduce(
+
+            (sum,row)=>
+
+                sum+
+
+                Number(row.final_amount || 0),
+
+            0
+
+        );
+
+    // =================================================
     // Traffic
-    // ==========================================
+    // =================================================
 
     const traffic =
 
@@ -51,15 +87,17 @@ export function buildStyleMetrics(styleId){
 
         ) || {};
 
-    const rating = Number(
+    const rating =
 
-        traffic.rating || 0
+        Number(
 
-    );
+            traffic.rating || 0
 
-    // ==========================================
+        );
+
+    // =================================================
     // Returns
-    // ==========================================
+    // =================================================
 
     const returns =
 
@@ -74,6 +112,7 @@ export function buildStyleMetrics(styleId){
         returns.filter(row=>
 
             String(row.type || "")
+
             .toUpperCase()==="RETURN"
 
         ).length;
@@ -83,9 +122,16 @@ export function buildStyleMetrics(styleId){
         returns.filter(row=>
 
             String(row.type || "")
+
             .toUpperCase()==="RTO"
 
         ).length;
+
+    const totalReturnUnits =
+
+        customerReturnUnits +
+
+        rtoUnits;
 
     const customerReturnPercent =
 
@@ -103,9 +149,18 @@ export function buildStyleMetrics(styleId){
 
         :(rtoUnits/sale90D)*100;
 
-    // ==========================================
+    const totalReturnPercent =
+
+        sale90D===0
+
+        ?0
+
+        :(totalReturnUnits/sale90D)*100;
+
+    // =================================================
     // Seller Stock
-    // ==========================================
+    // Uses ERP SKU
+    // =================================================
 
     const sellerStock =
 
@@ -113,7 +168,7 @@ export function buildStyleMetrics(styleId){
 
         .filter(row=>
 
-            String(row.style_id || "").trim()===styleId
+            String(row.erp_sku || "").trim()===erpSku
 
         )
 
@@ -123,15 +178,15 @@ export function buildStyleMetrics(styleId){
 
                 sum+
 
-                Number(row.stock_units || 0),
+                Number(row.units || 0),
 
             0
 
         );
 
-    // ==========================================
-    // SJIT
-    // ==========================================
+    // =================================================
+    // SJIT Stock
+    // =================================================
 
     const sjitStock =
 
@@ -149,15 +204,19 @@ export function buildStyleMetrics(styleId){
 
                 sum+
 
-                Number(row.stock_units || 0),
+                Number(
+
+                    row.sellable_inventory_count || 0
+
+                ),
 
             0
 
         );
 
-    // ==========================================
-    // SOR
-    // ==========================================
+    // =================================================
+    // SOR Stock
+    // =================================================
 
     const sorStock =
 
@@ -175,11 +234,15 @@ export function buildStyleMetrics(styleId){
 
                 sum+
 
-                Number(row.stock_units || 0),
+                Number(row.units || 0),
 
             0
 
         );
+
+    // =================================================
+    // Inventory
+    // =================================================
 
     const totalStock =
 
@@ -189,11 +252,41 @@ export function buildStyleMetrics(styleId){
 
         sorStock;
 
+    const drr =
+
+        sale90D/90;
+
+    const stockCover =
+
+        drr===0
+
+        ?0
+
+        :totalStock/drr;
+
+    // =================================================
+    // Return
+    // =================================================
+
     return{
+
+        // Identity
+
+        styleId,
+
+        erpSku,
+
+        // Sales
 
         sale90D,
 
+        salesValue,
+
+        // Traffic
+
         rating,
+
+        // Returns
 
         customerReturnUnits,
 
@@ -203,13 +296,25 @@ export function buildStyleMetrics(styleId){
 
         rtoPercent,
 
+        totalReturnUnits,
+
+        totalReturnPercent,
+
+        // Inventory
+
         sellerStock,
 
         sjitStock,
 
         sorStock,
 
-        totalStock
+        totalStock,
+
+        // Performance
+
+        drr,
+
+        stockCover
 
     };
 
