@@ -116,9 +116,7 @@ export function buildCatalogueFamily(context){
 
                     metrics.sale90D,
 
-                imageUrl:
-
-                    product.image_url || "",
+                imageUrl:"",
 
                 isCurrent:
 
