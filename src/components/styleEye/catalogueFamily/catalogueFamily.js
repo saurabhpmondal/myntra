@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Catalogue Family
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -12,6 +12,12 @@ import { createComponent } from "../../../utils/createComponent.js";
 import { buildCatalogueFamily } from "../../../services/styleEye/catalogueFamilyService.js";
 
 import { formatNumber } from "../../../utils/formatter.js";
+
+/**
+ * =====================================================
+ * Render
+ * =====================================================
+ */
 
 export async function renderCatalogueFamily(
 
@@ -33,15 +39,31 @@ export async function renderCatalogueFamily(
 
     });
 
-    const family =
+    const catalogue =
 
         buildCatalogueFamily(context);
+
+    if(!catalogue){
+
+        target.innerHTML=`
+
+<div class="dashboard-card">
+
+Unable to load Catalogue Family.
+
+</div>
+
+`;
+
+        return;
+
+    }
 
     renderSummary(
 
         target,
 
-        family.catalogue
+        catalogue
 
     );
 
@@ -49,7 +71,7 @@ export async function renderCatalogueFamily(
 
         target,
 
-        family.family,
+        catalogue,
 
         onStyleSelect
 
@@ -58,9 +80,9 @@ export async function renderCatalogueFamily(
 }
 
 /**
- * ==========================================
+ * =====================================================
  * Summary
- * ==========================================
+ * =====================================================
  */
 
 function renderSummary(
@@ -71,119 +93,133 @@ function renderSummary(
 
 ){
 
-    const container =
+    const container=
 
-        target.querySelector("#catalogueSummary");
+        target.querySelector(
 
-    container.className =
+            "#catalogueSummary"
+
+        );
+
+    const summary=
+
+        catalogue.summary;
+
+    const header=
+
+        catalogue.header;
+
+    container.className=
 
         "catalogue-summary";
 
-    container.innerHTML = `
+    container.innerHTML=`
 
 <div class="catalogue-title">
 
-    <div>
+<div>
 
-        <div class="catalogue-heading">
+<div class="catalogue-heading">
 
-            ${catalogue.fallback ? "⭐ Best Selling Styles" : "📦 Catalogue Family"}
+${header.title}
 
-        </div>
+</div>
 
-        <div class="catalogue-subtitle">
+<div class="catalogue-subtitle">
 
-            ${catalogue.fallback
-                ? "No family found. Showing the best performing styles."
-                : `Catalogue : <span class="catalogue-id">${catalogue.id}</span>`}
+${header.subtitle}
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </div>
 
 <div class="catalogue-kpi-grid">
 
-    <div class="catalogue-kpi">
+<div class="catalogue-kpi">
 
-        <div class="catalogue-kpi-value">
+<div class="catalogue-kpi-value">
 
-            ${catalogue.styleCount}
+${summary.styleCount}
 
-        </div>
+</div>
 
-        <div class="catalogue-kpi-label">
+<div class="catalogue-kpi-label">
 
-            Styles
+Styles
 
-        </div>
+</div>
 
-    </div>
+</div>
 
-    <div class="catalogue-kpi">
+<div class="catalogue-kpi">
 
-        <div class="catalogue-kpi-value">
+<div class="catalogue-kpi-value">
 
-            ${catalogue.active}
+${summary.active}
 
-        </div>
+</div>
 
-        <div class="catalogue-kpi-label">
+<div class="catalogue-kpi-label">
 
-            Active
+Active
 
-        </div>
+</div>
 
-    </div>
+</div>
 
-    <div class="catalogue-kpi">
+<div class="catalogue-kpi">
 
-        <div class="catalogue-kpi-value">
+<div class="catalogue-kpi-value">
 
-            ${catalogue.inactive}
+${summary.inactive}
 
-        </div>
+</div>
 
-        <div class="catalogue-kpi-label">
+<div class="catalogue-kpi-label">
 
-            Inactive
+Inactive
 
-        </div>
+</div>
 
-    </div>
+</div>
 
-    <div class="catalogue-kpi">
+<div class="catalogue-kpi">
 
-        <div class="catalogue-kpi-value">
+<div class="catalogue-kpi-value">
 
-            ${formatNumber(catalogue.totalSale)}
+${formatNumber(
 
-        </div>
+summary.totalSale
 
-        <div class="catalogue-kpi-label">
+)}
 
-            90D Sales
+</div>
 
-        </div>
+<div class="catalogue-kpi-label">
 
-    </div>
+90D Sales
 
-    <div class="catalogue-kpi">
+</div>
 
-        <div class="catalogue-kpi-value">
+</div>
 
-            ⭐ ${catalogue.avgRating.toFixed(1)}
+<div class="catalogue-kpi">
 
-        </div>
+<div class="catalogue-kpi-value">
 
-        <div class="catalogue-kpi-label">
+⭐ ${summary.avgRating.toFixed(1)}
 
-            Avg Rating
+</div>
 
-        </div>
+<div class="catalogue-kpi-label">
 
-    </div>
+Average Rating
+
+</div>
+
+</div>
 
 </div>
 
@@ -192,16 +228,16 @@ function renderSummary(
 }
 
 /**
- * ==========================================
+ * =====================================================
  * Carousel
- * ==========================================
+ * =====================================================
  */
 
 function renderCarousel(
 
     target,
 
-    family,
+    catalogue,
 
     onStyleSelect
 
@@ -215,15 +251,33 @@ function renderCarousel(
 
         );
 
+    const tiles =
+
+        catalogue.data.tiles;
+
     container.innerHTML =
 
-        family.map(style=>`
+        tiles.map(tile=>`
 
-<div class="catalogue-tile ${style.isCurrent ? "catalogue-current" : ""}">
+<div class="catalogue-tile ${tile.isCurrent ? "catalogue-current" : ""}">
 
     <div class="catalogue-image">
 
-        Image
+        ${tile.imageUrl
+
+            ?
+
+            `<img src="${tile.imageUrl}" alt="${tile.styleId}">`
+
+            :
+
+            `<div class="catalogue-placeholder">
+
+                👗
+
+            </div>`
+
+        }
 
     </div>
 
@@ -231,19 +285,19 @@ function renderCarousel(
 
         <div class="catalogue-rating">
 
-            ⭐ ${style.rating.toFixed(1)}
+            ⭐ ${Number(tile.rating || 0).toFixed(1)}
 
         </div>
 
         <div class="catalogue-style">
 
-            ${style.styleId}
+            ${tile.styleId}
 
         </div>
 
         <div class="catalogue-status">
 
-            ${style.status}
+            ${tile.status || "-"}
 
         </div>
 
@@ -251,7 +305,7 @@ function renderCarousel(
 
             <strong>
 
-                ${formatNumber(style.sale90D)}
+                ${formatNumber(tile.sale90D)}
 
             </strong>
 
@@ -259,17 +313,31 @@ function renderCarousel(
 
         </div>
 
-        <button
+        ${tile.isCurrent
 
-            class="catalogue-button"
+            ?
 
-            data-style="${style.styleId}"
+            `<div class="catalogue-current-badge">
 
-        >
+                CURRENT STYLE
 
-            View Style →
+            </div>`
 
-        </button>
+            :
+
+            `<button
+
+                class="catalogue-button"
+
+                data-style="${tile.styleId}"
+
+            >
+
+                View Style →
+
+            </button>`
+
+        }
 
     </div>
 
@@ -287,7 +355,7 @@ function renderCarousel(
 
         .forEach(button=>{
 
-            button.onclick=()=>{
+            button.onclick = ()=>{
 
                 if(onStyleSelect){
 
