@@ -4,8 +4,8 @@ export const Version = {
 
     codeName: "Project Phoenix",
 
-    version: "0.1.0",
+    version: "Phoenix V2.7",
 
-    release: "Foundation"
+    release: "Style Eye"
 
 };
