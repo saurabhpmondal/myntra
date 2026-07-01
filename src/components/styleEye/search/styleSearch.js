@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye Search
- * Version : V2.2
+ * Version : V2.3
  * =====================================================
  */
 
@@ -20,6 +20,8 @@ import { renderHeroPanel } from "../hero/heroPanel.js";
 import { renderOverviewPanel } from "../overview/overviewPanel.js";
 
 import { renderSalesPanel } from "../sales/salesPanel.js";
+
+import { renderInventoryPanel } from "../inventory/inventoryPanel.js";
 
 export async function renderStyleSearch(target){
 
@@ -68,10 +70,6 @@ function bindEvents(target){
 
             switch(result.type){
 
-                // =====================================
-                // Single Style
-                // =====================================
-
                 case "STYLE":
 
                     await openStyle(
@@ -83,10 +81,6 @@ function bindEvents(target){
                     );
 
                     break;
-
-                // =====================================
-                // Multiple Styles
-                // =====================================
 
                 case "MULTIPLE":
 
@@ -113,10 +107,6 @@ function bindEvents(target){
                     );
 
                     break;
-
-                // =====================================
-                // No Match
-                // =====================================
 
                 case "NOT_FOUND":
 
@@ -275,6 +265,32 @@ async function openStyle(
     await renderSalesPanel(
 
         salesSection,
+
+        context
+
+    );
+
+    // ==========================================
+    // Inventory Intelligence
+    // ==========================================
+
+    const inventorySection =
+
+        document.createElement("div");
+
+    inventorySection.className =
+
+        "dashboard-section";
+
+    target.appendChild(
+
+        inventorySection
+
+    );
+
+    await renderInventoryPanel(
+
+        inventorySection,
 
         context
 
