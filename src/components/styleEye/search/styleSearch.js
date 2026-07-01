@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye Search
- * Version : V2.3
+ * Version : V2.4
  * =====================================================
  */
 
@@ -22,6 +22,10 @@ import { renderOverviewPanel } from "../overview/overviewPanel.js";
 import { renderSalesPanel } from "../sales/salesPanel.js";
 
 import { renderInventoryPanel } from "../inventory/inventoryPanel.js";
+
+import { renderQualityPanel } from "../quality/qualityPanel.js";
+
+import { renderCatalogueFamily } from "../catalogueFamily/catalogueFamily.js";
 
 export async function renderStyleSearch(target){
 
@@ -42,14 +46,17 @@ export async function renderStyleSearch(target){
 function bindEvents(target){
 
     const searchBox =
+
         target.querySelector("#styleEyeSearch");
 
     const button =
+
         target.querySelector("#deepDiveButton");
 
     button.onclick = async ()=>{
 
         const keyword =
+
             searchBox.value.trim();
 
         if(!keyword){
@@ -66,7 +73,9 @@ function bindEvents(target){
 
         try{
 
-            const result = searchStyle(keyword);
+            const result =
+
+                searchStyle(keyword);
 
             switch(result.type){
 
@@ -84,7 +93,7 @@ function bindEvents(target){
 
                 case "MULTIPLE":
 
-                    target.innerHTML = "";
+                    target.innerHTML="";
 
                     await renderStyleSelector(
 
@@ -130,7 +139,7 @@ function bindEvents(target){
 
             console.error(
 
-                "Style Eye Search Failed",
+                "Style Eye",
 
                 error
 
@@ -205,7 +214,7 @@ async function openStyle(
     target.innerHTML = "";
 
     // ==========================================
-    // Hero Panel
+    // Hero
     // ==========================================
 
     const heroSection =
@@ -227,7 +236,7 @@ async function openStyle(
     );
 
     // ==========================================
-    // Overview Panel
+    // Overview
     // ==========================================
 
     const overviewSection =
@@ -249,7 +258,7 @@ async function openStyle(
     );
 
     // ==========================================
-    // Sales Intelligence
+    // Sales
     // ==========================================
 
     const salesSection =
@@ -271,7 +280,7 @@ async function openStyle(
     );
 
     // ==========================================
-    // Inventory Intelligence
+    // Inventory
     // ==========================================
 
     const inventorySection =
@@ -282,17 +291,97 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(
-
-        inventorySection
-
-    );
+    target.appendChild(inventorySection);
 
     await renderInventoryPanel(
 
         inventorySection,
 
         context
+
+    );
+
+    // ==========================================
+    // Quality Intelligence
+    // ==========================================
+
+    const qualitySection =
+
+        document.createElement("div");
+
+    qualitySection.className =
+
+        "dashboard-section";
+
+    target.appendChild(
+
+        qualitySection
+
+    );
+
+    await renderQualityPanel(
+
+        qualitySection,
+
+        context
+
+    );
+
+    // ==========================================
+    // Catalogue Family
+    // ==========================================
+
+    const catalogueSection =
+
+        document.createElement("div");
+
+    catalogueSection.className =
+
+        "dashboard-section";
+
+    target.appendChild(
+
+        catalogueSection
+
+    );
+
+    await renderCatalogueFamily(
+
+        catalogueSection,
+
+        context,
+
+        async selectedStyleId=>{
+
+            if(
+
+                selectedStyleId===
+
+                context.identity.styleId
+
+            ){
+
+                return;
+
+            }
+
+            window.scrollTo({
+
+                top:0,
+
+                behavior:"smooth"
+
+            });
+
+            await openStyle(
+
+                target,
+
+                selectedStyleId
+
+            );
+
+        }
 
     );
 
