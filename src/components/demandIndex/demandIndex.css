@@ -422,3 +422,84 @@
     }
 
 }
+
+/* ==========================================
+   KPI Cards
+========================================== */
+
+.di-kpi-card{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    box-shadow:0 8px 24px rgba(15,23,42,.05);
+
+    transition:.25s;
+
+}
+
+.di-kpi-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 28px rgba(15,23,42,.08);
+
+}
+
+.di-kpi-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:18px;
+
+}
+
+.di-kpi-icon{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:14px;
+
+    background:#EEF2FF;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+}
+
+.di-kpi-title{
+
+    font-size:14px;
+
+    color:#6B7280;
+
+    font-weight:600;
+
+}
+
+.di-kpi-value{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
