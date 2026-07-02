@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Catalogue Family Service
- * Version : V3.0
+ * Version : V3.1
  * =====================================================
  */
 
@@ -47,11 +47,7 @@ import {
  * =====================================================
  */
 
-export function buildCatalogueFamily(
-
-    context
-
-){
+export function buildCatalogueFamily(context){
 
     if(!context){
 
@@ -67,10 +63,6 @@ export function buildCatalogueFamily(
 
         ).trim();
 
-    // ==========================================
-    // Find Catalogue
-    // ==========================================
-
     const catalogue =
 
         findCatalogueFamily(
@@ -81,6 +73,8 @@ export function buildCatalogueFamily(
 
     if(
 
+        !catalogue ||
+
         !catalogue.currentProduct
 
     ){
@@ -89,31 +83,23 @@ export function buildCatalogueFamily(
 
     }
 
-    let mode =
+    let mode = "FAMILY";
 
-        "FAMILY";
+    let products = catalogue.family;
 
-    let products =
-
-        catalogue.family;
-
-    // ==========================================
-    // Fallback
-    // ==========================================
+    /**
+     * ==========================================
+     * Fallback
+     * ==========================================
+     */
 
     if(
 
-        shouldUseFallback(
-
-            products
-
-        )
+        shouldUseFallback(products)
 
     ){
 
-        mode =
-
-            "TOP_SELLERS";
+        mode = "TOP_SELLERS";
 
         products =
 
@@ -121,9 +107,7 @@ export function buildCatalogueFamily(
 
                 findBrandProducts(
 
-                    catalogue.currentProduct.brand,
-
-                    currentStyle
+                    catalogue.currentProduct.brand
 
                 ),
 
@@ -133,9 +117,11 @@ export function buildCatalogueFamily(
 
     }
 
-    // ==========================================
-    // Build Tiles
-    // ==========================================
+    /**
+     * ==========================================
+     * Tiles
+     * ==========================================
+     */
 
     let tiles =
 
@@ -147,9 +133,11 @@ export function buildCatalogueFamily(
 
         );
 
-    // ==========================================
-    // Sort
-    // ==========================================
+    /**
+     * ==========================================
+     * Sort
+     * ==========================================
+     */
 
     tiles =
 
@@ -159,9 +147,11 @@ export function buildCatalogueFamily(
 
         );
 
-    // ==========================================
-    // Maximum Cards
-    // ==========================================
+    /**
+     * ==========================================
+     * Limit
+     * ==========================================
+     */
 
     tiles =
 
@@ -173,9 +163,11 @@ export function buildCatalogueFamily(
 
         );
 
-    // ==========================================
-    // Summary
-    // ==========================================
+    /**
+     * ==========================================
+     * Summary
+     * ==========================================
+     */
 
     const summary =
 
@@ -185,15 +177,17 @@ export function buildCatalogueFamily(
 
             mode==="FAMILY"
 
-            ? catalogue.family
+                ? catalogue.family
 
-            : products
+                : products
 
         );
 
-    // ==========================================
-    // Header
-    // ==========================================
+    /**
+     * ==========================================
+     * Header
+     * ==========================================
+     */
 
     const header =
 
@@ -206,10 +200,6 @@ export function buildCatalogueFamily(
             catalogue.currentProduct.brand
 
         );
-
-    // ==========================================
-    // Return
-    // ==========================================
 
     return{
 
@@ -229,7 +219,7 @@ export function buildCatalogueFamily(
 
 /**
  * =====================================================
- * Find Tile
+ * Find Catalogue Tile
  * =====================================================
  */
 
@@ -257,19 +247,9 @@ export function findCatalogueTile(
 
     return catalogue.data.tiles.find(tile=>
 
-        String(
+        String(tile.styleId).trim()===
 
-            tile.styleId
-
-        ).trim()
-
-        ===
-
-        String(
-
-            styleId
-
-        ).trim()
+        String(styleId).trim()
 
     ) || null;
 
