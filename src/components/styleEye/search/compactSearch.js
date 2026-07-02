@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Compact Search
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -19,7 +19,7 @@ import { performSearch } from "./searchExecutor.js";
 
 export async function renderCompactSearch(
 
-    target,
+    rootTarget,
 
     currentKeyword=""
 
@@ -29,7 +29,11 @@ export async function renderCompactSearch(
 
         document.createElement("div");
 
-    target.appendChild(
+    wrapper.className =
+
+        "dashboard-section";
+
+    rootTarget.appendChild(
 
         wrapper
 
@@ -59,7 +63,7 @@ export async function renderCompactSearch(
 
     );
 
-    const input =
+    const searchBox =
 
         wrapper.querySelector(
 
@@ -67,9 +71,13 @@ export async function renderCompactSearch(
 
         );
 
-    input.value =
+    searchBox.value =
 
         currentKeyword;
+
+    searchBox.focus();
+
+    searchBox.select();
 
     const button =
 
@@ -79,19 +87,61 @@ export async function renderCompactSearch(
 
         );
 
-    button.onclick = async ()=>{
+    async function execute(){
 
-        await performSearch(
+        button.disabled = true;
 
-            target,
+        button.textContent =
 
-            input.value
+            "Searching...";
 
-        );
+        try{
 
-    };
+            await performSearch(
 
-    input.addEventListener(
+                rootTarget,
+
+                searchBox.value
+
+            );
+
+        }
+
+        catch(error){
+
+            console.error(
+
+                "Compact Search",
+
+                error
+
+            );
+
+            alert(
+
+                "Unable to search."
+
+            );
+
+        }
+
+        finally{
+
+            button.disabled = false;
+
+            button.textContent =
+
+                "🔍 Deep Dive";
+
+        }
+
+    }
+
+    button.onclick =
+
+        execute;
+
+    searchBox.addEventListener(
 
         "keydown",
 
@@ -99,7 +149,7 @@ export async function renderCompactSearch(
 
             if(event.key==="Enter"){
 
-                button.click();
+                execute();
 
             }
 
