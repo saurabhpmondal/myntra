@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Movement Engine
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -17,6 +17,15 @@ import { falling } from "./movement/falling.js";
 
 import { losingMomentum } from "./movement/losingMomentum.js";
 
+/**
+ * =====================================================
+ * Calculate Movement
+ *
+ * previousRank = Last Month Rank
+ * currentRank  = Current Rank
+ * =====================================================
+ */
+
 export function calculateMovement(
 
     previousRank,
@@ -27,13 +36,13 @@ export function calculateMovement(
 
     const movement =
 
-        Number(currentRank||0)
+        Number(currentRank || 0)
 
         -
 
-        Number(previousRank||0);
+        Number(previousRank || 0);
 
-    return(
+    const result =
 
         fastClimber(movement)
 
@@ -51,18 +60,34 @@ export function calculateMovement(
 
         ||
 
-        losingMomentum(movement)
+        losingMomentum(movement);
 
-        ||
+    if(result){
 
-        {
+        return{
 
-            badge:"",
+            movement,
 
-            priority:999
+            ...result
 
-        }
+        };
 
-    );
+    }
+
+    return{
+
+        movement,
+
+        badge:"",
+
+        label:"",
+
+        icon:"",
+
+        color:"gray",
+
+        priority:999
+
+    };
 
 }
