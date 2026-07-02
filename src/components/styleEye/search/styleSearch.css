@@ -1,3 +1,16 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Module  : Style Eye Search
+ * Version : V3.0
+ * =====================================================
+ */
+
+/* ==========================================
+   Landing
+========================================== */
+
 .style-eye-container{
 
     max-width:900px;
@@ -6,7 +19,39 @@
 
     text-align:center;
 
+    transition:.30s;
+
 }
+
+/* ==========================================
+   Compact Mode
+========================================== */
+
+.style-eye-container.compact{
+
+    max-width:1400px;
+
+    margin:0 auto 24px;
+
+    text-align:left;
+
+}
+
+.style-eye-container.compact .style-eye-header{
+
+    display:none;
+
+}
+
+.style-eye-container.compact .style-eye-info{
+
+    display:none;
+
+}
+
+/* ==========================================
+   Header
+========================================== */
 
 .style-eye-header{
 
@@ -24,13 +69,13 @@
 
 .style-eye-header h1{
 
+    margin:0 0 18px;
+
     font-size:42px;
 
     font-weight:700;
 
     color:#111827;
-
-    margin-bottom:18px;
 
 }
 
@@ -48,6 +93,10 @@
 
 }
 
+/* ==========================================
+   Search
+========================================== */
+
 .style-eye-search{
 
     display:flex;
@@ -58,11 +107,47 @@
 
     gap:16px;
 
-    margin-bottom:35px;
-
     flex-wrap:wrap;
 
+    margin-bottom:35px;
+
+    transition:.30s;
+
 }
+
+/* ==========================================
+   Sticky Mode
+========================================== */
+
+.style-eye-container.compact .style-eye-search{
+
+    position:sticky;
+
+    top:10px;
+
+    z-index:1000;
+
+    justify-content:flex-start;
+
+    margin-bottom:20px;
+
+    padding:12px 16px;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.95);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+/* ==========================================
+   Input
+========================================== */
 
 .style-eye-search input{
 
@@ -72,15 +157,15 @@
 
     height:60px;
 
+    padding:0 24px;
+
     border:1px solid #E5E7EB;
 
     border-radius:18px;
 
-    padding:0 24px;
+    outline:none;
 
     font-size:18px;
-
-    outline:none;
 
     transition:.25s;
 
@@ -88,11 +173,31 @@
 
 }
 
+.style-eye-container.compact .style-eye-search input{
+
+    flex:1;
+
+    width:auto;
+
+    height:54px;
+
+    font-size:16px;
+
+    box-shadow:none;
+
+}
+
 .style-eye-search input:focus{
 
     border-color:#FF3F6C;
 
+    box-shadow:0 0 0 4px rgba(255,63,108,.12);
+
 }
+
+/* ==========================================
+   Button
+========================================== */
 
 .style-eye-search button{
 
@@ -106,7 +211,7 @@
 
     background:#FF3F6C;
 
-    color:#fff;
+    color:#FFFFFF;
 
     font-size:17px;
 
@@ -118,6 +223,14 @@
 
 }
 
+.style-eye-container.compact .style-eye-search button{
+
+    height:54px;
+
+    white-space:nowrap;
+
+}
+
 .style-eye-search button:hover{
 
     transform:translateY(-2px);
@@ -125,6 +238,10 @@
     box-shadow:0 10px 30px rgba(255,63,108,.30);
 
 }
+
+/* ==========================================
+   Info
+========================================== */
 
 .style-eye-info{
 
@@ -134,10 +251,38 @@
 
     gap:40px;
 
+    flex-wrap:wrap;
+
     color:#6B7280;
 
     font-size:15px;
 
-    flex-wrap:wrap;
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media(max-width:768px){
+
+    .style-eye-search{
+
+        flex-direction:column;
+
+    }
+
+    .style-eye-search input,
+
+    .style-eye-search button{
+
+        width:100%;
+
+    }
+
+    .style-eye-container.compact .style-eye-search{
+
+        padding:10px;
+
+    }
 
 }
