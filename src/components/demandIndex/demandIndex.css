@@ -119,3 +119,113 @@
     }
 
 }
+
+/* ==========================================
+   Demand Filters
+========================================== */
+
+.demand-filter-bar{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    align-items:center;
+
+}
+
+.demand-filter-bar select,
+
+.demand-filter-bar input{
+
+    height:46px;
+
+    min-width:180px;
+
+    padding:0 14px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:12px;
+
+    background:#FFFFFF;
+
+    font-size:14px;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.demand-filter-bar input[type="text"]{
+
+    min-width:280px;
+
+    flex:1;
+
+}
+
+.demand-filter-bar select:focus,
+
+.demand-filter-bar input:focus{
+
+    border-color:#FF3F6C;
+
+    box-shadow:0 0 0 3px rgba(255,63,108,.12);
+
+}
+
+.di-reset-btn{
+
+    height:46px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#111827;
+
+    color:#FFFFFF;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.di-reset-btn:hover{
+
+    background:#000000;
+
+}
+
+@media(max-width:900px){
+
+    .demand-filter-bar{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    .demand-filter-bar select,
+
+    .demand-filter-bar input,
+
+    .di-reset-btn{
+
+        width:100%;
+
+    }
+
+}
