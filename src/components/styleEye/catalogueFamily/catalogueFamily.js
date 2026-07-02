@@ -9,7 +9,7 @@
 
 import { createComponent } from "../../../utils/createComponent.js";
 
-import { buildCatalogueFamily } from "../../../services/styleEye/catalogueFamilyService.js";
+import { buildCatalogueFamily } from "../../../services/styleEye/catalogueFamily/catalogueFamilyService.js";
 
 import { formatNumber } from "../../../utils/formatter.js";
 
