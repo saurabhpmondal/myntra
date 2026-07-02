@@ -3,19 +3,23 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sticky Search
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
 
-import { searchStyle } from "../../../services/styleEye/styleSearchService.js";
+/**
+ * =====================================================
+ * Render Sticky Search
+ * =====================================================
+ */
 
 export async function renderStickySearch(
 
     target,
 
-    onStyleSelect
+    onSearch
 
 ){
 
@@ -28,6 +32,30 @@ export async function renderStickySearch(
         css:"src/components/styleEye/stickySearch/stickySearch.css"
 
     });
+
+    bindEvents(
+
+        target,
+
+        onSearch
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Events
+ * =====================================================
+ */
+
+function bindEvents(
+
+    target,
+
+    onSearch
+
+){
 
     const searchBox =
 
@@ -45,7 +73,7 @@ export async function renderStickySearch(
 
         );
 
-    button.onclick = async ()=>{
+    async function performSearch(){
 
         const keyword =
 
@@ -67,67 +95,15 @@ export async function renderStickySearch(
 
         try{
 
-            const result =
+            if(typeof onSearch==="function"){
 
-                searchStyle(
+                await onSearch(
 
                     keyword
 
                 );
 
-            switch(result.type){
-
-                case "STYLE":
-
-                    if(onStyleSelect){
-
-                        await onStyleSelect(
-
-                            result.results[0].styleId
-
-                        );
-
-                    }
-
-                    break;
-
-                case "MULTIPLE":
-
-                    alert(
-
-                        "Multiple Style IDs found for this ERP SKU.\n\nPlease use the Home Search until Selector is integrated."
-
-                    );
-
-                    break;
-
-                case "NOT_FOUND":
-
-                    alert(
-
-                        "No matching Style ID or ERP SKU found."
-
-                    );
-
-                    break;
-
             }
-
-        }
-
-        catch(error){
-
-            console.error(
-
-                error
-
-            );
-
-            alert(
-
-                "Unable to search."
-
-            );
 
         }
 
@@ -141,7 +117,11 @@ export async function renderStickySearch(
 
         }
 
-    };
+    }
+
+    button.onclick =
+
+        performSearch;
 
     searchBox.addEventListener(
 
@@ -149,13 +129,9 @@ export async function renderStickySearch(
 
         event=>{
 
-            if(
+            if(event.key==="Enter"){
 
-                event.key==="Enter"
-
-            ){
-
-                button.click();
+                performSearch();
 
             }
 
