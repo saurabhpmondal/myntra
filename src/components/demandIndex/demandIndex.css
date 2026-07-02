@@ -1,3 +1,196 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Module  : Demand Index
+ * Version : V1.0
+ * =====================================================
+ */
+
+.demand-index-page{
+
+    max-width:1800px;
+
+    margin:0 auto;
+
+    padding:28px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+#demandHeader{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+/* ==========================================
+   Filters
+========================================== */
+
+#demandFilters{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:16px;
+
+    align-items:center;
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    box-shadow:0 6px 18px rgba(15,23,42,.05);
+
+}
+
+/* ==========================================
+   KPI Cards
+========================================== */
+
+#demandKPIs{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:20px;
+
+}
+
+/* ==========================================
+   Charts
+========================================== */
+
+#demandCharts{
+
+    display:grid;
+
+    grid-template-columns:1fr;
+
+    gap:20px;
+
+}
+
+/* ==========================================
+   Table
+========================================== */
+
+#demandTable{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 24px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================
+   Loader
+========================================== */
+
+.demand-loader{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:220px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#6B7280;
+
+}
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.demand-empty{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:220px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    color:#9CA3AF;
+
+    background:#FFFFFF;
+
+    border:1px dashed #D1D5DB;
+
+    border-radius:20px;
+
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media(max-width:1024px){
+
+    .demand-index-page{
+
+        padding:20px;
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    #demandFilters{
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+    #demandKPIs{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
 /* ==========================================
    Demand Header
 ========================================== */
