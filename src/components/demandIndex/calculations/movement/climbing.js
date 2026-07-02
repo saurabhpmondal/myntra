@@ -3,32 +3,28 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Climbing Rule
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { MOVEMENT_RULES } from "../../config/movementRules.js";
 
-export function climbing(movement){
+export function climbing(
 
-    if(
+    movement
 
-        movement <=
+){
+
+    return movement <=
 
         MOVEMENT_RULES.CLIMBING
 
-    ){
+        ?
 
-        return{
+        "📈 Climbing"
 
-            badge:"📈 Climbing",
+        :
 
-            priority:2
-
-        };
-
-    }
-
-    return null;
+        null;
 
 }
