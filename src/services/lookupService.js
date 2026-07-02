@@ -65,6 +65,12 @@ export function buildLookups(){
 
     const statuses=new Set();
 
+console.log("Image Links", DataStore.imageLinks.length);
+
+console.log("First Image Row", DataStore.imageLinks[0]);
+
+console.log("Image Lookup", imageByStyleId["41120141"]);
+
     /* ==========================================
        Product Master
     ========================================== */
