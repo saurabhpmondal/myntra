@@ -3,32 +3,28 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Losing Momentum Rule
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { MOVEMENT_RULES } from "../../config/movementRules.js";
 
-export function losingMomentum(movement){
+export function losingMomentum(
 
-    if(
+    movement
 
-        movement >=
+){
+
+    return movement >=
 
         MOVEMENT_RULES.LOSING
 
-    ){
+        ?
 
-        return{
+        "📉 Losing Momentum"
 
-            badge:"📉 Losing Momentum",
+        :
 
-            priority:5
-
-        };
-
-    }
-
-    return null;
+        null;
 
 }
