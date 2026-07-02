@@ -3,151 +3,90 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Catalogue Family Helpers
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 /**
  * =====================================================
- * Extract Catalogue ID from ERP SKU
- *
- * Examples
+ * ERP SKU
  *
  * 1281S2013 -> 1281S
  * 1415S147  -> 1415S
  * 1620S141  -> 1620S
+ *
+ * Catalogue = everything before the
+ * last numeric product code.
  * =====================================================
  */
 
-export function getCatalogueId(
+export function getCatalogueId(erpSku){
 
-    erpSku
+    erpSku = String(erpSku || "")
+        .trim()
+        .toUpperCase();
 
-){
+    if(!erpSku){
 
-    erpSku = String(
+        return "";
 
-        erpSku || ""
+    }
 
-    )
+    const lastLetter = erpSku.search(/[A-Z](?=\d+$)/);
 
-    .trim()
+    if(lastLetter === -1){
 
-    .toUpperCase();
+        return erpSku;
 
-    const match =
+    }
 
-        erpSku.match(
+    return erpSku.substring(
 
-            /^(.*?[A-Z])\d+$/
+        0,
 
-        );
+        lastLetter + 1
 
-    return match
-
-        ? match[1]
-
-        : erpSku;
+    );
 
 }
 
 /**
  * =====================================================
- * Compare Style IDs
+ * Normalize
  * =====================================================
  */
 
-export function compareStyleId(
+export function normalize(value){
 
-    a,
-
-    b
-
-){
-
-    return String(a)
-
-        .localeCompare(
-
-            String(b),
-
-            undefined,
-
-            {
-
-                numeric:true,
-
-                sensitivity:"base"
-
-            }
-
-        );
+    return String(value || "")
+        .trim()
+        .toUpperCase();
 
 }
 
 /**
  * =====================================================
- * Safe Number
+ * Compare Style
  * =====================================================
  */
 
-export function toNumber(
+export function compareStyleId(a,b){
 
-    value
+    return String(a).localeCompare(
 
-){
+        String(b),
 
-    const number =
+        undefined,
 
-        Number(value);
+        {
 
-    return Number.isFinite(number)
+            numeric:true,
 
-        ? number
+            sensitivity:"base"
 
-        : 0;
+        }
 
-}
-
-/**
- * =====================================================
- * Safe String
- * =====================================================
- */
-
-export function toText(
-
-    value
-
-){
-
-    return String(
-
-        value || ""
-
-    ).trim();
-
-}
-
-/**
- * =====================================================
- * Normalize Text
- * =====================================================
- */
-
-export function normalize(
-
-    value
-
-){
-
-    return toText(
-
-        value
-
-    )
-
-    .toUpperCase();
+    );
 
 }
 
@@ -157,22 +96,8 @@ export function normalize(
  * =====================================================
  */
 
-export function sortBySale(
+export function sortBySale(a,b){
 
-    a,
-
-    b
-
-){
-
-    return (
-
-        b.sale90D || 0
-
-    ) - (
-
-        a.sale90D || 0
-
-    );
+    return (b.sale90D||0)-(a.sale90D||0);
 
 }
