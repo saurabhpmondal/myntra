@@ -131,21 +131,13 @@ export function findCatalogueFamily(
 
 export function findBrandProducts(
 
-    brand,
-
-    currentStyle
+    brand
 
 ){
 
     brand = normalize(
 
         brand
-
-    );
-
-    currentStyle = normalize(
-
-        currentStyle
 
     );
 
@@ -156,14 +148,6 @@ export function findBrandProducts(
             product.brand
 
         )===brand
-
-        &&
-
-        normalize(
-
-            product.style_id
-
-        )!==currentStyle
 
     );
 
