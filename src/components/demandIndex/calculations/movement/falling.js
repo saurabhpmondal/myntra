@@ -3,32 +3,28 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Falling Rule
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { MOVEMENT_RULES } from "../../config/movementRules.js";
 
-export function falling(movement){
+export function falling(
 
-    if(
+    movement
 
-        movement >=
+){
+
+    return movement >=
 
         MOVEMENT_RULES.FALLING
 
-    ){
+        ?
 
-        return{
+        "⬇ Falling"
 
-            badge:"⬇ Falling",
+        :
 
-            priority:4
-
-        };
-
-    }
-
-    return null;
+        null;
 
 }
