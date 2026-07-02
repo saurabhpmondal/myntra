@@ -3,11 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Open Style Controller
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import { buildStyleContext } from "../../../services/styleEye/styleContextBuilder.js";
+
+import { renderCompactSearch } from "./compactSearch.js";
 
 import { renderDashboardSections } from "./sectionRenderer.js";
 
@@ -45,7 +47,27 @@ export async function openStyle(
 
     }
 
-    target.innerHTML="";
+    target.innerHTML = "";
+
+    /**
+     * ==========================================
+     * Compact Search
+     * ==========================================
+     */
+
+    await renderCompactSearch(
+
+        target,
+
+        styleId
+
+    );
+
+    /**
+     * ==========================================
+     * Dashboard Sections
+     * ==========================================
+     */
 
     await renderDashboardSections(
 
