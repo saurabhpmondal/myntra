@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Eye Search
- * Version : V2.4
+ * Version : V2.5
  * =====================================================
  */
 
@@ -27,6 +27,14 @@ import { renderQualityPanel } from "../quality/qualityPanel.js";
 
 import { renderCatalogueFamily } from "../catalogueFamily/catalogueFamily.js";
 
+import { renderStickySearch } from "../stickySearch/stickySearch.js";
+
+/**
+ * =====================================================
+ * Landing Search
+ * =====================================================
+ */
+
 export async function renderStyleSearch(target){
 
     await createComponent({
@@ -39,11 +47,17 @@ export async function renderStyleSearch(target){
 
     });
 
-    bindEvents(target);
+    bindLandingEvents(target);
 
 }
 
-function bindEvents(target){
+/**
+ * =====================================================
+ * Landing Events
+ * =====================================================
+ */
+
+function bindLandingEvents(target){
 
     const searchBox =
 
@@ -53,25 +67,175 @@ function bindEvents(target){
 
         target.querySelector("#deepDiveButton");
 
-    button.onclick = async ()=>{
+    button.onclick = ()=>{
 
-        const keyword =
+        performSearch(
 
-            searchBox.value.trim();
+            target,
 
-        if(!keyword){
+            searchBox.value.trim()
 
-            searchBox.focus();
+        );
 
-            return;
+    };
+
+    searchBox.addEventListener(
+
+        "keydown",
+
+        event=>{
+
+            if(event.key==="Enter"){
+
+                button.click();
+
+            }
 
         }
 
-        button.disabled = true;
+    );
 
-        button.textContent = "Searching...";
+}
 
-        try{
+/**
+ * =====================================================
+ * Perform Search
+ * =====================================================
+ */
+
+async function performSearch(
+
+    target,
+
+    keyword
+
+){
+
+    if(!keyword){
+
+        return;
+
+    }
+
+    const result =
+
+        searchStyle(keyword);
+
+    switch(result.type){
+
+        case "STYLE":
+
+            await openStyle(
+
+                target,
+
+                result.results[0].styleId
+
+            );
+
+            break;
+
+        case "MULTIPLE":
+
+            target.innerHTML="";
+
+            await renderStyleSelector(
+
+                target,
+
+                result.results,
+
+                async styleId=>{
+
+                    await openStyle(
+
+                        target,
+
+                        styleId
+
+                    );
+
+                }
+
+            );
+
+            break;
+
+        case "NOT_FOUND":
+
+            alert(
+
+                "No matching Style ID or ERP SKU found."
+
+            );
+
+            break;
+
+    }
+
+}
+
+/**
+ * =====================================================
+ * Open Style
+ * =====================================================
+ */
+
+async function openStyle(
+
+    target,
+
+    styleId
+
+){
+
+    const context =
+
+        buildStyleContext(
+
+            styleId
+
+        );
+
+    if(!context){
+
+        alert(
+
+            "Unable to build Style Context."
+
+        );
+
+        return;
+
+    }
+
+    target.innerHTML="";
+
+    /**
+     * ==========================================
+     * Sticky Search
+     * ==========================================
+     */
+
+    const stickySection =
+
+        document.createElement("div");
+
+    stickySection.className =
+
+        "dashboard-section";
+
+    target.appendChild(
+
+        stickySection
+
+    );
+
+    await renderStickySearch(
+
+        stickySection,
+
+        async keyword=>{
 
             const result =
 
@@ -80,6 +244,14 @@ function bindEvents(target){
             switch(result.type){
 
                 case "STYLE":
+
+                    window.scrollTo({
+
+                        top:0,
+
+                        behavior:"smooth"
+
+                    });
 
                     await openStyle(
 
@@ -127,95 +299,17 @@ function bindEvents(target){
 
                     break;
 
-                default:
-
-                    break;
-
-            }
-
-        }
-
-        catch(error){
-
-            console.error(
-
-                "Style Eye",
-
-                error
-
-            );
-
-            alert(
-
-                "Unable to load Style Eye."
-
-            );
-
-        }
-
-        finally{
-
-            button.disabled = false;
-
-            button.textContent = "🔍 Deep Dive";
-
-        }
-
-    };
-
-    searchBox.addEventListener(
-
-        "keydown",
-
-        event=>{
-
-            if(event.key==="Enter"){
-
-                button.click();
-
             }
 
         }
 
     );
 
-}
-
-/**
- * =====================================================
- * Open Style
- * =====================================================
- */
-
-async function openStyle(
-
-    target,
-
-    styleId
-
-){
-
-    const context =
-
-        buildStyleContext(styleId);
-
-    if(!context){
-
-        alert(
-
-            "Unable to build Style Context."
-
-        );
-
-        return;
-
-    }
-
-    target.innerHTML = "";
-
-    // ==========================================
-    // Hero
-    // ==========================================
+    /**
+     * ==========================================
+     * Hero
+     * ==========================================
+     */
 
     const heroSection =
 
@@ -225,7 +319,11 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(heroSection);
+    target.appendChild(
+
+        heroSection
+
+    );
 
     await renderHeroPanel(
 
@@ -235,9 +333,11 @@ async function openStyle(
 
     );
 
-    // ==========================================
-    // Overview
-    // ==========================================
+    /**
+     * ==========================================
+     * Overview
+     * ==========================================
+     */
 
     const overviewSection =
 
@@ -247,7 +347,11 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(overviewSection);
+    target.appendChild(
+
+        overviewSection
+
+    );
 
     await renderOverviewPanel(
 
@@ -257,9 +361,11 @@ async function openStyle(
 
     );
 
-    // ==========================================
-    // Sales
-    // ==========================================
+    /**
+     * ==========================================
+     * Sales
+     * ==========================================
+     */
 
     const salesSection =
 
@@ -269,7 +375,11 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(salesSection);
+    target.appendChild(
+
+        salesSection
+
+    );
 
     await renderSalesPanel(
 
@@ -279,9 +389,11 @@ async function openStyle(
 
     );
 
-    // ==========================================
-    // Inventory
-    // ==========================================
+    /**
+     * ==========================================
+     * Inventory
+     * ==========================================
+     */
 
     const inventorySection =
 
@@ -291,7 +403,11 @@ async function openStyle(
 
         "dashboard-section";
 
-    target.appendChild(inventorySection);
+    target.appendChild(
+
+        inventorySection
+
+    );
 
     await renderInventoryPanel(
 
@@ -301,9 +417,11 @@ async function openStyle(
 
     );
 
-    // ==========================================
-    // Quality Intelligence
-    // ==========================================
+    /**
+     * ==========================================
+     * Quality
+     * ==========================================
+     */
 
     const qualitySection =
 
@@ -327,9 +445,11 @@ async function openStyle(
 
     );
 
-    // ==========================================
-    // Catalogue Family
-    // ==========================================
+    /**
+     * ==========================================
+     * Catalogue Family
+     * ==========================================
+     */
 
     const catalogueSection =
 
