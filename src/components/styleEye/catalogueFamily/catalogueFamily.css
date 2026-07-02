@@ -45,35 +45,6 @@
 
 }
 
-.catalogue-carousel{
-
-    display:flex;
-
-    flex-wrap:nowrap;
-
-    align-items:stretch;
-
-    gap:16px;
-
-    width:100%;
-
-    min-width:0;
-
-}
-
-.catalogue-tile{
-
-    flex:0 0 220px;
-
-    width:220px;
-
-    min-width:220px;
-
-    max-width:220px;
-
-    box-sizing:border-box;
-
-}
 
 .catalogue-body{
 
@@ -90,5 +61,41 @@
 .catalogue-button{
 
     width:100%;
+
+}
+
+.catalogue-carousel{
+
+    display:flex;
+
+    flex-wrap:nowrap;
+
+    align-items:stretch;
+
+    gap:16px;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    width:auto;
+
+    min-width:max-content;
+
+    padding-bottom:6px;
+
+}
+
+.catalogue-tile{
+
+    flex:0 0 220px;
+
+    width:220px;
+
+    min-width:220px;
+
+    max-width:220px;
+
+    box-sizing:border-box;
 
 }
