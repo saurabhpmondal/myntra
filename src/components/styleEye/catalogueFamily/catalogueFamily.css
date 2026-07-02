@@ -406,3 +406,21 @@
     }
 
 }
+
+.catalogue-carousel{
+
+    display:flex;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    width:100%;
+
+}
+
+.catalogue-tile{
+
+    flex:0 0 240px;
+
+}
