@@ -3,16 +3,26 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Premium Style Selector
- * Version : V2.1
+ * Version : V3.0
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
 
+/**
+ * =====================================================
+ * Render Style Selector
+ * =====================================================
+ */
+
 export async function renderStyleSelector(
+
     target,
+
     styles = [],
+
     onSelect = null
+
 ){
 
     await createComponent({
@@ -25,11 +35,21 @@ export async function renderStyleSelector(
 
     });
 
-    document.getElementById("selectorSubtitle").textContent =
+    const subtitle =
 
-        `${styles.length} style${styles.length>1?"s":""} found. Select one to continue with Deep Dive.`;
+        buildSubtitle(styles);
 
-    document.getElementById("selectorCount").textContent =
+    document.getElementById(
+
+        "selectorSubtitle"
+
+    ).textContent = subtitle;
+
+    document.getElementById(
+
+        "selectorCount"
+
+    ).textContent =
 
         `${styles.length} Result${styles.length>1?"s":""}`;
 
@@ -41,31 +61,107 @@ export async function renderStyleSelector(
 
         );
 
-    container.innerHTML = styles.map(style=>`
+    container.innerHTML =
+
+        styles.map(style=>
+
+            renderCard(style)
+
+        ).join("");
+
+    bindButtons(
+
+        container,
+
+        onSelect
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Subtitle
+ * =====================================================
+ */
+
+function buildSubtitle(styles){
+
+    if(!styles.length){
+
+        return "No matching style found.";
+
+    }
+
+    const erpSku =
+
+        styles[0].erpSku || "";
+
+    if(styles.length===1){
+
+        return
+
+        `1 matching style found.`;
+
+    }
+
+    return
+
+        `Multiple listings found for ERP SKU ${erpSku}. Select the required style to continue Style Eye analysis.`;
+
+}
+
+/**
+ * =====================================================
+ * Render Card
+ * =====================================================
+ */
+
+function renderCard(style){
+
+    return `
 
 <div class="style-selector-card">
 
     <div class="style-selector-top">
 
-        <div class="style-selector-image">
-
-            Image Coming Soon
-
-        </div>
+        ${renderImage(style)}
 
         <div class="style-selector-content">
 
             <div class="style-selector-brand">
 
-                <h3>
+                <div>
 
-                    ${style.brand || "-"}
+                    <h3>
 
-                </h3>
+                        ${style.brand || "-"}
 
-                <div class="style-selector-status">
+                    </h3>
 
-                    ${style.erpStatus || "-"}
+                    <div class="style-selector-style-name">
+
+                        ${style.styleName || "Saree"}
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="style-selector-status">
+
+                        ${style.erpStatus || "-"}
+
+                    </div>
+
+                    <div class="${style.isActive ? "selector-active" : "selector-inactive"}">
+
+                        ${style.badge}
+
+                        ${style.overallStatus}
+
+                    </div>
 
                 </div>
 
@@ -81,7 +177,7 @@ export async function renderStyleSelector(
 
                 <span class="style-selector-value">
 
-                    ${style.styleId || "-"}
+                    ${style.styleId}
 
                 </span>
 
@@ -97,7 +193,7 @@ export async function renderStyleSelector(
 
                 <span class="style-selector-value">
 
-                    ${style.erpSku || "-"}
+                    ${style.erpSku}
 
                 </span>
 
@@ -107,13 +203,13 @@ export async function renderStyleSelector(
 
                 <span class="style-selector-label">
 
-                    Launch Date
+                    Style Status
 
                 </span>
 
                 <span class="style-selector-value">
 
-                    ${style.launchDate || "-"}
+                    ${style.styleStatus || "-"}
 
                 </span>
 
@@ -123,13 +219,13 @@ export async function renderStyleSelector(
 
                 <span class="style-selector-label">
 
-                    Launch Age
+                    Listing Status
 
                 </span>
 
                 <span class="style-selector-value">
 
-                    ${style.launchAge ?? "-"}
+                    ${style.listingStatus || "-"}
 
                 </span>
 
@@ -145,7 +241,23 @@ export async function renderStyleSelector(
 
                 <span class="style-selector-value">
 
-                    ⭐ ${style.rating ?? "-"}
+                    ${renderRating(style.rating)}
+
+                </span>
+
+            </div>
+
+            <div class="style-selector-row">
+
+                <span class="style-selector-label">
+
+                    Launch Age
+
+                </span>
+
+                <span class="style-selector-value">
+
+                    ${style.launchAge}
 
                 </span>
 
@@ -157,108 +269,244 @@ export async function renderStyleSelector(
 
     <div class="style-selector-divider"></div>
 
-    <div class="style-selector-kpis">
+    ${renderKpis(style)}
 
-        <div class="selector-kpi">
+    ${renderFooter(style)}
 
-            <div class="selector-kpi-label">
+</div>
 
-                MRP
+`;
 
-            </div>
+}
 
-            <div class="selector-kpi-value">
+/**
+ * =====================================================
+ * KPI Section
+ * =====================================================
+ */
 
-                ${style.mrp || "-"}
+function renderKpis(style){
 
-            </div>
+    return `
 
-        </div>
+<div class="style-selector-kpis">
 
-        <div class="selector-kpi">
+    <div class="selector-kpi">
 
-            <div class="selector-kpi-label">
+        <div class="selector-kpi-label">
 
-                TP
-
-            </div>
-
-            <div class="selector-kpi-value">
-
-                ${style.tp || "-"}
-
-            </div>
+            MRP
 
         </div>
 
-        <div class="selector-kpi">
+        <div class="selector-kpi-value">
 
-            <div class="selector-kpi-label">
-
-                Category
-
-            </div>
-
-            <div class="selector-kpi-value">
-
-                ${style.category || "-"}
-
-            </div>
-
-        </div>
-
-        <div class="selector-kpi">
-
-            <div class="selector-kpi-label">
-
-                Brand
-
-            </div>
-
-            <div class="selector-kpi-value">
-
-                ${style.brand || "-"}
-
-            </div>
+            ${formatCurrency(style.mrp)}
 
         </div>
 
     </div>
 
-    <div class="style-selector-footer">
+    <div class="selector-kpi">
 
-        <button
-            class="style-selector-button"
-            data-style="${style.styleId}">
+        <div class="selector-kpi-label">
 
-            Deep Dive →
+            TP
 
-        </button>
+        </div>
+
+        <div class="selector-kpi-value">
+
+            ${formatCurrency(style.tp)}
+
+        </div>
+
+    </div>
+
+    <div class="selector-kpi">
+
+        <div class="selector-kpi-label">
+
+            Category
+
+        </div>
+
+        <div class="selector-kpi-value">
+
+            ${style.category || "-"}
+
+        </div>
+
+    </div>
+
+    <div class="selector-kpi">
+
+        <div class="selector-kpi-label">
+
+            Brand
+
+        </div>
+
+        <div class="selector-kpi-value">
+
+            ${style.brand || "-"}
+
+        </div>
 
     </div>
 
 </div>
 
-`).join("");
+`;
+
+}
+
+/**
+ * =====================================================
+ * Footer
+ * =====================================================
+ */
+
+function renderFooter(style){
+
+    return `
+
+<div class="style-selector-footer">
+
+    <button
+
+        class="style-selector-button"
+
+        data-style="${style.styleId}"
+
+    >
+
+        🔍 Deep Dive
+
+    </button>
+
+</div>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Image
+ * =====================================================
+ */
+
+function renderImage(style){
+
+    const image = style.imageUrl
+        ? `<img
+                src="${style.imageUrl}"
+                alt="${style.styleId}"
+                loading="lazy"
+           >`
+        : `<div class="style-selector-no-image">
+
+                👗
+
+                <span>
+
+                    No Image
+
+                </span>
+
+           </div>`;
+
+    return `
+
+<div
+    class="style-selector-image ${style.isActive ? "selector-image-active" : "selector-image-inactive"}"
+    data-image="${style.imageUrl || ""}"
+    data-style="${style.styleId}"
+>
+
+    ${image}
+
+</div>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Rating
+ * =====================================================
+ */
+
+function renderRating(rating){
+
+    rating = Number(rating || 0);
+
+    if(!rating){
+
+        return "—";
+
+    }
+
+    return `
+
+<span class="selector-rating">
+
+⭐ ${rating.toFixed(1)}
+
+</span>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Bind Images
+ * =====================================================
+ */
+
+function bindImages(container){
 
     container
-        .querySelectorAll(".style-selector-button")
-        .forEach(button=>{
 
-            button.onclick=()=>{
+        .querySelectorAll(
 
-                if(typeof onSelect==="function"){
+            ".style-selector-image"
 
-                    onSelect(
+        )
 
-                        button.dataset.style
+        .forEach(image=>{
 
-                    );
+            image.onclick=()=>{
+
+                const url =
+
+                    image.dataset.image;
+
+                if(!url){
+
+                    return;
 
                 }
+
+                /*
+                 * Phase 5
+                 * Phoenix Image Viewer
+                 */
+
+                window.open(
+
+                    url,
+
+                    "_blank"
+
+                );
 
             };
 
         });
 
 }
+
