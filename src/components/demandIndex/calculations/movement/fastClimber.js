@@ -3,32 +3,28 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Fast Climber Rule
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { MOVEMENT_RULES } from "../../config/movementRules.js";
 
-export function fastClimber(movement){
+export function fastClimber(
 
-    if(
+    movement
 
-        movement <=
+){
+
+    return movement <=
 
         MOVEMENT_RULES.FAST_CLIMBER
 
-    ){
+        ?
 
-        return{
+        "🚀 Fast Climber"
 
-            badge:"🚀 Fast Climber",
+        :
 
-            priority:1
-
-        };
-
-    }
-
-    return null;
+        null;
 
 }
