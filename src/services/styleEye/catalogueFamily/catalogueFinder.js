@@ -7,8 +7,8 @@
  * =====================================================
  */
 
-import { DataStore } from "../dataService.js";
 
+import { DataStore } from "../../dataService.js";
 import {
 
     getCatalogueId,
