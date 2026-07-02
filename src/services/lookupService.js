@@ -3,6 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Lookup Service
+ * Version : V2.0
  * =====================================================
  */
 
@@ -10,55 +11,109 @@ import { DataStore } from "./dataService.js";
 
 export const LookupStore = {
 
-    productMap: {},
+    /* ==========================================
+       Product
+    ========================================== */
 
-    brands: [],
+    productMap:{},
 
-    categories: [],
+    /* ==========================================
+       Images
+    ========================================== */
 
-    erpStatuses: []
+    imageByStyleId:{},
+
+    imageByErpSku:{},
+
+    /* ==========================================
+       Listing Master
+    ========================================== */
+
+    listingByStyleId:{},
+
+    /* ==========================================
+       Filters
+    ========================================== */
+
+    brands:[],
+
+    categories:[],
+
+    erpStatuses:[]
 
 };
 
-export function buildLookups() {
+/**
+ * =====================================================
+ * Build Lookups
+ * =====================================================
+ */
 
-    const map = {};
+export function buildLookups(){
 
-    const brands = new Set();
+    const productMap={};
 
-    const categories = new Set();
+    const imageByStyleId={};
 
-    const statuses = new Set();
+    const imageByErpSku={};
 
-    DataStore.productMaster.forEach(product => {
+    const listingByStyleId={};
 
-        map[product.style_id] = {
+    const brands=new Set();
 
-            styleId: product.style_id,
+    const categories=new Set();
 
-            erpSku: product.erp_sku,
+    const statuses=new Set();
 
-            brand: product.brand,
+    /* ==========================================
+       Product Master
+    ========================================== */
 
-            category: product.article_type,
+    DataStore.productMaster.forEach(product=>{
 
-            erpStatus: product.status
+        const styleId=
+
+            String(product.style_id || "").trim();
+
+        const erpSku=
+
+            String(product.erp_sku || "").trim();
+
+        productMap[styleId]={
+
+            styleId,
+
+            erpSku,
+
+            brand:product.brand || "",
+
+            category:product.article_type || "",
+
+            erpStatus:product.status || "",
+
+            mrp:Number(product.mrp || 0),
+
+            tp:Number(product.tp || 0),
+
+            launchDate:product.launch_date || "",
+
+            liveDate:product.live_date || ""
 
         };
 
-        if (product.brand) {
+        if(product.brand){
 
             brands.add(product.brand);
 
         }
 
-        if (product.article_type) {
+        if(product.article_type){
 
             categories.add(product.article_type);
 
         }
 
-        if (product.status) {
+        if(product.status){
 
             statuses.add(product.status);
 
@@ -66,23 +121,149 @@ export function buildLookups() {
 
     });
 
-    LookupStore.productMap = map;
+    /* ==========================================
+       Image Links
+    ========================================== */
 
-    LookupStore.brands = [...brands].sort();
+    DataStore.imageLinks.forEach(row=>{
 
-    LookupStore.categories = [...categories].sort();
+        const styleId=
 
-    LookupStore.erpStatuses = [...statuses].sort();
+            String(row.style_id || "").trim();
+
+        const erpSku=
+
+            String(row.erp_sku || "").trim();
+
+        const imageUrl=
+
+            String(row.image_url || "").trim();
+
+        if(styleId){
+
+            imageByStyleId[styleId]=imageUrl;
+
+        }
+
+        if(erpSku){
+
+            imageByErpSku[erpSku]=imageUrl;
+
+        }
+
+    });
+
+    /* ==========================================
+       Listing Master
+    ========================================== */
+
+    DataStore.listingMaster.forEach(row=>{
+
+        const styleId=
+
+            String(row.style_id || "").trim();
+
+        if(!styleId){
+
+            return;
+
+        }
+
+        listingByStyleId[styleId]={
+
+            styleName:
+
+                row.style_name || "",
+
+            articleType:
+
+                row.article_type || "",
+
+            brand:
+
+                row.brand || "",
+
+            styleStatus:
+
+                row.style_status_description || "",
+
+            listingStatus:
+
+                row.listing_status_description || "",
+
+            isActive:
+
+                String(
+
+                    row.is_active || ""
+
+                )
+
+                .trim()
+
+                .toUpperCase()
+
+        };
+
+    });
+
+    /* ==========================================
+       Save
+    ========================================== */
+
+    LookupStore.productMap=
+
+        productMap;
+
+    LookupStore.imageByStyleId=
+
+        imageByStyleId;
+
+    LookupStore.imageByErpSku=
+
+        imageByErpSku;
+
+    LookupStore.listingByStyleId=
+
+        listingByStyleId;
+
+    LookupStore.brands=
+
+        [...brands].sort();
+
+    LookupStore.categories=
+
+        [...categories].sort();
+
+    LookupStore.erpStatuses=
+
+        [...statuses].sort();
 
     console.table({
 
-        Brands: LookupStore.brands.length,
+        Products:
 
-        Categories: LookupStore.categories.length,
+            Object.keys(productMap).length,
 
-        ERPStatus: LookupStore.erpStatuses.length,
+        Images:
 
-        Products: Object.keys(map).length
+            Object.keys(imageByStyleId).length,
+
+        Listings:
+
+            Object.keys(listingByStyleId).length,
+
+        Brands:
+
+            LookupStore.brands.length,
+
+        Categories:
+
+            LookupStore.categories.length,
+
+        ERPStatus:
+
+            LookupStore.erpStatuses.length
 
     });
 
