@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Data Service
- * Version : V3.4
+ * Version : V3.5
  * =====================================================
  */
 
@@ -21,16 +21,30 @@ export const DataStore = {
     sellerStock: [],
     productMaster: [],
     traffic: [],
+
     listings: [],
     inventory: [],
     ads: [],
 
-    loaded: false
+    /* ==========================================
+       NEW
+    ========================================== */
+
+    imageLinks: [],
+    listingMaster: [],
+
+    loaded:false
 
 };
 
 let completed = 0;
 let totalJobs = 0;
+
+/**
+ * =====================================================
+ * Load One Sheet
+ * =====================================================
+ */
 
 async function loadSheet(job){
 
@@ -46,7 +60,7 @@ async function loadSheet(job){
 
         const progress = Math.round(
 
-            5 + (completed / totalJobs) * 90
+            5 + (completed/totalJobs)*90
 
         );
 
@@ -58,7 +72,11 @@ async function loadSheet(job){
 
         );
 
-        console.log(`✅ ${job.title}: ${data.length}`);
+        console.log(
+
+            `✅ ${job.title}: ${data.length}`
+
+        );
 
         return data;
 
@@ -66,13 +84,19 @@ async function loadSheet(job){
 
     catch(error){
 
-        console.error(`❌ ${job.title}`, error);
+        console.error(
+
+            `❌ ${job.title}`,
+
+            error
+
+        );
 
         completed++;
 
         const progress = Math.round(
 
-            5 + (completed / totalJobs) * 90
+            5 + (completed/totalJobs)*90
 
         );
 
@@ -90,6 +114,12 @@ async function loadSheet(job){
 
 }
 
+/**
+ * =====================================================
+ * Initialize
+ * =====================================================
+ */
+
 export async function initializeData(){
 
     if(DataStore.loaded){
@@ -98,7 +128,11 @@ export async function initializeData(){
 
     }
 
-    console.log("🚀 Loading Phoenix Data Engine...");
+    console.log(
+
+        "🚀 Loading Phoenix Data Engine..."
+
+    );
 
     updateSplash(
 
@@ -108,7 +142,7 @@ export async function initializeData(){
 
     );
 
-    const jobs = [
+    const jobs=[
 
         {
 
@@ -208,6 +242,30 @@ export async function initializeData(){
 
             url:Sheets.ads
 
+        },
+
+        /* ==========================================
+           NEW
+        ========================================== */
+
+        {
+
+            key:"imageLinks",
+
+            title:"Image Links",
+
+            url:Sheets.imageLinks
+
+        },
+
+        {
+
+            key:"listingMaster",
+
+            title:"Listing Master",
+
+            url:Sheets.listingMaster
+
         }
 
     ];
@@ -224,43 +282,49 @@ export async function initializeData(){
 
     );
 
-    const promises = jobs.map(
+    const promises =
 
-        job => loadSheet(job)
+        jobs.map(job=>loadSheet(job));
 
-    );
+    const results =
 
-    const results = await Promise.allSettled(
+        await Promise.allSettled(
 
-        promises
+            promises
 
-    );
+        );
 
-    results.forEach((result,index)=>{
+    results.forEach(
 
-        const key = jobs[index].key;
+        (result,index)=>{
 
-        if(result.status==="fulfilled"){
+            const key = jobs[index].key;
 
-            DataStore[key] = result.value;
+            if(result.status==="fulfilled"){
+
+                DataStore[key]=
+
+                    result.value;
+
+            }
+
+            else{
+
+                console.error(
+
+                    `❌ Failed : ${jobs[index].title}`,
+
+                    result.reason
+
+                );
+
+                DataStore[key]=[];
+
+            }
 
         }
 
-        else{
-
-            console.error(
-
-                `❌ Failed : ${jobs[index].title}`,
-
-                result.reason
-
-            );
-
-            DataStore[key] = [];
-
-        }
-
-    });
+    );
 
     updateSplash(
 
@@ -272,7 +336,7 @@ export async function initializeData(){
 
     buildLookups();
 
-    DataStore.loaded = true;
+    DataStore.loaded=true;
 
     console.table({
 
@@ -294,7 +358,11 @@ export async function initializeData(){
 
         Inventory:DataStore.inventory.length,
 
-        Ads:DataStore.ads.length
+        Ads:DataStore.ads.length,
+
+        ImageLinks:DataStore.imageLinks.length,
+
+        ListingMaster:DataStore.listingMaster.length
 
     });
 
@@ -306,7 +374,11 @@ export async function initializeData(){
 
     );
 
-    console.log("✅ Phoenix Ready");
+    console.log(
+
+        "✅ Phoenix Ready"
+
+    );
 
     return DataStore;
 
