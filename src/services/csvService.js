@@ -3,25 +3,29 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : CSV Service
- * Version : V3.0
+ * Version : V4.0
  * =====================================================
  */
 
-export async function loadCSV(url) {
+export async function loadCSV(url){
 
-    try {
+    try{
 
         const response = await fetch(url);
 
-        if (!response.ok) {
+        if(!response.ok){
+
             throw new Error(`Unable to fetch CSV : ${url}`);
+
         }
 
         const text = await response.text();
 
         return parseCSV(text);
 
-    } catch (error) {
+    }
+
+    catch(error){
 
         console.error("CSV Load Error:", error);
 
@@ -31,27 +35,69 @@ export async function loadCSV(url) {
 
 }
 
-function parseCSV(csv) {
+/**
+ * =====================================================
+ * Parse CSV
+ * =====================================================
+ */
 
-    const lines = csv.trim().split("\n");
+function parseCSV(csv){
 
-    if (lines.length === 0) return [];
+    if(!csv){
 
-    const headers = splitCSVLine(lines[0]).map(h => h.trim());
+        return [];
+
+    }
+
+    /* ==========================================
+       Normalize File
+    ========================================== */
+
+    csv = csv
+
+        .replace(/^\uFEFF/, "")      // Remove UTF-8 BOM
+
+        .replace(/\r\n/g,"\n")
+
+        .replace(/\r/g,"\n");
+
+    const lines = csv.split("\n")
+
+        .filter(line=>line.trim());
+
+    if(!lines.length){
+
+        return [];
+
+    }
+
+    /* ==========================================
+       Headers
+    ========================================== */
+
+    const headers = splitCSVLine(lines[0]).map(cleanHeader);
 
     const data = [];
 
-    for (let i = 1; i < lines.length; i++) {
-
-        if (!lines[i].trim()) continue;
+    for(let i=1;i<lines.length;i++){
 
         const values = splitCSVLine(lines[i]);
 
         const row = {};
 
-        headers.forEach((header, index) => {
+        headers.forEach((header,index)=>{
 
-            row[header] = values[index] ? values[index].trim() : "";
+            row[header] =
+
+                values[index]
+
+                ?
+
+                values[index].trim()
+
+                :
+
+                "";
 
         });
 
@@ -63,35 +109,79 @@ function parseCSV(csv) {
 
 }
 
-function splitCSVLine(line) {
+/**
+ * =====================================================
+ * Clean Header
+ * =====================================================
+ */
 
-    const result = [];
+function cleanHeader(header){
 
-    let current = "";
+    return String(header || "")
 
-    let insideQuotes = false;
+        .replace(/^\uFEFF/, "")
 
-    for (const char of line) {
+        .replace(/\u200B/g,"")
 
-        if (char === '"') {
+        .replace(/\u00A0/g," ")
 
-            insideQuotes = !insideQuotes;
+        .trim();
+
+}
+
+/**
+ * =====================================================
+ * Split CSV Line
+ * =====================================================
+ */
+
+function splitCSVLine(line){
+
+    const result=[];
+
+    let current="";
+
+    let insideQuotes=false;
+
+    for(let i=0;i<line.length;i++){
+
+        const char=line[i];
+
+        if(char==='"'){
+
+            if(
+
+                insideQuotes &&
+
+                line[i+1]==='"'
+
+            ){
+
+                current+='"';
+
+                i++;
+
+                continue;
+
+            }
+
+            insideQuotes=!insideQuotes;
 
             continue;
 
         }
 
-        if (char === "," && !insideQuotes) {
+        if(char==="," && !insideQuotes){
 
             result.push(current);
 
-            current = "";
+            current="";
 
-        } else {
-
-            current += char;
+            continue;
 
         }
+
+        current+=char;
 
     }
 
