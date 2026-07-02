@@ -35,15 +35,11 @@ export async function renderStyleSelector(
 
     });
 
-    const subtitle =
-
-        buildSubtitle(styles);
-
     document.getElementById(
 
         "selectorSubtitle"
 
-    ).textContent = subtitle;
+    ).textContent = buildSubtitle(styles);
 
     document.getElementById(
 
@@ -69,7 +65,7 @@ export async function renderStyleSelector(
 
         ).join("");
 
-    bindButtons(
+    bindEvents(
 
         container,
 
@@ -101,7 +97,7 @@ function buildSubtitle(styles){
 
         return
 
-        `1 matching style found.`;
+            "1 matching style found.";
 
     }
 
@@ -147,7 +143,7 @@ function renderCard(style){
 
                 </div>
 
-                <div>
+                <div class="style-selector-badges">
 
                     <div class="style-selector-status">
 
@@ -281,6 +277,58 @@ function renderCard(style){
 
 /**
  * =====================================================
+ * Image
+ * =====================================================
+ */
+
+function renderImage(style){
+
+    if(style.imageUrl){
+
+        return `
+
+<div
+    class="style-selector-image"
+    data-image="${style.imageUrl}"
+    title="Click to enlarge"
+>
+
+    <img
+        src="${style.imageUrl}"
+        alt="${style.styleId}"
+        loading="lazy"
+    >
+
+</div>
+
+`;
+
+    }
+
+    return `
+
+<div class="style-selector-image">
+
+    <div class="style-selector-no-image">
+
+        👗
+
+        <span>
+
+            No Image
+
+        </span>
+
+    </div>
+
+</div>
+
+`;
+
+}
+
+/**
+ * =====================================================
  * KPI Section
  * =====================================================
  */
@@ -393,48 +441,6 @@ function renderFooter(style){
 
 /**
  * =====================================================
- * Image
- * =====================================================
- */
-
-function renderImage(style){
-
-    const image = style.imageUrl
-        ? `<img
-                src="${style.imageUrl}"
-                alt="${style.styleId}"
-                loading="lazy"
-           >`
-        : `<div class="style-selector-no-image">
-
-                👗
-
-                <span>
-
-                    No Image
-
-                </span>
-
-           </div>`;
-
-    return `
-
-<div
-    class="style-selector-image ${style.isActive ? "selector-image-active" : "selector-image-inactive"}"
-    data-image="${style.imageUrl || ""}"
-    data-style="${style.styleId}"
->
-
-    ${image}
-
-</div>
-
-`;
-
-}
-
-/**
- * =====================================================
  * Rating
  * =====================================================
  */
@@ -445,29 +451,57 @@ function renderRating(rating){
 
     if(!rating){
 
-        return "—";
+        return "-";
 
     }
 
-    return `
-
-<span class="selector-rating">
-
-⭐ ${rating.toFixed(1)}
-
-</span>
-
-`;
+    return `⭐ ${rating.toFixed(1)}`;
 
 }
 
 /**
  * =====================================================
- * Bind Images
+ * Bind Events
  * =====================================================
  */
 
-function bindImages(container){
+function bindEvents(
+
+    container,
+
+    onSelect
+
+){
+
+    container
+
+        .querySelectorAll(
+
+            ".style-selector-button"
+
+        )
+
+        .forEach(button=>{
+
+            button.onclick=()=>{
+
+                if(
+
+                    typeof onSelect==="function"
+
+                ){
+
+                    onSelect(
+
+                        button.dataset.style
+
+                    );
+
+                }
+
+            };
+
+        });
 
     container
 
@@ -481,24 +515,26 @@ function bindImages(container){
 
             image.onclick=()=>{
 
-                const url =
+                const imageUrl =
 
                     image.dataset.image;
 
-                if(!url){
+                if(!imageUrl){
 
                     return;
 
                 }
 
                 /*
-                 * Phase 5
+                 * ==========================================
                  * Phoenix Image Viewer
+                 * (Temporary)
+                 * ==========================================
                  */
 
                 window.open(
 
-                    url,
+                    imageUrl,
 
                     "_blank"
 
@@ -510,3 +546,537 @@ function bindImages(container){
 
 }
 
+/**
+ * =====================================================
+ * Currency
+ * =====================================================
+ */
+
+function formatCurrency(value){
+
+    value = Number(
+
+        value || 0
+
+    );
+
+    if(!value){
+
+        return "-";
+
+    }
+
+    return value.toLocaleString(
+
+        "en-IN",
+
+        {
+
+            style:"currency",
+
+            currency:"INR",
+
+            maximumFractionDigits:0
+
+        }
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Date
+ * =====================================================
+ */
+
+function formatDate(date){
+
+    if(!date){
+
+        return "-";
+
+    }
+
+    const value =
+
+        new Date(date);
+
+    if(
+
+        isNaN(
+
+            value.getTime()
+
+        )
+
+    ){
+
+        return date;
+
+    }
+
+    return value.toLocaleDateString(
+
+        "en-IN",
+
+        {
+
+            day:"2-digit",
+
+            month:"short",
+
+            year:"numeric"
+
+        }
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Launch Age
+ * =====================================================
+ */
+
+function calculateLaunchAge(date){
+
+    if(!date){
+
+        return "-";
+
+    }
+
+    const launch =
+
+        new Date(date);
+
+    if(
+
+        isNaN(
+
+            launch.getTime()
+
+        )
+
+    ){
+
+        return "-";
+
+    }
+
+    const today =
+
+        new Date();
+
+    const diff =
+
+        today-launch;
+
+    const days =
+
+        Math.floor(
+
+            diff/86400000
+
+        );
+
+    if(days<30){
+
+        return `${days} Days`;
+
+    }
+
+    if(days<365){
+
+        return `${Math.floor(days/30)} Months`;
+
+    }
+
+    return `${Math.floor(days/365)} Years`;
+
+}
+
+/**
+ * =====================================================
+ * Status Badge Class
+ * =====================================================
+ */
+
+function getStatusClass(style){
+
+    return style.isActive
+
+        ?
+
+        "selector-active"
+
+        :
+
+        "selector-inactive";
+
+}
+
+/**
+ * =====================================================
+ * Safe Text
+ * =====================================================
+ */
+
+function safe(value){
+
+    if(
+
+        value===undefined ||
+
+        value===null ||
+
+        value===""
+
+    ){
+
+        return "-";
+
+    }
+
+    return String(value);
+
+}
+
+/**
+ * =====================================================
+ * Safe Number
+ * =====================================================
+ */
+
+function safeNumber(value){
+
+    const number =
+
+        Number(value);
+
+    if(
+
+        isNaN(number)
+
+    ){
+
+        return 0;
+
+    }
+
+    return number;
+
+}
+
+/**
+ * =====================================================
+ * Rating Color
+ * =====================================================
+ */
+
+function getRatingColor(rating){
+
+    rating = safeNumber(rating);
+
+    if(rating>=4.5){
+
+        return "#16A34A";
+
+    }
+
+    if(rating>=4){
+
+        return "#CA8A04";
+
+    }
+
+    return "#DC2626";
+
+}
+
+/**
+ * =====================================================
+ * Image Error Handler
+ * =====================================================
+ */
+
+document.addEventListener(
+
+    "error",
+
+    event=>{
+
+        const target =
+
+            event.target;
+
+        if(
+
+            target.tagName!=="IMG"
+
+        ){
+
+            return;
+
+        }
+
+        target.style.display="none";
+
+        const wrapper =
+
+            target.closest(
+
+                ".style-selector-image"
+
+            );
+
+        if(!wrapper){
+
+            return;
+
+        }
+
+        wrapper.innerHTML =
+
+        `
+
+<div class="style-selector-no-image">
+
+    👗
+
+    <span>
+
+        No Image
+
+    </span>
+
+</div>
+
+`;
+
+    },
+
+    true
+
+);
+
+/**
+ * =====================================================
+ * Card Border
+ * =====================================================
+ */
+
+function getCardClass(style){
+
+    return style.isActive
+
+        ?
+
+        "style-selector-card selector-card-active"
+
+        :
+
+        "style-selector-card selector-card-inactive";
+
+}
+
+/**
+ * =====================================================
+ * Build Tooltip
+ * =====================================================
+ */
+
+function buildTooltip(style){
+
+    return [
+
+        `Brand : ${safe(style.brand)}`,
+
+        `Style : ${safe(style.styleId)}`,
+
+        `ERP : ${safe(style.erpSku)}`,
+
+        `ERP Status : ${safe(style.erpStatus)}`,
+
+        `Style Status : ${safe(style.styleStatus)}`,
+
+        `Listing Status : ${safe(style.listingStatus)}`,
+
+        `Overall : ${safe(style.overallStatus)}`
+
+    ].join("\n");
+
+}
+
+/**
+ * =====================================================
+ * Build Overall Badge
+ * =====================================================
+ */
+
+function renderOverallBadge(style){
+
+    return `
+
+<div class="${getStatusClass(style)}">
+
+    ${style.badge}
+
+    ${safe(style.overallStatus)}
+
+</div>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Format Launch Date
+ * =====================================================
+ */
+
+function renderLaunchDate(style){
+
+    return formatDate(
+
+        style.launchDate
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Format Launch Age
+ * =====================================================
+ */
+
+function renderLaunchAge(style){
+
+    return calculateLaunchAge(
+
+        style.launchDate
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Format Rating
+ * =====================================================
+ */
+
+function renderRatingBadge(style){
+
+    const rating =
+
+        safeNumber(
+
+            style.rating
+
+        );
+
+    if(!rating){
+
+        return "-";
+
+    }
+
+    return `
+
+<span
+    class="selector-rating"
+    style="color:${getRatingColor(rating)}"
+>
+
+    ⭐ ${rating.toFixed(1)}
+
+</span>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Image Available
+ * =====================================================
+ */
+
+function hasImage(style){
+
+    return Boolean(
+
+        style.imageUrl
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Active
+ * =====================================================
+ */
+
+function isStyleActive(style){
+
+    return Boolean(
+
+        style.isActive
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Debug
+ * Remove later if not required
+ * =====================================================
+ */
+
+function debugStyle(style){
+
+    return {
+
+        styleId:style.styleId,
+
+        erpSku:style.erpSku,
+
+        brand:style.brand,
+
+        styleName:style.styleName,
+
+        category:style.category,
+
+        erpStatus:style.erpStatus,
+
+        styleStatus:style.styleStatus,
+
+        listingStatus:style.listingStatus,
+
+        overallStatus:style.overallStatus,
+
+        rating:style.rating,
+
+        launchDate:style.launchDate,
+
+        launchAge:style.launchAge,
+
+        imageUrl:style.imageUrl
+
+    };
+
+}
+
+/**
+ * =====================================================
+ * End Of File
+ * Version : V3.0
+ * =====================================================
+ */
