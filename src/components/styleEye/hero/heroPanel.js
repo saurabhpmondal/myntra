@@ -3,15 +3,18 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Hero Panel
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { createComponent } from "../../../utils/createComponent.js";
 
 export async function renderHeroPanel(
+
     target,
+
     context
+
 ){
 
     await createComponent({
@@ -26,7 +29,7 @@ export async function renderHeroPanel(
 
     if(!context){
 
-        target.innerHTML = "";
+        target.innerHTML="";
 
         return;
 
@@ -35,6 +38,10 @@ export async function renderHeroPanel(
     const identity = context.identity || {};
 
     const pricing = context.pricing || {};
+
+    /* ==========================================
+       Hero Details
+    ========================================== */
 
     document.getElementById("heroBrand").textContent =
 
@@ -80,6 +87,78 @@ export async function renderHeroPanel(
 
         identity.category || "-";
 
+    /* ==========================================
+       Hero Image
+    ========================================== */
+
+    bindHeroImage(identity);
+
+}
+
+/**
+ * =====================================================
+ * Image
+ * =====================================================
+ */
+
+function bindHeroImage(identity){
+
+    const image =
+
+        document.getElementById("heroImage");
+
+    const placeholder =
+
+        document.getElementById(
+
+            "heroImagePlaceholder"
+
+        );
+
+    const imageUrl =
+
+        String(
+
+            identity.imageUrl || ""
+
+        ).trim();
+
+    if(!imageUrl){
+
+        image.style.display="none";
+
+        placeholder.style.display="flex";
+
+        return;
+
+    }
+
+    image.src=imageUrl;
+
+    image.style.display="block";
+
+    placeholder.style.display="none";
+
+    image.onerror=()=>{
+
+        image.style.display="none";
+
+        placeholder.style.display="flex";
+
+    };
+
+    image.onclick=()=>{
+
+        window.open(
+
+            imageUrl,
+
+            "_blank"
+
+        );
+
+    };
+
 }
 
 /**
@@ -96,23 +175,39 @@ function calculateAge(date){
 
     }
 
-    const launch = new Date(date);
+    const launch =
 
-    if(isNaN(launch.getTime())){
+        new Date(date);
+
+    if(
+
+        isNaN(
+
+            launch.getTime()
+
+        )
+
+    ){
 
         return "-";
 
     }
 
-    const today = new Date();
+    const today =
 
-    const diff = today - launch;
+        new Date();
 
-    const days = Math.floor(
+    const diff =
 
-        diff / 86400000
+        today-launch;
 
-    );
+    const days =
+
+        Math.floor(
+
+            diff/86400000
+
+        );
 
     return `${days} Days`;
 
@@ -126,7 +221,9 @@ function calculateAge(date){
 
 function formatCurrency(value){
 
-    const amount = Number(value || 0);
+    const amount =
+
+        Number(value || 0);
 
     if(!amount){
 
@@ -166,9 +263,19 @@ function formatDate(date){
 
     }
 
-    const value = new Date(date);
+    const value =
 
-    if(isNaN(value.getTime())){
+        new Date(date);
+
+    if(
+
+        isNaN(
+
+            value.getTime()
+
+        )
+
+    ){
 
         return date;
 
