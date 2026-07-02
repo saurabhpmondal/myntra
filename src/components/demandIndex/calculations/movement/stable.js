@@ -3,15 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Stable Rule
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { MOVEMENT_RULES } from "../../config/movementRules.js";
 
-export function stable(movement){
+export function stable(
 
-    if(
+    movement
+
+){
+
+    return(
 
         movement >=
 
@@ -23,18 +27,14 @@ export function stable(movement){
 
         MOVEMENT_RULES.STABLE_MAX
 
-    ){
+    )
 
-        return{
+    ?
 
-            badge:"❄ Stable",
+    "❄ Stable"
 
-            priority:3
+    :
 
-        };
-
-    }
-
-    return null;
+    null;
 
 }
