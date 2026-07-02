@@ -1,191 +1,120 @@
-/**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Demand Index
- * Version : V1.0
- * =====================================================
- */
+/* ==========================================
+   Demand Header
+========================================== */
 
-.demand-index-page{
-
-    max-width:1800px;
-
-    margin:0 auto;
-
-    padding:28px;
+.demand-header{
 
     display:flex;
 
-    flex-direction:column;
+    justify-content:space-between;
+
+    align-items:center;
 
     gap:24px;
 
-}
-
-/* ==========================================
-   Header
-========================================== */
-
-#demandHeader{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-}
-
-/* ==========================================
-   Filters
-========================================== */
-
-#demandFilters{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:16px;
-
-    align-items:center;
-
     background:#FFFFFF;
 
     border:1px solid #E5E7EB;
+
+    border-radius:22px;
+
+    padding:24px 28px;
+
+    box-shadow:0 8px 24px rgba(15,23,42,.05);
+
+}
+
+.demand-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.demand-icon{
+
+    width:64px;
+
+    height:64px;
 
     border-radius:18px;
 
-    padding:20px;
-
-    box-shadow:0 6px 18px rgba(15,23,42,.05);
-
-}
-
-/* ==========================================
-   KPI Cards
-========================================== */
-
-#demandKPIs{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-
-    gap:20px;
-
-}
-
-/* ==========================================
-   Charts
-========================================== */
-
-#demandCharts{
-
-    display:grid;
-
-    grid-template-columns:1fr;
-
-    gap:20px;
-
-}
-
-/* ==========================================
-   Table
-========================================== */
-
-#demandTable{
-
-    background:#FFFFFF;
-
-    border:1px solid #E5E7EB;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-    box-shadow:0 8px 24px rgba(15,23,42,.06);
-
-}
-
-/* ==========================================
-   Loader
-========================================== */
-
-.demand-loader{
+    background:#EEF2FF;
 
     display:flex;
 
-    justify-content:center;
-
     align-items:center;
 
-    min-height:220px;
+    justify-content:center;
 
-    font-size:18px;
+    font-size:32px;
 
-    font-weight:600;
+}
+
+.demand-header h1{
+
+    margin:0;
+
+    font-size:32px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.demand-header p{
+
+    margin:8px 0 0;
 
     color:#6B7280;
 
-}
-
-/* ==========================================
-   Empty State
-========================================== */
-
-.demand-empty{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    min-height:220px;
-
-    font-size:18px;
-
-    font-weight:600;
-
-    color:#9CA3AF;
-
-    background:#FFFFFF;
-
-    border:1px dashed #D1D5DB;
-
-    border-radius:20px;
+    font-size:15px;
 
 }
 
-/* ==========================================
-   Responsive
-========================================== */
+.demand-export-btn{
 
-@media(max-width:1024px){
+    height:48px;
 
-    .demand-index-page{
+    padding:0 24px;
 
-        padding:20px;
+    border:none;
 
-    }
+    border-radius:14px;
+
+    background:#FF3F6C;
+
+    color:#FFFFFF;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.demand-export-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 22px rgba(255,63,108,.25);
 
 }
 
 @media(max-width:768px){
 
-    #demandFilters{
+    .demand-header{
 
         flex-direction:column;
 
-        align-items:stretch;
-
-    }
-
-    #demandKPIs{
-
-        grid-template-columns:1fr;
+        align-items:flex-start;
 
     }
 
