@@ -3,12 +3,12 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Catalogue Finder
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
-
 import { DataStore } from "../../dataService.js";
+
 import {
 
     getCatalogueId,
@@ -53,9 +53,7 @@ export function findCatalogueFamily(
             found:false,
 
             catalogueId:"",
-
             currentProduct:null,
-
             family:[]
 
         };
@@ -70,41 +68,79 @@ export function findCatalogueFamily(
 
         );
 
-    const family =
+    // ==========================================
+    // Build Family
+    // ==========================================
 
-        DataStore.productMaster
+    const familyMap = new Map();
 
-            .filter(product=>
+    DataStore.productMaster.forEach(product=>{
 
-                getCatalogueId(
+        const productCatalogue =
 
-                    product.erp_sku
+            getCatalogueId(
 
-                )===catalogueId
-
-            )
-
-            .sort((a,b)=>
-
-                String(a.erp_sku)
-
-                .localeCompare(
-
-                    String(b.erp_sku),
-
-                    undefined,
-
-                    {
-
-                        numeric:true,
-
-                        sensitivity:"base"
-
-                    }
-
-                )
+                product.erp_sku
 
             );
+
+        if(
+
+            productCatalogue===catalogueId
+
+        ){
+
+            familyMap.set(
+
+                normalize(
+
+                    product.style_id
+
+                ),
+
+                product
+
+            );
+
+        }
+
+    });
+
+    const family =
+
+        Array.from(
+
+            familyMap.values()
+
+        )
+
+        .sort((a,b)=>{
+
+            return String(
+
+                a.erp_sku || ""
+
+            ).localeCompare(
+
+                String(
+
+                    b.erp_sku || ""
+
+                ),
+
+                undefined,
+
+                {
+
+                    numeric:true,
+
+                    sensitivity:"base"
+
+                }
+
+            );
+
+        });
 
     return{
 
@@ -124,8 +160,8 @@ export function findCatalogueFamily(
 
 /**
  * =====================================================
- * Find Brand Products
- * Used when catalogue family not available
+ * Find Same Brand Products
+ * Used when no catalogue family exists
  * =====================================================
  */
 
@@ -141,15 +177,17 @@ export function findBrandProducts(
 
     );
 
-    return DataStore.productMaster.filter(product=>
+    return DataStore.productMaster
 
-        normalize(
+        .filter(product=>
 
-            product.brand
+            normalize(
 
-        )===brand
+                product.brand
 
-    );
+            )===brand
+
+        );
 
 }
 
