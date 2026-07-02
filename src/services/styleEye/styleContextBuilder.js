@@ -3,11 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Style Context Builder
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { DataStore } from "../dataService.js";
+
+import { LookupStore } from "../lookupService.js";
 
 /**
  * =====================================================
@@ -25,7 +27,7 @@ export function buildStyleContext(styleId){
 
         return String(
             row.style_id || ""
-        ).trim() === styleId;
+        ).trim()===styleId;
 
     });
 
@@ -37,23 +39,27 @@ export function buildStyleContext(styleId){
 
     return{
 
-        identity : buildIdentity(product),
+        identity:
 
-        pricing : buildPricing(product),
+            buildIdentity(product),
 
-        sales : {},
+        pricing:
 
-        inventory : {},
+            buildPricing(product),
 
-        quality : {},
+        sales:{},
 
-        performance : {},
+        inventory:{},
 
-        related : {},
+        quality:{},
 
-        alerts : [],
+        performance:{},
 
-        ai : {}
+        related:{},
+
+        alerts:[],
+
+        ai:{}
 
     };
 
@@ -67,33 +73,127 @@ export function buildStyleContext(styleId){
 
 function buildIdentity(product){
 
+    const styleId =
+
+        String(
+
+            product.style_id || ""
+
+        ).trim();
+
+    const erpSku =
+
+        String(
+
+            product.erp_sku || ""
+
+        ).trim();
+
+    const listing =
+
+        LookupStore.listingByStyleId[styleId] || {};
+
+    const imageUrl =
+
+        LookupStore.imageByStyleId[styleId]
+
+        ||
+
+        LookupStore.imageByErpSku[erpSku]
+
+        ||
+
+        "";
+
+    const styleStatus =
+
+        listing.styleStatus || "";
+
+    const listingStatus =
+
+        listing.listingStatus || "";
+
+    const listingActive =
+
+        String(
+
+            listing.isActive || ""
+
+        ).toUpperCase()==="TRUE"
+
+        ||
+
+        String(
+
+            listing.isActive || ""
+
+        ).toUpperCase()==="YES"
+
+        ||
+
+        String(
+
+            listing.isActive || ""
+
+        ).toUpperCase()==="ACTIVE";
+
     return{
 
-        styleId :
+        styleId:
 
-            product.style_id || "",
+            styleId,
 
-        erpSku :
+        erpSku:
 
-            product.erp_sku || "",
+            erpSku,
 
-        brand :
+        brand:
 
             product.brand || "",
 
-        category :
+        category:
+
+            listing.styleName ||
+
+            product.article_type ||
+
+            "Saree",
+
+        articleType:
 
             product.article_type || "",
 
-        erpStatus :
+        styleName:
+
+            listing.styleName ||
+
+            "Saree",
+
+        erpStatus:
 
             product.status || "",
 
-        launchDate :
+        styleStatus:
+
+            styleStatus,
+
+        listingStatus:
+
+            listingStatus,
+
+        listingActive:
+
+            listingActive,
+
+        imageUrl:
+
+            imageUrl,
+
+        launchDate:
 
             product.launch_date || "",
 
-        liveDate :
+        liveDate:
 
             product.live_date || ""
 
@@ -111,17 +211,17 @@ function buildPricing(product){
 
     return{
 
-        mrp :
+        mrp:Number(
 
-            Number(
-                product.mrp || 0
-            ),
+            product.mrp || 0
 
-        tp :
+        ),
 
-            Number(
-                product.tp || 0
-            )
+        tp:Number(
+
+            product.tp || 0
+
+        )
 
     };
 
