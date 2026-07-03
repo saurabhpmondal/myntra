@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Builder
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -131,17 +131,86 @@ function getSales(
 
 ){
 
-   const sales = DataStore.sales || [];
+    const sales =
+
+        DataStore.sales || [];
+
+    const monthMap={
+
+        JAN:0,
+        FEB:1,
+        MAR:2,
+        APR:3,
+        MAY:4,
+        JUN:5,
+        JUL:6,
+        AUG:7,
+        SEP:8,
+        OCT:9,
+        NOV:10,
+        DEC:11
+
+    };
 
     return sales.filter(
 
         row=>{
 
+            const day=
+
+                Number(
+
+                    row.date || 0
+
+                );
+
+            const year=
+
+                Number(
+
+                    row.year || 0
+
+                );
+
+            const month=
+
+                monthMap[
+
+                    String(
+
+                        row.month || ""
+
+                    )
+
+                    .trim()
+
+                    .toUpperCase()
+
+                ];
+
+            if(
+
+                day===0 ||
+
+                year===0 ||
+
+                month===undefined
+
+            ){
+
+                return false;
+
+            }
+
             const orderDate=
 
                 new Date(
 
-                    row.order_date
+                    year,
+
+                    month,
+
+                    day
 
                 );
 
@@ -380,6 +449,3 @@ function calculateBrandDemandWeight(
     return rows;
 
 }
-
-
-
