@@ -3,23 +3,46 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Core Style Badge
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { BADGE_RULES } from "../../config/badgeRules.js";
 
-export function coreStyle(row){
+/**
+ * =====================================================
+ * Core Style
+ *
+ * Rule
+ *
+ * 1. Cumulative DW <= 80%
+ * 2. Units Sold > 20
+ * =====================================================
+ */
+
+export function coreStyle(
+
+    row
+
+){
 
     if(
 
-        row.cumulativeDW<=
+        row.cumulativeDW <=
 
         BADGE_RULES.CORE_STYLE
 
+        &&
+
+        Number(
+
+            row.unitsSold || 0
+
+        ) > 20
+
     ){
 
-        return[
+        return [
 
             "🎯 Core Style"
 
@@ -27,6 +50,6 @@ export function coreStyle(row){
 
     }
 
-    return[];
+    return [];
 
 }
