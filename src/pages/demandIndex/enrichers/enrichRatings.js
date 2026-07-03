@@ -29,25 +29,23 @@ export function enrichRatings(
 
                 ).trim();
 
-            const rating=
+            if(
+
+                !styleId
+
+            ){
+
+                return;
+
+            }
+
+            ratingMap[styleId]=
 
                 Number(
 
                     row.rating || 0
 
                 );
-
-            if(
-
-                styleId
-
-            ){
-
-                ratingMap[styleId]=
-
-                    rating;
-
-            }
 
         }
 
