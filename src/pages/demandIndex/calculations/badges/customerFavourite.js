@@ -1,9 +1,6 @@
 /**
  * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Customer Favourite Badge
- * Version : V2.0
+ * Customer Favourite
  * =====================================================
  */
 
@@ -19,7 +16,7 @@ export function customerFavourite(
 
             row.rating || 0
 
-        )>=4.0
+        )>=4
 
     ){
 
