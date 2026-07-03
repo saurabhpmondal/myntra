@@ -3,11 +3,24 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Table
- * Version : V2.1
+ * Version : V3.0
  * =====================================================
  */
 
-import { openStyle } from "../../../components/styleEye/search/openStyle.js";
+import { renderTable as renderCommonTable }
+from "../../../components/common/table/table.js";
+
+import { getDemandIndexTableConfig }
+from "../config/tableConfig.js";
+
+import { openStyle }
+from "../../../components/styleEye/search/openStyle.js";
+
+/**
+ * =====================================================
+ * Render Table
+ * =====================================================
+ */
 
 export async function renderTable(
 
@@ -17,59 +30,21 @@ export async function renderTable(
 
 ){
 
-    target.innerHTML=`
+    const config=
 
-<div class="di-table-wrapper">
+        getDemandIndexTableConfig(
 
-<table class="di-table">
+            target,
 
-<thead>
+            rows
 
-<tr>
+        );
 
-<th>#</th>
+    await renderCommonTable(
 
-<th>👁</th>
+        config
 
-<th>Overall</th>
-
-<th>Brand</th>
-
-<th>Style ID</th>
-
-<th>ERP SKU</th>
-
-<th>Brand</th>
-
-<th>Category</th>
-
-<th>Status</th>
-
-<th>Units</th>
-
-<th>Overall DW</th>
-
-<th>Brand DW</th>
-
-<th>Cumulative</th>
-
-<th>Badges</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-${buildRows(rows)}
-
-</tbody>
-
-</table>
-
-</div>
-
-`;
+    );
 
     bindEvents(
 
@@ -91,279 +66,56 @@ function bindEvents(
 
 ){
 
-    target.querySelectorAll(
+    target
 
-        ".di-eye-btn"
+        .querySelectorAll(
 
-    ).forEach(
+            ".di-eye-btn"
 
-        button=>{
+        )
 
-            button.onclick=
+        .forEach(
 
-            async()=>{
+            button=>{
 
-                const styleId=
+                button.onclick=
 
-                    button.dataset.style;
+                async()=>{
 
-                const app=
+                    const styleId=
 
-                    document.querySelector(
+                        button.dataset.style;
 
-                        "#app"
+                    const app=
+
+                        document.querySelector(
+
+                            "#app"
+
+                        );
+
+                    if(
+
+                        !app
+
+                    ){
+
+                        return;
+
+                    }
+
+                    await openStyle(
+
+                        app,
+
+                        styleId
 
                     );
 
-                if(
+                };
 
-                    !app
+            }
 
-                ){
-
-                    return;
-
-                }
-
-                await openStyle(
-
-                    app,
-
-                    styleId
-
-                );
-
-            };
-
-        }
-
-    );
+        );
 
 }
-
-/**
- * =====================================================
- * Build Rows
- * =====================================================
- */
-
-function buildRows(
-
-    rows
-
-){
-
-    if(
-
-        !rows.length
-
-    ){
-
-        return`
-
-<tr>
-
-<td
-colspan="14"
-class="di-table-empty">
-
-No records found.
-
-</td>
-
-</tr>
-
-`;
-
-    }
-
-    return rows.map(
-
-        row=>`
-
-<tr>
-
-<td>
-
-${row.overallRank}
-
-</td>
-
-<td>
-
-<button
-
-class="di-eye-btn"
-
-data-style="${row.styleId}"
-
-title="Open Style Eye">
-
-👁
-
-</button>
-
-</td>
-
-<td>
-
-${row.overallRank}
-
-</td>
-
-<td>
-
-${row.brandRank}
-
-</td>
-
-<td>
-
-<a
-
-href="https://www.myntra.com/${row.styleId}"
-
-target="_blank"
-
-class="di-style-link">
-
-${row.styleId}
-
-</a>
-
-</td>
-
-<td>
-
-${row.erpSku}
-
-</td>
-
-<td>
-
-${row.brand}
-
-</td>
-
-<td>
-
-${row.category}
-
-</td>
-
-<td>
-
-${row.erpStatus}
-
-</td>
-
-<td>
-
-${row.unitsSold.toLocaleString()}
-
-</td>
-
-<td>
-
-${(
-
-    row.overallDW*100
-
-).toFixed(
-
-    2
-
-)}%
-
-</td>
-
-<td>
-
-${(
-
-    row.brandDW*100
-
-).toFixed(
-
-    2
-
-)}%
-
-</td>
-
-<td>
-
-${(
-
-    row.cumulativeDW*100
-
-).toFixed(
-
-    2
-
-)}%
-
-</td>
-
-<td>
-
-${renderBadges(
-
-    row.badges
-
-)}
-
-</td>
-
-</tr>
-
-`
-
-    ).join("");
-
-}
-
-/**
- * =====================================================
- * Badges
- * =====================================================
- */
-
-function renderBadges(
-
-    badges=[]
-
-){
-
-    if(
-
-        !badges.length
-
-    ){
-
-        return "-";
-
-    }
-
-    return badges.map(
-
-        badge=>`
-
-<span
-
-class="di-badge">
-
-${badge}
-
-</span>
-
-`
-
-    ).join(
-
-        " "
-
-    );
-
-}
-
