@@ -808,3 +808,63 @@
     box-shadow:0 10px 20px rgba(255,63,108,.25);
 
 }
+
+/* =====================================================
+   Rank Movement
+===================================================== */
+
+.di-rank{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+.di-rank-up{
+
+    color:#16a34a;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.di-rank-down{
+
+    color:#dc2626;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.di-rank-new{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.di-rank-same{
+
+    color:#6b7280;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
