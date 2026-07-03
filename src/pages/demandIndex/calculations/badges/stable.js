@@ -33,7 +33,11 @@ export function stable(
 
         &&
 
-        row.rankChange<3
+        Number(
+
+            row.rankChange || 0
+
+        )<=2
 
     ){
 
@@ -53,9 +57,13 @@ export function stable(
 
         Math.abs(
 
-            row.rankChange
+            Number(
 
-        )<3
+                row.rankChange || 0
+
+            )
+
+        )<=2
 
     ){
 
