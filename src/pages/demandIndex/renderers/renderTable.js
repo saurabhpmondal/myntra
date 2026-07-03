@@ -10,15 +10,14 @@
 import { renderTable as renderCommonTable }
 from "../../../components/common/table/table.js";
 
-import { getDemandIndexTableConfig }
+import {
+    getDemandIndexTableConfig
+}
 from "../config/tableConfig.js";
-
-import { openStyle }
-from "../../../components/styleEye/search/openStyle.js";
 
 /**
  * =====================================================
- * Render Table
+ * Render Demand Index Table
  * =====================================================
  */
 
@@ -45,77 +44,5 @@ export async function renderTable(
         config
 
     );
-
-    bindEvents(
-
-        target
-
-    );
-
-}
-
-/**
- * =====================================================
- * Events
- * =====================================================
- */
-
-function bindEvents(
-
-    target
-
-){
-
-    target
-
-        .querySelectorAll(
-
-            ".di-eye-btn"
-
-        )
-
-        .forEach(
-
-            button=>{
-
-                button.onclick=
-
-                async()=>{
-
-                    const styleId=
-
-                        button.dataset.style;
-
-                    const app=
-
-                        document.querySelector(
-
-                            "#app"
-
-                        );
-
-                    if(
-
-                        !app
-
-                    ){
-
-                        return;
-
-                    }
-
-                    await openStyle(
-
-                        app,
-
-                        styleId
-
-                    );
-
-                };
-
-            }
-
-        );
 
 }
