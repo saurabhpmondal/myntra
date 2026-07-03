@@ -3,13 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Top 10 Badge
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { BADGE_RULES } from "../../config/badgeRules.js";
 
-export function top10(row){
+export function top10(
+
+    row
+
+){
 
     if(
 
@@ -19,7 +23,7 @@ export function top10(row){
 
     ){
 
-        return[
+        return [
 
             "🔥 Top 10"
 
@@ -27,6 +31,6 @@ export function top10(row){
 
     }
 
-    return[];
+    return [];
 
 }
