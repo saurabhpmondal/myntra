@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Builder
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
@@ -23,6 +23,8 @@ import { calculateBrandRank } from "../calculations/calculateBrandRank.js";
 
 import { calculateCumulativeDW } from "../calculations/calculateCumulativeDW.js";
 
+import { calculateMovement } from "../calculations/calculateMovement.js";
+
 import { calculateBadges } from "../calculations/calculateBadges.js";
 
 /**
@@ -39,33 +41,177 @@ export function buildDemandIndex(
 
 ){
 
-    const sales = getSales(
+    /**
+     * ==========================================
+     * Current Period
+     * ==========================================
+     */
 
-        fromDate,
+    const currentSales=
 
-        toDate
+        getSales(
+
+            fromDate,
+
+            toDate
+
+        );
+
+    /**
+     * ==========================================
+     * Previous Period
+     * ==========================================
+     */
+
+    const periodDays=
+
+        Math.round(
+
+            (
+
+                toDate-
+
+                fromDate
+
+            )
+
+            /
+
+            86400000
+
+        )+1;
+
+    const previousToDate=
+
+        new Date(
+
+            fromDate
+
+        );
+
+    previousToDate.setDate(
+
+        previousToDate.getDate()-1
 
     );
 
-    const grouped =
+    const previousFromDate=
 
-        groupSalesByStyle(
+        new Date(
 
-            sales
+            previousToDate
 
         );
 
-    let rows =
+    previousFromDate.setDate(
+
+        previousFromDate.getDate()
+
+        -
+
+        (
+
+            periodDays-1
+
+        )
+
+    );
+
+    const previousSales=
+
+        getSales(
+
+            previousFromDate,
+
+            previousToDate
+
+        );
+
+    /**
+     * ==========================================
+     * Build Current Rows
+     * ==========================================
+     */
+
+    let rows=
 
         buildRows(
 
-            grouped,
+            groupSalesByStyle(
 
-            sales
+                currentSales
+
+            ),
+
+            currentSales
 
         );
 
-    rows =
+    /**
+     * ==========================================
+     * Build Previous Rows
+     * ==========================================
+     */
+
+    let previousRows=
+
+        buildRows(
+
+            groupSalesByStyle(
+
+                previousSales
+
+            ),
+
+            previousSales
+
+        );
+
+    /**
+     * ==========================================
+     * Previous Period Ranking
+     * ==========================================
+     */
+
+    previousRows=
+
+        calculateBrandDemandWeight(
+
+            previousRows
+
+        );
+
+    previousRows=
+
+        calculateOverallRank(
+
+            previousRows
+
+        );
+
+    previousRows=
+
+        calculateBrandRank(
+
+            previousRows
+
+        );
+
+    previousRows=
+
+        calculateCumulativeDW(
+
+            previousRows
+
+        );
+
+    /**
+     * ==========================================
+     * Current Period Ranking
+     * ==========================================
+     */
+
+    rows=
 
         calculateBrandDemandWeight(
 
@@ -73,7 +219,7 @@ export function buildDemandIndex(
 
         );
 
-    rows =
+    rows=
 
         calculateOverallRank(
 
@@ -81,7 +227,7 @@ export function buildDemandIndex(
 
         );
 
-    rows =
+    rows=
 
         calculateBrandRank(
 
@@ -89,7 +235,7 @@ export function buildDemandIndex(
 
         );
 
-    rows =
+    rows=
 
         calculateCumulativeDW(
 
@@ -97,11 +243,33 @@ export function buildDemandIndex(
 
         );
 
+    /**
+     * ==========================================
+     * Movement
+     * ==========================================
+     */
+
+    rows=
+
+        calculateMovement(
+
+            rows,
+
+            previousRows
+
+        );
+
+    /**
+     * ==========================================
+     * Badges
+     * ==========================================
+     */
+
     rows.forEach(
 
         row=>{
 
-            row.badges =
+            row.badges=
 
                 calculateBadges(
 
@@ -131,25 +299,38 @@ function getSales(
 
 ){
 
-    const sales =
+    const sales=
 
         DataStore.sales || [];
 
     const monthMap={
 
         JAN:0,
+
         FEB:1,
+
         MAR:2,
+
         APR:3,
+
         MAY:4,
+
         JUN:5,
-JUNE:5, 
+
+        JUNE:5,
+
         JUL:6,
-JULY:6, 
+
+        JULY:6,
+
         AUG:7,
+
         SEP:8,
+
         OCT:9,
+
         NOV:10,
+
         DEC:11
 
     };
@@ -254,9 +435,19 @@ function groupSalesByStyle(
 
                 String(
 
-                    row.style_id
+                    row.style_id || ""
 
                 ).trim();
+
+            if(
+
+                !styleId
+
+            ){
+
+                return;
+
+            }
 
             if(
 
@@ -308,13 +499,19 @@ function buildRows(
 
         grouped
 
-    ).map(
+    )
+
+    .map(
 
         ([styleId,rows])=>{
 
             const product=
 
-                LookupStore.productMap[styleId] || {};
+                LookupStore.productMap[
+
+                    styleId
+
+                ] || {};
 
             const unitsSold=
 
@@ -376,6 +573,12 @@ function buildRows(
 
                 overallRank:0,
 
+                previousRank:null,
+
+                rankChange:null,
+
+                rankMovement:"NEW",
+
                 brandRank:0,
 
                 cumulativeDW:0,
@@ -385,6 +588,14 @@ function buildRows(
             };
 
         }
+
+    )
+
+    .filter(
+
+        row=>
+
+            row.unitsSold>0
 
     );
 
@@ -410,15 +621,27 @@ function calculateBrandDemandWeight(
 
             if(
 
-                !brandTotals[row.brand]
+                !brandTotals[
+
+                    row.brand
+
+                ]
 
             ){
 
-                brandTotals[row.brand]=0;
+                brandTotals[
+
+                    row.brand
+
+                ]=0;
 
             }
 
-            brandTotals[row.brand]+=
+            brandTotals[
+
+                row.brand
+
+            ]+=
 
                 row.unitsSold;
 
