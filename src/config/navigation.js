@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Navigation
- * Version : V2.1
+ * Version : V2.2
  * =====================================================
  */
 
@@ -48,20 +48,6 @@ export const Navigation = [
         id:"sor-shipment",
         title:"SOR Shipment",
         icon:"package-plus",
-        filter:true
-    },
-
-    {
-        id:"surge",
-        title:"Surge",
-        icon:"zap",
-        filter:true
-    },
-
-    {
-        id:"sales-drop",
-        title:"Sales Drop",
-        icon:"trending-down",
         filter:true
     },
 
