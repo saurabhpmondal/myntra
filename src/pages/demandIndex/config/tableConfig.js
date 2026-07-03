@@ -196,3 +196,147 @@ ${value}
     }
 
 ];
+
+/**
+ * =====================================================
+ * Badge Renderer
+ * =====================================================
+ */
+
+function renderBadges(
+
+    badges=[]
+
+){
+
+    if(
+
+        !badges.length
+
+    ){
+
+        return "-";
+
+    }
+
+    return badges.map(
+
+        badge=>`
+
+<span
+
+class="di-badge">
+
+${badge}
+
+</span>
+
+`
+
+    ).join(
+
+        " "
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Build Config
+ * =====================================================
+ */
+
+export function getDemandIndexTableConfig(
+
+    target,
+
+    rows=[]
+
+){
+
+    const tableRows=
+
+        rows.map(
+
+            row=>({
+
+                overallRank:
+
+                    row.overallRank,
+
+                brandRank:
+
+                    row.brandRank,
+
+                eye:
+
+                    "",
+
+                styleId:
+
+                    row.styleId,
+
+                erpSku:
+
+                    row.erpSku,
+
+                brand:
+
+                    row.brand,
+
+                category:
+
+                    row.category,
+
+                erpStatus:
+
+                    row.erpStatus,
+
+                unitsSold:
+
+                    row.unitsSold,
+
+                overallDW:
+
+                    row.overallDW,
+
+                brandDW:
+
+                    row.brandDW,
+
+                cumulativeDW:
+
+                    row.cumulativeDW,
+
+                badges:
+
+                    row.badges
+
+            })
+
+        );
+
+    return{
+
+        target,
+
+        title:
+
+            "Demand Index",
+
+        subtitle:
+
+            "Ranked by Overall Demand Weight",
+
+        columns:
+
+            DemandIndexColumns,
+
+        rows:
+
+            tableRows
+
+    };
+
+}
