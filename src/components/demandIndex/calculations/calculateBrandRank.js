@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Calculate Brand Rank
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -11,7 +11,7 @@ import { rankByMetric } from "./rankByMetric.js";
 
 /**
  * =====================================================
- * Brand Rank
+ * Calculate Brand Rank
  * =====================================================
  */
 
@@ -21,14 +21,74 @@ export function calculateBrandRank(
 
 ){
 
-    return rankByMetric(
+    if(
 
-        rows,
+        !Array.isArray(rows)
 
-        "brandDW",
+    ){
 
-        "brandRank"
+        return [];
+
+    }
+
+    const brands={};
+
+    rows.forEach(
+
+        row=>{
+
+            const brand=
+
+                row.brand || "";
+
+            if(
+
+                !brands[brand]
+
+            ){
+
+                brands[brand]=[];
+
+            }
+
+            brands[brand].push(
+
+                row
+
+            );
+
+        }
 
     );
+
+    const ranked=[];
+
+    Object.values(
+
+        brands
+
+    ).forEach(
+
+        brandRows=>{
+
+            ranked.push(
+
+                ...rankByMetric(
+
+                    brandRows,
+
+                    "brandDW",
+
+                    "brandRank"
+
+                )
+
+            );
+
+        }
+
+    );
+
+    return ranked;
 
 }
