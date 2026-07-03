@@ -3,9 +3,11 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Table
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
+
+import { openStyle } from "../../styleEye/search/openStyle.js";
 
 export async function renderTable(
 
@@ -69,6 +71,74 @@ ${buildRows(rows)}
 
 `;
 
+    bindEvents(
+
+        target
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Events
+ * =====================================================
+ */
+
+function bindEvents(
+
+    target
+
+){
+
+    target.querySelectorAll(
+
+        ".di-eye-btn"
+
+    ).forEach(
+
+        button=>{
+
+            button.onclick=
+
+            async()=>{
+
+                const styleId=
+
+                    button.dataset.style;
+
+                const app=
+
+                    document.querySelector(
+
+                        "#app"
+
+                    );
+
+                if(
+
+                    !app
+
+                ){
+
+                    return;
+
+                }
+
+                await openStyle(
+
+                    app,
+
+                    styleId
+
+                );
+
+            };
+
+        }
+
+    );
+
 }
 
 /**
@@ -83,7 +153,11 @@ function buildRows(
 
 ){
 
-    if(!rows.length){
+    if(
+
+        !rows.length
+
+    ){
 
         return`
 
@@ -118,8 +192,12 @@ ${row.overallRank}
 <td>
 
 <button
+
 class="di-eye-btn"
-data-style="${row.styleId}">
+
+data-style="${row.styleId}"
+
+title="Open Style Eye">
 
 👁
 
@@ -187,19 +265,43 @@ ${row.unitsSold.toLocaleString()}
 
 <td>
 
-${(row.overallDW*100).toFixed(2)}%
+${(
+
+    row.overallDW*100
+
+).toFixed(
+
+    2
+
+)}%
 
 </td>
 
 <td>
 
-${(row.brandDW*100).toFixed(2)}%
+${(
+
+    row.brandDW*100
+
+).toFixed(
+
+    2
+
+)}%
 
 </td>
 
 <td>
 
-${(row.cumulativeDW*100).toFixed(2)}%
+${(
+
+    row.cumulativeDW*100
+
+).toFixed(
+
+    2
+
+)}%
 
 </td>
 
@@ -248,6 +350,7 @@ function renderBadges(
         badge=>`
 
 <span
+
 class="di-badge">
 
 ${badge}
@@ -256,6 +359,10 @@ ${badge}
 
 `
 
-    ).join(" ");
+    ).join(
+
+        " "
+
+    );
 
 }
