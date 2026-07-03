@@ -3,95 +3,151 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index KPI Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 export async function renderKPIs(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    const kpis=[
+    const totalStyles=
 
-        {
+        rows.length;
 
-            title:"Total Styles",
+    const topStyle=
 
-            value:"-",
+        rows.length
 
-            id:"diTotalStyles",
+        ?
 
-            icon:"📦"
+        rows[0].styleId
 
-        },
+        :
 
-        {
+        "-";
 
-            title:"Top Style",
+    const brandSummary={};
 
-            value:"-",
+    rows.forEach(
 
-            id:"diTopStyle",
+        row=>{
 
-            icon:"🏆"
+            if(
 
-        },
+                !brandSummary[
 
-        {
+                    row.brand
 
-            title:"Top Brand",
+                ]
 
-            value:"-",
+            ){
 
-            id:"diTopBrand",
+                brandSummary[
 
-            icon:"👑"
+                    row.brand
 
-        },
+                ]=0;
 
-        {
+            }
 
-            title:"80% DW Styles",
+            brandSummary[
 
-            value:"-",
+                row.brand
 
-            id:"diCoreStyles",
+            ]+=
 
-            icon:"🎯"
-
-        },
-
-        {
-
-            title:"Top 10 Contribution",
-
-            value:"-",
-
-            id:"diTop10Contribution",
-
-            icon:"📈"
-
-        },
-
-        {
-
-            title:"Movers",
-
-            value:"-",
-
-            id:"diMovers",
-
-            icon:"🚀"
+                row.unitsSold;
 
         }
 
-    ];
+    );
 
-    target.innerHTML=
+    let topBrand="-";
 
-        kpis.map(kpi=>`
+    let topBrandSale=0;
+
+    Object.entries(
+
+        brandSummary
+
+    ).forEach(
+
+        ([brand,sales])=>{
+
+            if(
+
+                sales>
+
+                topBrandSale
+
+            ){
+
+                topBrandSale=
+
+                    sales;
+
+                topBrand=
+
+                    brand;
+
+            }
+
+        }
+
+    );
+
+    const coreStyles=
+
+        rows.filter(
+
+            row=>
+
+                row.cumulativeDW<=0.80
+
+        ).length;
+
+    const top10Contribution=(
+
+        rows
+
+        .slice(
+
+            0,
+
+            10
+
+        )
+
+        .reduce(
+
+            (
+
+                total,
+
+                row
+
+            )=>
+
+                total+
+
+                row.overallDW,
+
+            0
+
+        )*100
+
+    ).toFixed(
+
+        2
+
+    )+"%";
+
+    target.innerHTML=`
 
 <div class="di-kpi-card">
 
@@ -99,28 +155,156 @@ export async function renderKPIs(
 
         <div class="di-kpi-icon">
 
-            ${kpi.icon}
+            📦
 
         </div>
 
         <div class="di-kpi-title">
 
-            ${kpi.title}
+            Total Styles
 
         </div>
 
     </div>
 
-    <div
-        id="${kpi.id}"
-        class="di-kpi-value">
+    <div class="di-kpi-value">
 
-        ${kpi.value}
+        ${totalStyles}
 
     </div>
 
 </div>
 
-`).join("");
+<div class="di-kpi-card">
+
+    <div class="di-kpi-top">
+
+        <div class="di-kpi-icon">
+
+            🏆
+
+        </div>
+
+        <div class="di-kpi-title">
+
+            Top Style
+
+        </div>
+
+    </div>
+
+    <div class="di-kpi-value">
+
+        ${topStyle}
+
+    </div>
+
+</div>
+
+<div class="di-kpi-card">
+
+    <div class="di-kpi-top">
+
+        <div class="di-kpi-icon">
+
+            👑
+
+        </div>
+
+        <div class="di-kpi-title">
+
+            Top Brand
+
+        </div>
+
+    </div>
+
+    <div class="di-kpi-value">
+
+        ${topBrand}
+
+    </div>
+
+</div>
+
+<div class="di-kpi-card">
+
+    <div class="di-kpi-top">
+
+        <div class="di-kpi-icon">
+
+            🎯
+
+        </div>
+
+        <div class="di-kpi-title">
+
+            80% DW Styles
+
+        </div>
+
+    </div>
+
+    <div class="di-kpi-value">
+
+        ${coreStyles}
+
+    </div>
+
+</div>
+
+<div class="di-kpi-card">
+
+    <div class="di-kpi-top">
+
+        <div class="di-kpi-icon">
+
+            📈
+
+        </div>
+
+        <div class="di-kpi-title">
+
+            Top 10 Contribution
+
+        </div>
+
+    </div>
+
+    <div class="di-kpi-value">
+
+        ${top10Contribution}
+
+    </div>
+
+</div>
+
+<div class="di-kpi-card">
+
+    <div class="di-kpi-top">
+
+        <div class="di-kpi-icon">
+
+            🚀
+
+        </div>
+
+        <div class="di-kpi-title">
+
+            Movers
+
+        </div>
+
+    </div>
+
+    <div class="di-kpi-value">
+
+            -
+
+    </div>
+
+</div>
+
+`;
 
 }
