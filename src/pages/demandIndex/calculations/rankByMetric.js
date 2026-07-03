@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Generic Ranking Engine
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -11,19 +11,14 @@
  * =====================================================
  * Rank By Metric
  *
- * Parameters
+ * Sequential Ranking
  *
- * rows
- * metricField
- * rankField
+ * 1
+ * 2
+ * 3
+ * 4
+ * 5
  *
- * Example
- *
- * rankByMetric(
- *      rows,
- *      "overallDW",
- *      "overallRank"
- * );
  * =====================================================
  */
 
@@ -47,17 +42,19 @@ export function rankByMetric(
 
     }
 
-    const ranked =
+    const ranked=[
 
-        [...rows]
+        ...rows
 
-        .sort(
+    ].sort(
 
-            (a,b)=>
+        (a,b)=>{
+
+            return(
 
                 Number(
 
-                    b[metricField] || 0
+                    b[metricField]||0
 
                 )
 
@@ -65,19 +62,15 @@ export function rankByMetric(
 
                 Number(
 
-                    a[metricField] || 0
+                    a[metricField]||0
 
                 )
 
-        );
+            );
 
-    let previousValue =
+        }
 
-        null;
-
-    let currentRank =
-
-        0;
+    );
 
     ranked.forEach(
 
@@ -89,33 +82,9 @@ export function rankByMetric(
 
         )=>{
 
-            const value =
+            row[rankField]=
 
-                Number(
-
-                    row[metricField] || 0
-
-                );
-
-            if(
-
-                value !== previousValue
-
-            ){
-
-                currentRank =
-
-                    index + 1;
-
-                previousValue =
-
-                    value;
-
-            }
-
-            row[rankField] =
-
-                currentRank;
+                index+1;
 
         }
 
