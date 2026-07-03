@@ -21,7 +21,11 @@ export function losingMomentum(
 
         Math.abs(
 
-            row.rankChange
+            Number(
+
+                row.rankChange || 0
+
+            )
 
         )>=20
 
