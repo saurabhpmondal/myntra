@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -27,84 +27,17 @@ export async function renderDemandIndex(
 
         target,
 
-        html:"src/components/demandIndex/demandIndex.html",
+        html:"src/pages/demandIndex/demandIndex.html",
 
-        css:"src/components/demandIndex/demandIndex.css"
+        css:"src/pages/demandIndex/demandIndex.css"
 
     });
-
-    buildLayout(
-
-        target
-
-    );
 
     await initializeDemandIndex(
 
         target
 
     );
-
-}
-
-/**
- * =====================================================
- * Build Layout
- * =====================================================
- */
-
-function buildLayout(
-
-    target
-
-){
-
-    target.innerHTML=`
-
-<div
-class="demand-index-page">
-
-    <div
-    id="demandLoader"
-    class="demand-loader">
-
-        Loading Demand Index...
-
-    </div>
-
-    <div
-    id="demandHeader">
-
-    </div>
-
-    <div
-    id="demandFilters">
-
-    </div>
-
-    <div
-    id="demandKPIs"
-    class="di-kpi-grid">
-
-    </div>
-
-    <div
-    id="demandEmpty"
-    class="demand-empty"
-    style="display:none;">
-
-        No data found.
-
-    </div>
-
-    <div
-    id="demandTable">
-
-    </div>
-
-</div>
-
-`;
 
 }
 
@@ -126,9 +59,7 @@ export function showDemandLoader(){
 
     if(loader){
 
-        loader.style.display=
-
-            "flex";
+        loader.style.display="flex";
 
     }
 
@@ -152,9 +83,7 @@ export function hideDemandLoader(){
 
     if(loader){
 
-        loader.style.display=
-
-            "none";
+        loader.style.display="none";
 
     }
 
@@ -190,9 +119,7 @@ export function showDemandEmpty(
 
         message;
 
-    empty.style.display=
-
-        "flex";
+    empty.style.display="flex";
 
 }
 
@@ -214,9 +141,7 @@ export function hideDemandEmpty(){
 
     if(empty){
 
-        empty.style.display=
-
-            "none";
+        empty.style.display="none";
 
     }
 
