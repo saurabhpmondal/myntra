@@ -7,7 +7,7 @@
  * =====================================================
  */
 
-import { openStyle } from "../../styleEye/search/openStyle.js";
+import { openStyle } from "../../../components/styleEye/search/openStyle.js";
 
 export async function renderTable(
 
