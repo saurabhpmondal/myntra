@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Filters
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -13,7 +13,7 @@ export async function renderFilters(
 
 ){
 
-    target.innerHTML = `
+    target.innerHTML=`
 
 <div class="demand-filter-bar">
 
@@ -47,17 +47,48 @@ export async function renderFilters(
 
     </select>
 
-    <input
-        id="diDateFilter"
-        type="month">
+    <select id="diDateFilter">
+
+        <option value="7">
+
+            Last 7 Days
+
+        </option>
+
+        <option
+            value="30"
+            selected>
+
+            Last 30 Days
+
+        </option>
+
+        <option value="60">
+
+            Last 60 Days
+
+        </option>
+
+        <option value="90">
+
+            Last 90 Days
+
+        </option>
+
+    </select>
 
     <input
+
         id="diSearch"
+
         type="text"
+
         placeholder="Search Style ID / ERP SKU">
 
     <button
+
         id="diResetFilters"
+
         class="di-reset-btn">
 
         Reset
