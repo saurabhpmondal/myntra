@@ -3,9 +3,11 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Service
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
+
+import { buildDemandIndex } from "./demandIndexBuilder.js";
 
 import { renderHeader } from "../renderers/renderHeader.js";
 
@@ -31,17 +33,29 @@ export async function initializeDemandIndex(
 
         showLoader();
 
-        /**
-         * ==========================================
-         * Hide Global Controls
-         * ==========================================
-         */
+        const today=
 
-        toggleGlobalControls(
+            new Date();
 
-            false
+        const fromDate=
+
+            new Date();
+
+        fromDate.setDate(
+
+            today.getDate()-30
 
         );
+
+        const rows=
+
+            buildDemandIndex(
+
+                fromDate,
+
+                today
+
+            );
 
         /**
          * ==========================================
@@ -87,7 +101,9 @@ export async function initializeDemandIndex(
 
                 "demandKPIs"
 
-            )
+            ),
+
+            rows
 
         );
 
@@ -103,9 +119,35 @@ export async function initializeDemandIndex(
 
                 "demandTable"
 
-            )
+            ),
+
+            rows
 
         );
+
+        const empty=
+
+            document.getElementById(
+
+                "demandEmpty"
+
+            );
+
+        if(empty){
+
+            empty.style.display=
+
+                rows.length
+
+                ?
+
+                "none"
+
+                :
+
+                "flex";
+
+        }
 
     }
 
@@ -137,7 +179,7 @@ export async function initializeDemandIndex(
 
 function showLoader(){
 
-    const loader =
+    const loader=
 
         document.getElementById(
 
@@ -147,7 +189,9 @@ function showLoader(){
 
     if(loader){
 
-        loader.style.display="flex";
+        loader.style.display=
+
+            "flex";
 
     }
 
@@ -155,7 +199,7 @@ function showLoader(){
 
 function hideLoader(){
 
-    const loader =
+    const loader=
 
         document.getElementById(
 
@@ -165,41 +209,10 @@ function hideLoader(){
 
     if(loader){
 
-        loader.style.display="none";
+        loader.style.display=
+
+            "none";
 
     }
-
-}
-
-/**
- * =====================================================
- * Global Header Controls
- * =====================================================
- */
-
-function toggleGlobalControls(
-
-    visible
-
-){
-
-    /**
-     * TODO
-     *
-     * Use existing Phoenix
-     * show / hide utility.
-     *
-     * We will connect this
-     * after Demand Index UI
-     * is completed.
-     */
-
-    console.log(
-
-        "Global Controls:",
-
-        visible
-
-    );
 
 }
