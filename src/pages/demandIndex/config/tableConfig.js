@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Table Config
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -21,7 +21,15 @@ export const DemandIndexColumns=[
 
         label:"Overall Rank",
 
-        align:"center"
+        align:"center",
+
+        renderer:(value,row)=>renderOverallRank(
+
+            value,
+
+            row
+
+        )
 
     },
 
@@ -171,6 +179,130 @@ ${value}
 
 /**
  * =====================================================
+ * Overall Rank Renderer
+ * =====================================================
+ */
+
+function renderOverallRank(
+
+    value,
+
+    row
+
+){
+
+    if(
+
+        row.rankMovement==="NEW"
+
+    ){
+
+        return `
+
+<div class="di-rank">
+
+<span>
+
+${value}
+
+</span>
+
+<span class="di-rank-new">
+
+🆕
+
+</span>
+
+</div>
+
+`;
+
+    }
+
+    if(
+
+        row.rankMovement==="UP"
+
+    ){
+
+        return `
+
+<div class="di-rank">
+
+<span>
+
+${value}
+
+</span>
+
+<span class="di-rank-up">
+
+▲${row.rankChange}
+
+</span>
+
+</div>
+
+`;
+
+    }
+
+    if(
+
+        row.rankMovement==="DOWN"
+
+    ){
+
+        return `
+
+<div class="di-rank">
+
+<span>
+
+${value}
+
+</span>
+
+<span class="di-rank-down">
+
+▼${Math.abs(
+
+    row.rankChange
+
+)}
+
+</span>
+
+</div>
+
+`;
+
+    }
+
+    return `
+
+<div class="di-rank">
+
+<span>
+
+${value}
+
+</span>
+
+<span class="di-rank-same">
+
+—
+
+</span>
+
+</div>
+
+`;
+
+}
+
+/**
+ * =====================================================
  * Badge Renderer
  * =====================================================
  */
@@ -252,6 +384,18 @@ export function getDemandIndexTableConfig(
                     overallRank:
 
                         row.overallRank,
+
+                    previousRank:
+
+                        row.previousRank,
+
+                    rankChange:
+
+                        row.rankChange,
+
+                    rankMovement:
+
+                        row.rankMovement,
 
                     brandRank:
 
