@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Builder
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -11,21 +11,35 @@ import { DataStore } from "../../../services/dataService.js";
 
 import { LookupStore } from "../../../services/lookupService.js";
 
-import { calculateUnitsSold } from "../calculations/calculateUnitsSold.js";
+import { enrichRatings }
+from "../enrichers/enrichRatings.js";
 
-import { calculateOverallDW } from "../calculations/calculateOverallDW.js";
+import { enrichStateCoverage }
+from "../enrichers/enrichStateCoverage.js";
 
-import { calculateBrandDW } from "../calculations/calculateBrandDW.js";
+import { enrichMovement }
+from "../enrichers/enrichMovement.js";
 
-import { calculateOverallRank } from "../calculations/calculateOverallRank.js";
+import { calculateUnitsSold }
+from "../calculations/calculateUnitsSold.js";
 
-import { calculateBrandRank } from "../calculations/calculateBrandRank.js";
+import { calculateOverallDW }
+from "../calculations/calculateOverallDW.js";
 
-import { calculateCumulativeDW } from "../calculations/calculateCumulativeDW.js";
+import { calculateBrandDW }
+from "../calculations/calculateBrandDW.js";
 
-import { calculateMovement } from "../calculations/calculateMovement.js";
+import { calculateOverallRank }
+from "../calculations/calculateOverallRank.js";
 
-import { calculateBadges } from "../calculations/calculateBadges.js";
+import { calculateBrandRank }
+from "../calculations/calculateBrandRank.js";
+
+import { calculateCumulativeDW }
+from "../calculations/calculateCumulativeDW.js";
+
+import { calculateBadges }
+from "../calculations/calculateBadges.js";
 
 /**
  * =====================================================
@@ -63,9 +77,9 @@ export function buildDemandIndex(
      * ==========================================
      */
 
-    const periodDays=
+    const totalDays=
 
-        Math.round(
+        Math.floor(
 
             (
 
@@ -111,7 +125,7 @@ export function buildDemandIndex(
 
         (
 
-            periodDays-1
+            totalDays-1
 
         )
 
@@ -197,14 +211,6 @@ export function buildDemandIndex(
 
         );
 
-    previousRows=
-
-        calculateCumulativeDW(
-
-            previousRows
-
-        );
-
     /**
      * ==========================================
      * Current Period Ranking
@@ -235,9 +241,33 @@ export function buildDemandIndex(
 
         );
 
+    /**
+     * ==========================================
+     * Enrichers
+     * ==========================================
+     */
+
     rows=
 
-        calculateCumulativeDW(
+        enrichMovement(
+
+            rows,
+
+            previousRows
+
+        );
+
+    rows=
+
+        enrichRatings(
+
+            rows
+
+        );
+
+    rows=
+
+        enrichStateCoverage(
 
             rows
 
@@ -245,17 +275,15 @@ export function buildDemandIndex(
 
     /**
      * ==========================================
-     * Movement
+     * Cumulative Demand Weight
      * ==========================================
      */
 
     rows=
 
-        calculateMovement(
+        calculateCumulativeDW(
 
-            rows,
-
-            previousRows
+            rows
 
         );
 
@@ -415,7 +443,7 @@ function getSales(
 
 /**
  * =====================================================
- * Group Sales
+ * Group Sales By Style
  * =====================================================
  */
 
@@ -557,6 +585,10 @@ function buildRows(
 
                     product.liveDate || "",
 
+                rating:0,
+
+                stateCount:0,
+
                 unitsSold,
 
                 overallDW:
@@ -619,11 +651,15 @@ function calculateBrandDemandWeight(
 
         row=>{
 
+            const brand=
+
+                row.brand || "";
+
             if(
 
                 !brandTotals[
 
-                    row.brand
+                    brand
 
                 ]
 
@@ -631,7 +667,7 @@ function calculateBrandDemandWeight(
 
                 brandTotals[
 
-                    row.brand
+                    brand
 
                 ]=0;
 
@@ -639,7 +675,7 @@ function calculateBrandDemandWeight(
 
             brandTotals[
 
-                row.brand
+                brand
 
             ]+=
 
