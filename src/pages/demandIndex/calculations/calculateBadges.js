@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Badge Engine
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -15,13 +15,45 @@ import { top10 } from "./badges/top10.js";
 
 import { top50 } from "./badges/top50.js";
 
-import { eliteStyle } from "./badges/eliteStyle.js";
-
 import { coreStyle } from "./badges/coreStyle.js";
 
-export function calculateBadges(row){
+/* ==========================================
+   Movement
+========================================== */
 
-    return[
+import { risingStar } from "./badges/risingStar.js";
+
+import { climbing } from "./badges/climbing.js";
+
+import { losingMomentum } from "./badges/losingMomentum.js";
+
+import { stable } from "./badges/stable.js";
+
+/* ==========================================
+   Business
+========================================== */
+
+import { customerFavourite } from "./badges/customerFavourite.js";
+
+import { highConverter } from "./badges/highConverter.js";
+
+import { nationwideHero } from "./badges/nationwideHero.js";
+
+/**
+ * =====================================================
+ * Calculate Badges
+ * =====================================================
+ */
+
+export function calculateBadges(
+
+    row
+
+){
+
+    return [
+
+        /* Achievement */
 
         ...marketLeader(row),
 
@@ -31,9 +63,25 @@ export function calculateBadges(row){
 
         ...top50(row),
 
-        ...eliteStyle(row),
+        ...coreStyle(row),
 
-        ...coreStyle(row)
+        /* Momentum */
+
+        ...risingStar(row),
+
+        ...climbing(row),
+
+        ...losingMomentum(row),
+
+        ...stable(row),
+
+        /* Business */
+
+        ...customerFavourite(row),
+
+        ...highConverter(row),
+
+        ...nationwideHero(row)
 
     ];
 
