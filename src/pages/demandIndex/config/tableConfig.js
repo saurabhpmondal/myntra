@@ -7,8 +7,6 @@
  * =====================================================
  */
 
-import { openStyle } from "../../../components/styleEye/search/openStyle.js";
-
 /**
  * =====================================================
  * Columns
@@ -39,39 +37,13 @@ export const DemandIndexColumns=[
 
     {
 
-        key:"eye",
-
-        label:"👁",
-
-        align:"center",
-
-        renderer:(value,row)=>`
-
-<button
-
-class="di-eye-btn"
-
-data-style="${row.styleId}"
-
-title="Open Style Eye">
-
-👁
-
-</button>
-
-`
-
-    },
-
-    {
-
         key:"styleId",
 
         label:"Style ID",
 
         align:"center",
 
-        renderer:(value)=>`
+        renderer:value=>`
 
 <a
 
@@ -211,6 +183,12 @@ function renderBadges(
 
     if(
 
+        !Array.isArray(
+
+            badges
+
+        ) ||
+
         !badges.length
 
     ){
@@ -223,9 +201,7 @@ function renderBadges(
 
         badge=>`
 
-<span
-
-class="di-badge">
+<span class="di-badge">
 
 ${badge}
 
@@ -233,17 +209,13 @@ ${badge}
 
 `
 
-    ).join(
-
-        " "
-
-    );
+    ).join("");
 
 }
 
 /**
  * =====================================================
- * Build Config
+ * Build Table Config
  * =====================================================
  */
 
@@ -255,68 +227,6 @@ export function getDemandIndexTableConfig(
 
 ){
 
-    const tableRows=
-
-        rows.map(
-
-            row=>({
-
-                overallRank:
-
-                    row.overallRank,
-
-                brandRank:
-
-                    row.brandRank,
-
-                eye:
-
-                    "",
-
-                styleId:
-
-                    row.styleId,
-
-                erpSku:
-
-                    row.erpSku,
-
-                brand:
-
-                    row.brand,
-
-                category:
-
-                    row.category,
-
-                erpStatus:
-
-                    row.erpStatus,
-
-                unitsSold:
-
-                    row.unitsSold,
-
-                overallDW:
-
-                    row.overallDW,
-
-                brandDW:
-
-                    row.brandDW,
-
-                cumulativeDW:
-
-                    row.cumulativeDW,
-
-                badges:
-
-                    row.badges
-
-            })
-
-        );
-
     return{
 
         target,
@@ -327,7 +237,7 @@ export function getDemandIndexTableConfig(
 
         subtitle:
 
-            "Ranked by Overall Demand Weight",
+            `Showing ${rows.length.toLocaleString()} ranked styles`,
 
         columns:
 
@@ -335,7 +245,61 @@ export function getDemandIndexTableConfig(
 
         rows:
 
-            tableRows
+            rows.map(
+
+                row=>({
+
+                    overallRank:
+
+                        row.overallRank,
+
+                    brandRank:
+
+                        row.brandRank,
+
+                    styleId:
+
+                        row.styleId,
+
+                    erpSku:
+
+                        row.erpSku,
+
+                    brand:
+
+                        row.brand,
+
+                    category:
+
+                        row.category,
+
+                    erpStatus:
+
+                        row.erpStatus,
+
+                    unitsSold:
+
+                        row.unitsSold,
+
+                    overallDW:
+
+                        row.overallDW,
+
+                    brandDW:
+
+                        row.brandDW,
+
+                    cumulativeDW:
+
+                        row.cumulativeDW,
+
+                    badges:
+
+                        row.badges
+
+                })
+
+            )
 
     };
 
