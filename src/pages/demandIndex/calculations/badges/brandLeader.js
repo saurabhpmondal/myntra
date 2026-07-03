@@ -3,13 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Brand Leader Badge
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { BADGE_RULES } from "../../config/badgeRules.js";
 
-export function brandLeader(row){
+export function brandLeader(
+
+    row
+
+){
 
     if(
 
@@ -19,7 +23,7 @@ export function brandLeader(row){
 
     ){
 
-        return[
+        return [
 
             "🥇 Brand Leader"
 
@@ -27,6 +31,6 @@ export function brandLeader(row){
 
     }
 
-    return[];
+    return [];
 
 }
