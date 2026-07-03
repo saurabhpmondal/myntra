@@ -1,3 +1,12 @@
+/**
+ * =====================================================
+ * Project Phoenix
+ * Product : Myntra Analytics
+ * Module  : Navigation
+ * Version : V2.1
+ * =====================================================
+ */
+
 export const Navigation = [
 
     {
@@ -35,14 +44,12 @@ export const Navigation = [
         filter:true
     },
 
-
-{
+    {
         id:"sor-shipment",
         title:"SOR Shipment",
         icon:"package-plus",
         filter:true
     },
-
 
     {
         id:"surge",
@@ -70,6 +77,13 @@ export const Navigation = [
         title:"Style Eye",
         icon:"eye",
         filter:true
+    },
+
+    {
+        id:"demand-index",
+        title:"Demand Index",
+        icon:"chart-column",
+        filter:false
     },
 
     {
