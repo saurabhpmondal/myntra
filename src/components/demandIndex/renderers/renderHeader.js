@@ -3,9 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Header
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
+
+import { DemandIndexStore } from "../services/demandIndexStore.js";
+
+import { exportDemandIndex } from "../services/exportService.js";
 
 export async function renderHeader(
 
@@ -13,42 +17,33 @@ export async function renderHeader(
 
 ){
 
-    target.innerHTML = `
+    target.innerHTML=`
 
-<div class="demand-header">
+<div class="di-header">
 
-    <div class="demand-header-left">
+    <div class="di-header-left">
 
-        <div class="demand-icon">
+        <h1>
 
-            📊
+            Demand Index
 
-        </div>
+        </h1>
 
-        <div>
+        <p>
 
-            <h1>
+            Demand Intelligence for every Style.
 
-                Demand Index
-
-            </h1>
-
-            <p>
-
-                Rank every style based on contribution, demand weight,
-                movement and business impact.
-
-            </p>
-
-        </div>
+        </p>
 
     </div>
 
-    <div class="demand-header-right">
+    <div class="di-header-right">
 
         <button
-            id="exportDemandIndex"
-            class="demand-export-btn">
+
+            id="diExportButton"
+
+            class="di-primary-btn">
 
             ⬇ Export
 
@@ -59,5 +54,35 @@ export async function renderHeader(
 </div>
 
 `;
+
+    bindEvents();
+
+}
+
+/**
+ * =====================================================
+ * Events
+ * =====================================================
+ */
+
+function bindEvents(){
+
+    document
+
+        .getElementById(
+
+            "diExportButton"
+
+        )
+
+        .onclick=()=>{
+
+            exportDemandIndex(
+
+                DemandIndexStore.filteredRows
+
+            );
+
+        };
 
 }
