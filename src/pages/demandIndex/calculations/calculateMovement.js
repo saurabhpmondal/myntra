@@ -2,91 +2,143 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Movement Engine
- * Version : V4.0
+ * Module  : Calculate Movement
+ * Version : V1.0
  * =====================================================
  */
-
-import { fastClimber } from "./movement/fastClimber.js";
-
-import { climbing } from "./movement/climbing.js";
-
-import { stable } from "./movement/stable.js";
-
-import { falling } from "./movement/falling.js";
-
-import { losingMomentum } from "./movement/losingMomentum.js";
 
 /**
  * =====================================================
  * Calculate Movement
+ *
+ * Compares current rank with previous rank.
  * =====================================================
  */
 
 export function calculateMovement(
 
-    previousRank,
+    currentRows,
 
-    currentRank
+    previousRows
 
 ){
 
-    const movement =
+    if(
 
-        Number(currentRank || 0)
+        !Array.isArray(currentRows)
 
-        -
+    ){
 
-        Number(previousRank || 0);
+        return [];
 
-    return{
+    }
 
-        movement,
+    const previousRankMap={};
 
-        badge:
+    (previousRows || []).forEach(
 
-            fastClimber(
+        row=>{
 
-                movement
+            previousRankMap[
 
-            )
+                row.styleId
 
-            ||
+            ]=
 
-            climbing(
+                row.overallRank;
 
-                movement
+        }
 
-            )
+    );
 
-            ||
+    currentRows.forEach(
 
-            stable(
+        row=>{
 
-                movement
+            const previousRank=
 
-            )
+                previousRankMap[
 
-            ||
+                    row.styleId
 
-            falling(
+                ];
 
-                movement
+            row.previousRank=
 
-            )
+                previousRank ||
 
-            ||
+                null;
 
-            losingMomentum(
+            /**
+             * ==========================================
+             * New Entry
+             * ==========================================
+             */
 
-                movement
+            if(
 
-            )
+                previousRank==null
 
-            ||
+            ){
 
-            ""
+                row.rankMovement=
 
-    };
+                    "NEW";
+
+                row.rankChange=
+
+                    null;
+
+                return;
+
+            }
+
+            const change=
+
+                previousRank-
+
+                row.overallRank;
+
+            row.rankChange=
+
+                change;
+
+            if(
+
+                change>0
+
+            ){
+
+                row.rankMovement=
+
+                    "UP";
+
+            }
+
+            else if(
+
+                change<0
+
+            ){
+
+                row.rankMovement=
+
+                    "DOWN";
+
+            }
+
+            else{
+
+                row.rankMovement=
+
+                    "SAME";
+
+            }
+
+        }
+
+    );
+
+    return currentRows;
 
 }
