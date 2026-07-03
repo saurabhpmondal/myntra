@@ -3,74 +3,259 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Table
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 export async function renderTable(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    target.innerHTML = `
+    target.innerHTML=`
 
 <div class="di-table-wrapper">
 
-    <table class="di-table">
+<table class="di-table">
 
-        <thead>
+<thead>
 
-            <tr>
+<tr>
 
-                <th>👁</th>
+<th>#</th>
 
-                <th>Overall Rank</th>
+<th>👁</th>
 
-                <th>Brand Rank</th>
+<th>Overall</th>
 
-                <th>Style ID</th>
+<th>Brand</th>
 
-                <th>ERP SKU</th>
+<th>Style ID</th>
 
-                <th>Brand</th>
+<th>ERP SKU</th>
 
-                <th>Status</th>
+<th>Brand</th>
 
-                <th>Units Sold</th>
+<th>Category</th>
 
-                <th>Overall DW</th>
+<th>Status</th>
 
-                <th>Brand DW</th>
+<th>Units</th>
 
-                <th>Cumulative DW</th>
+<th>Overall DW</th>
 
-                <th>Badges</th>
+<th>Brand DW</th>
 
-                <th>Actions</th>
+<th>Cumulative</th>
 
-            </tr>
+<th>Badges</th>
 
-        </thead>
+</tr>
 
-        <tbody id="diTableBody">
+</thead>
 
-            <tr>
+<tbody>
 
-                <td colspan="13" class="di-table-empty">
+${buildRows(rows)}
 
-                    Demand Index will appear here.
+</tbody>
 
-                </td>
-
-            </tr>
-
-        </tbody>
-
-    </table>
+</table>
 
 </div>
 
 `;
+
+}
+
+/**
+ * =====================================================
+ * Build Rows
+ * =====================================================
+ */
+
+function buildRows(
+
+    rows
+
+){
+
+    if(!rows.length){
+
+        return`
+
+<tr>
+
+<td
+colspan="14"
+class="di-table-empty">
+
+No records found.
+
+</td>
+
+</tr>
+
+`;
+
+    }
+
+    return rows.map(
+
+        row=>`
+
+<tr>
+
+<td>
+
+${row.overallRank}
+
+</td>
+
+<td>
+
+<button
+class="di-eye-btn"
+data-style="${row.styleId}">
+
+👁
+
+</button>
+
+</td>
+
+<td>
+
+${row.overallRank}
+
+</td>
+
+<td>
+
+${row.brandRank}
+
+</td>
+
+<td>
+
+<a
+
+href="https://www.myntra.com/${row.styleId}"
+
+target="_blank"
+
+class="di-style-link">
+
+${row.styleId}
+
+</a>
+
+</td>
+
+<td>
+
+${row.erpSku}
+
+</td>
+
+<td>
+
+${row.brand}
+
+</td>
+
+<td>
+
+${row.category}
+
+</td>
+
+<td>
+
+${row.erpStatus}
+
+</td>
+
+<td>
+
+${row.unitsSold.toLocaleString()}
+
+</td>
+
+<td>
+
+${(row.overallDW*100).toFixed(2)}%
+
+</td>
+
+<td>
+
+${(row.brandDW*100).toFixed(2)}%
+
+</td>
+
+<td>
+
+${(row.cumulativeDW*100).toFixed(2)}%
+
+</td>
+
+<td>
+
+${renderBadges(
+
+    row.badges
+
+)}
+
+</td>
+
+</tr>
+
+`
+
+    ).join("");
+
+}
+
+/**
+ * =====================================================
+ * Badges
+ * =====================================================
+ */
+
+function renderBadges(
+
+    badges=[]
+
+){
+
+    if(
+
+        !badges.length
+
+    ){
+
+        return "-";
+
+    }
+
+    return badges.map(
+
+        badge=>`
+
+<span
+class="di-badge">
+
+${badge}
+
+</span>
+
+`
+
+    ).join(" ");
 
 }
