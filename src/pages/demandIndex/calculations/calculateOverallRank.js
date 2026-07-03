@@ -3,15 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Calculate Overall Rank
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
-
-import { rankByMetric } from "./rankByMetric.js";
 
 /**
  * =====================================================
  * Overall Rank
+ *
+ * Business Logic
+ *
+ * Rank all styles by Units Sold.
+ *
+ * Highest Units Sold = Rank 1
  * =====================================================
  */
 
@@ -21,14 +25,58 @@ export function calculateOverallRank(
 
 ){
 
-    return rankByMetric(
+    if(
 
-        rows,
+        !Array.isArray(rows)
 
-        "overallDW",
+    ){
 
-        "overallRank"
+        return [];
+
+    }
+
+    const ranked=[
+
+        ...rows
+
+    ].sort(
+
+        (a,b)=>
+
+            Number(
+
+                b.unitsSold||0
+
+            )
+
+            -
+
+            Number(
+
+                a.unitsSold||0
+
+            )
 
     );
+
+    ranked.forEach(
+
+        (
+
+            row,
+
+            index
+
+        )=>{
+
+            row.overallRank=
+
+                index+1;
+
+        }
+
+    );
+
+    return ranked;
 
 }
