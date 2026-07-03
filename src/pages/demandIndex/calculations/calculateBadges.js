@@ -17,10 +17,6 @@ import { top50 } from "./badges/top50.js";
 
 import { coreStyle } from "./badges/coreStyle.js";
 
-/* ==========================================
-   Movement
-========================================== */
-
 import { risingStar } from "./badges/risingStar.js";
 
 import { climbing } from "./badges/climbing.js";
@@ -29,21 +25,9 @@ import { losingMomentum } from "./badges/losingMomentum.js";
 
 import { stable } from "./badges/stable.js";
 
-/* ==========================================
-   Business
-========================================== */
-
 import { customerFavourite } from "./badges/customerFavourite.js";
 
-import { highConverter } from "./badges/highConverter.js";
-
 import { nationwideHero } from "./badges/nationwideHero.js";
-
-/**
- * =====================================================
- * Calculate Badges
- * =====================================================
- */
 
 export function calculateBadges(
 
@@ -51,9 +35,7 @@ export function calculateBadges(
 
 ){
 
-    return [
-
-        /* Achievement */
+    return[
 
         ...marketLeader(row),
 
@@ -65,8 +47,6 @@ export function calculateBadges(
 
         ...coreStyle(row),
 
-        /* Momentum */
-
         ...risingStar(row),
 
         ...climbing(row),
@@ -75,11 +55,7 @@ export function calculateBadges(
 
         ...stable(row),
 
-        /* Business */
-
         ...customerFavourite(row),
-
-        ...highConverter(row),
 
         ...nationwideHero(row)
 
