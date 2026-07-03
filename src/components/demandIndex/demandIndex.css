@@ -737,3 +737,74 @@
 
 }
 
+/* ==========================================
+   Header
+========================================== */
+
+.di-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.di-header h1{
+
+    margin:0;
+
+    font-size:32px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.di-header p{
+
+    margin-top:6px;
+
+    color:#6B7280;
+
+    font-size:15px;
+
+}
+
+.di-primary-btn{
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:12px 24px;
+
+    background:#FF3F6C;
+
+    color:#FFFFFF;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.di-primary-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(255,63,108,.25);
+
+}
