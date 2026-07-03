@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Service
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -37,13 +37,6 @@ export async function initializeDemandIndex(
 
         showLoader();
 
-        /**
-         * ==========================================
-         * Default Date Range
-         * Last 30 Days
-         * ==========================================
-         */
-
         const toDate=
 
             new Date();
@@ -58,12 +51,6 @@ export async function initializeDemandIndex(
 
         );
 
-        /**
-         * ==========================================
-         * Build Demand Index
-         * ==========================================
-         */
-
         const rows=
 
             buildDemandIndex(
@@ -73,12 +60,6 @@ export async function initializeDemandIndex(
                 toDate
 
             );
-
-        /**
-         * ==========================================
-         * Store
-         * ==========================================
-         */
 
         DemandIndexStore.rows=[
 
@@ -92,12 +73,6 @@ export async function initializeDemandIndex(
 
         ];
 
-        /**
-         * ==========================================
-         * Header
-         * ==========================================
-         */
-
         await renderHeader(
 
             document.getElementById(
@@ -107,12 +82,6 @@ export async function initializeDemandIndex(
             )
 
         );
-
-        /**
-         * ==========================================
-         * Filters
-         * ==========================================
-         */
 
         await renderFilters(
 
@@ -128,71 +97,7 @@ export async function initializeDemandIndex(
 
         bindFilters();
 
-        /**
-         * ==========================================
-         * KPI Cards
-         * ==========================================
-         */
-
-        await renderKPIs(
-
-            document.getElementById(
-
-                "demandKPIs"
-
-            ),
-
-            DemandIndexStore.filteredRows
-
-        );
-
-        /**
-         * ==========================================
-         * Demand Table
-         * ==========================================
-         */
-
-        await renderTable(
-
-            document.getElementById(
-
-                "demandTable"
-
-            ),
-
-            DemandIndexStore.filteredRows
-
-        );
-
-        /**
-         * ==========================================
-         * Empty State
-         * ==========================================
-         */
-
-        const empty=
-
-            document.getElementById(
-
-                "demandEmpty"
-
-            );
-
-        if(empty){
-
-            empty.style.display=
-
-                DemandIndexStore.filteredRows.length
-
-                ?
-
-                "none"
-
-                :
-
-                "flex";
-
-        }
+        await refreshScreen();
 
     }
 
@@ -218,6 +123,68 @@ export async function initializeDemandIndex(
 
 /**
  * =====================================================
+ * Refresh Screen
+ * =====================================================
+ */
+
+async function refreshScreen(){
+
+    await renderKPIs(
+
+        document.getElementById(
+
+            "demandKPIs"
+
+        ),
+
+        DemandIndexStore.filteredRows
+
+    );
+
+    await renderTable(
+
+        document.getElementById(
+
+            "demandTable"
+
+        ),
+
+        DemandIndexStore.filteredRows
+
+    );
+
+    const empty=
+
+        document.getElementById(
+
+            "demandEmpty"
+
+        );
+
+    if(
+
+        empty
+
+    ){
+
+        empty.style.display=
+
+            DemandIndexStore.filteredRows.length
+
+            ?
+
+            "none"
+
+            :
+
+            "flex";
+
+    }
+
+}
+
+/**
+ * =====================================================
  * Loader
  * =====================================================
  */
@@ -234,7 +201,9 @@ function showLoader(){
 
     if(loader){
 
-        loader.style.display="flex";
+        loader.style.display=
+
+            "flex";
 
     }
 
@@ -252,7 +221,9 @@ function hideLoader(){
 
     if(loader){
 
-        loader.style.display="none";
+        loader.style.display=
+
+            "none";
 
     }
 
@@ -290,6 +261,20 @@ function populateFilters(){
 
         );
 
+    const badgeFilter=
+
+        document.getElementById(
+
+            "diBadgeFilter"
+
+        );
+
+    /**
+     * ==========================================
+     * Brand Filter
+     * ==========================================
+     */
+
     LookupStore.brands.forEach(
 
         brand=>{
@@ -305,6 +290,12 @@ function populateFilters(){
         }
 
     );
+
+    /**
+     * ==========================================
+     * Category Filter
+     * ==========================================
+     */
 
     LookupStore.categories.forEach(
 
@@ -322,6 +313,12 @@ function populateFilters(){
 
     );
 
+    /**
+     * ==========================================
+     * ERP Status Filter
+     * ==========================================
+     */
+
     LookupStore.erpStatuses.forEach(
 
         status=>{
@@ -331,6 +328,58 @@ function populateFilters(){
                 "beforeend",
 
                 `<option value="${status}">${status}</option>`
+
+            );
+
+        }
+
+    );
+
+    /**
+     * ==========================================
+     * Badge Filter
+     * ==========================================
+     */
+
+    const badges=
+
+        new Set();
+
+    DemandIndexStore.rows.forEach(
+
+        row=>{
+
+            (row.badges||[]).forEach(
+
+                badge=>{
+
+                    badges.add(
+
+                        badge
+
+                    );
+
+                }
+
+            );
+
+        }
+
+    );
+
+    [...badges]
+
+    .sort()
+
+    .forEach(
+
+        badge=>{
+
+            badgeFilter.insertAdjacentHTML(
+
+                "beforeend",
+
+                `<option value="${badge}">${badge}</option>`
 
             );
 
@@ -375,6 +424,18 @@ function bindFilters(){
     document.getElementById(
 
         "diStatusFilter"
+
+    ).addEventListener(
+
+        "change",
+
+        applyFilters
+
+    );
+
+    document.getElementById(
+
+        "diBadgeFilter"
 
     ).addEventListener(
 
@@ -442,6 +503,14 @@ async function applyFilters(){
 
         ).value;
 
+    const badge=
+
+        document.getElementById(
+
+            "diBadgeFilter"
+
+        ).value;
+
     const keyword=
 
         document.getElementById(
@@ -498,7 +567,43 @@ async function applyFilters(){
 
                 }
 
-                if(keyword){
+                /**
+                 * ==========================================
+                 * Badge Filter
+                 * ==========================================
+                 */
+
+                if(
+
+                    badge &&
+
+                    !(
+
+                        row.badges || []
+
+                    ).includes(
+
+                        badge
+
+                    )
+
+                ){
+
+                    return false;
+
+                }
+
+                /**
+                 * ==========================================
+                 * Search
+                 * ==========================================
+                 */
+
+                if(
+
+                    keyword
+
+                ){
 
                     const styleId=
 
@@ -506,7 +611,9 @@ async function applyFilters(){
 
                             row.styleId || ""
 
-                        ).toLowerCase();
+                        )
+
+                        .toLowerCase();
 
                     const erpSku=
 
@@ -514,7 +621,9 @@ async function applyFilters(){
 
                             row.erpSku || ""
 
-                        ).toLowerCase();
+                        )
+
+                        .toLowerCase();
 
                     if(
 
@@ -546,53 +655,7 @@ async function applyFilters(){
 
         );
 
-    await renderKPIs(
-
-        document.getElementById(
-
-            "demandKPIs"
-
-        ),
-
-        DemandIndexStore.filteredRows
-
-    );
-
-    await renderTable(
-
-        document.getElementById(
-
-            "demandTable"
-
-        ),
-
-        DemandIndexStore.filteredRows
-
-    );
-
-    const empty=
-
-        document.getElementById(
-
-            "demandEmpty"
-
-        );
-
-    if(empty){
-
-        empty.style.display=
-
-            DemandIndexStore.filteredRows.length
-
-            ?
-
-            "none"
-
-            :
-
-            "flex";
-
-    }
+    await refreshScreen();
 
 }
 
@@ -619,6 +682,12 @@ function resetFilters(){
     document.getElementById(
 
         "diStatusFilter"
+
+    ).value="";
+
+    document.getElementById(
+
+        "diBadgeFilter"
 
     ).value="";
 
