@@ -133,9 +133,7 @@ function getSales(
 
     const sales=[
 
-        ...(DataStore.salesCurrent||[]),
-
-        ...(DataStore.salesHistorical||[])
+    DataStore.sales || [];
 
     ];
 
