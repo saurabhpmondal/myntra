@@ -594,4 +594,64 @@
     font-weight:600;
 
 }
+.di-eye-btn{
+
+    width:36px;
+
+    height:36px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#EEF2FF;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.di-eye-btn:hover{
+
+    background:#DBEAFE;
+
+}
+
+.di-style-link{
+
+    color:#FF3F6C;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+}
+
+.di-style-link:hover{
+
+    text-decoration:underline;
+
+}
+
+.di-badge{
+
+    display:inline-block;
+
+    padding:4px 10px;
+
+    margin:2px;
+
+    border-radius:999px;
+
+    background:#F3F4F6;
+
+    font-size:12px;
+
+    white-space:nowrap;
+
+    font-weight:600;
+
+}
+
 
