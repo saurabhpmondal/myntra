@@ -19,7 +19,11 @@ export function climbing(
 
         &&
 
-        row.rankChange>=20
+        Number(
+
+            row.rankChange || 0
+
+        )>=20
 
     ){
 
