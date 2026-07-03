@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Climbing Badge
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -12,6 +12,24 @@ export function climbing(
     row
 
 ){
+
+    if(
+
+        row.rankMovement==="UP"
+
+        &&
+
+        row.rankChange>=20
+
+    ){
+
+        return [
+
+            "📈 Climbing"
+
+        ];
+
+    }
 
     return [];
 
