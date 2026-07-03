@@ -1,9 +1,6 @@
 /**
  * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Rising Star Badge
- * Version : V2.0
+ * Rising Star
  * =====================================================
  */
 
