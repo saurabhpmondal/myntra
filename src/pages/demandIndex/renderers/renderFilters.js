@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index Filters
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -42,6 +42,16 @@ export async function renderFilters(
         <option value="">
 
             All ERP Status
+
+        </option>
+
+    </select>
+
+    <select id="diBadgeFilter">
+
+        <option value="">
+
+            All Badges
 
         </option>
 
