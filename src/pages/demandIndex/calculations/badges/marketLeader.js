@@ -3,13 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Market Leader Badge
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import { BADGE_RULES } from "../../config/badgeRules.js";
 
-export function marketLeader(row){
+export function marketLeader(
+
+    row
+
+){
 
     if(
 
@@ -19,7 +23,7 @@ export function marketLeader(row){
 
     ){
 
-        return[
+        return [
 
             "👑 Market Leader"
 
@@ -27,6 +31,6 @@ export function marketLeader(row){
 
     }
 
-    return[];
+    return [];
 
 }
