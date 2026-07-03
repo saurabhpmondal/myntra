@@ -1,9 +1,6 @@
 /**
  * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Nationwide Hero Badge
- * Version : V2.0
+ * Nationwide Hero
  * =====================================================
  */
 
