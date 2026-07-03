@@ -131,11 +131,7 @@ function getSales(
 
 ){
 
-    const sales=[
-
-    DataStore.sales || [];
-
-    ];
+   const sales = DataStore.sales || [];
 
     return sales.filter(
 
