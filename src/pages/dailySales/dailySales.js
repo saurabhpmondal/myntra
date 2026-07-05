@@ -15,6 +15,16 @@ from "../../components/dailySales/dailySalesTrend/dailySalesTrend.js";
 
 let pageContainer = null;
 
+// ======================================
+// Daily Sales Trend
+// ======================================
+
+const trendSection = createSection();
+
+pageContainer.appendChild(trendSection);
+
+await renderDailySalesTrend(trendSection);
+
 /**
  * ==========================================
  * Initial Render
