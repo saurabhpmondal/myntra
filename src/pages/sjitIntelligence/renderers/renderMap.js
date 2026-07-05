@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : India Heat Map
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -11,7 +11,7 @@ export async function renderMap(
 
     target,
 
-    mapData
+    mapData=[]
 
 ){
 
@@ -43,7 +43,13 @@ export async function renderMap(
 
         id="sjitIndiaMap"
 
-        style="width:100%;height:520px;"
+        style="
+
+            width:100%;
+
+            height:520px;
+
+        "
 
     ></div>
 
@@ -51,49 +57,83 @@ export async function renderMap(
 
 `;
 
-    const geoJson=
+    try{
 
-        await fetch(
-
-            "src/assets/maps/india.json"
-
-        )
-
-        .then(
-
-            response=>response.json()
-
-        );
-
-    echarts.registerMap(
-
-        "india",
-
-        geoJson
-
-    );
-
-    const chart=
-
-        echarts.init(
+        const container=
 
             document.getElementById(
 
                 "sjitIndiaMap"
 
+            );
+
+        if(
+
+            !container
+
+        ){
+
+            return;
+
+        }
+
+        const oldChart=
+
+            echarts.getInstanceByDom(
+
+                container
+
+            );
+
+        if(
+
+            oldChart
+
+        ){
+
+            oldChart.dispose();
+
+        }
+
+        const geoJson=
+
+            await fetch(
+
+                "src/assets/maps/india.json"
+
             )
+
+            .then(
+
+                response=>response.json()
+
+            );
+
+        echarts.registerMap(
+
+            "india",
+
+            geoJson
 
         );
 
-    chart.setOption({
+        const chart=
 
-        tooltip:{
+            echarts.init(
 
-            trigger:"item",
+                container
 
-            formatter(params){
+            );
 
-                return `
+        chart.setOption({
+
+            tooltip:{
+
+                trigger:"item",
+
+                formatter(params){
+
+                    return `
 
 <strong>
 
@@ -104,7 +144,6 @@ ${params.name}
 <br><br>
 
 Sold Qty :
-
 ${Number(
 
 params.value||0
@@ -113,58 +152,82 @@ params.value||0
 
 `;
 
-            }
+                }
 
-        },
+            },
 
-        visualMap:{
+            visualMap:{
 
-            min:0,
+                min:0,
 
-            max:Math.max(
+                max:Math.max(
 
-                ...mapData.map(
+                    ...mapData.map(
 
-                    x=>x.value
+                        row=>row.value
+
+                    ),
+
+                    1
 
                 ),
 
-                1
+                left:20,
 
-            ),
+                bottom:20,
 
-            left:20,
+                calculable:true
 
-            bottom:20,
+            },
 
-            calculable:true
+            series:[
 
-        },
+                {
 
-        series:[
+                    type:"map",
 
-            {
+                    map:"india",
 
-                type:"map",
+                    roam:true,
 
-                map:"india",
+                    emphasis:{
 
-                roam:true,
+                        label:{
 
-                data:mapData
+                            show:true
 
-            }
+                        }
 
-        ]
+                    },
 
-    });
+                    data:mapData
 
-    window.addEventListener(
+                }
 
-        "resize",
+            ]
 
-        ()=>chart.resize()
+        });
 
-    );
+        window.addEventListener(
+
+            "resize",
+
+            ()=>chart.resize()
+
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+
+            "India Map",
+
+            error
+
+        );
+
+    }
 
 }
