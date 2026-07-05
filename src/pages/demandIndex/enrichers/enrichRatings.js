@@ -3,11 +3,12 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Rating Enricher
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
-import { DataStore } from "../../../services/dataService.js";
+import { DataStore }
+from "../../../services/dataService.js";
 
 export function enrichRatings(
 
@@ -17,7 +18,11 @@ export function enrichRatings(
 
     const ratingMap={};
 
-    (DataStore.ratings || []).forEach(
+    (
+
+        DataStore.traffic || []
+
+    ).forEach(
 
         row=>{
 
@@ -39,7 +44,11 @@ export function enrichRatings(
 
             }
 
-            ratingMap[styleId]=
+            ratingMap[
+
+                styleId
+
+            ]=
 
                 Number(
 
