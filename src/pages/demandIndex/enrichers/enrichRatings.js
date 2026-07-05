@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Rating Enricher
- * Version : V2.0
+ * Version : V2.1 (Debug)
  * =====================================================
  */
 
@@ -24,13 +24,13 @@ export function enrichRatings(
 
     ).forEach(
 
-        row=>{
+        traffic=>{
 
             const styleId=
 
                 String(
 
-                    row.style_id || ""
+                    traffic.style_id || ""
 
                 ).trim();
 
@@ -52,7 +52,7 @@ export function enrichRatings(
 
                 Number(
 
-                    row.rating || 0
+                    traffic.rating || 0
 
                 );
 
@@ -60,19 +60,79 @@ export function enrichRatings(
 
     );
 
+    let matched=0;
+
     rows.forEach(
 
         row=>{
 
+            const key=
+
+                String(
+
+                    row.styleId || ""
+
+                ).trim();
+
             row.rating=
 
-                ratingMap[
+                ratingMap[key] || 0;
 
-                    row.styleId
+            if(
 
-                ] || 0;
+                row.rating>0
+
+            ){
+
+                matched++;
+
+            }
 
         }
+
+    );
+
+    console.log(
+
+        "Traffic Records :",
+
+        DataStore.traffic.length
+
+    );
+
+    console.log(
+
+        "Rating Map :",
+
+        Object.keys(
+
+            ratingMap
+
+        ).length
+
+    );
+
+    console.log(
+
+        "Matched Ratings :",
+
+        matched
+
+    );
+
+    console.log(
+
+        "Sample Traffic :",
+
+        DataStore.traffic[0]
+
+    );
+
+    console.log(
+
+        "Sample Demand Row :",
+
+        rows[0]
 
     );
 
