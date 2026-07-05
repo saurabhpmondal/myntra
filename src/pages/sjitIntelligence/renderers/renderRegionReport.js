@@ -3,16 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Region Report Renderer
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import {
-
     renderTable
-
 }
-
 from "../../../components/common/table/table.js";
 
 export async function renderRegionReport(
@@ -29,29 +26,28 @@ export async function renderRegionReport(
 
         title:"Regional Performance",
 
+        subtitle:"Region-wise SJIT Sales",
+
         columns:[
 
             {
-
                 key:"region",
-
                 label:"Region"
-
             },
 
             {
-
                 key:"soldQty",
-
-                label:"Sold Qty"
-
+                label:"Sold Qty",
+                format:"number"
             },
 
             {
-
                 key:"contribution",
+                label:"Contribution",
 
-                label:"Contribution %"
+                renderer:value=>
+
+`${Number(value||0).toFixed(1)}%`
 
             }
 
