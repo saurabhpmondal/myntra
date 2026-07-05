@@ -7,23 +7,37 @@
  * =====================================================
  */
 
-import { DataStore } from "../../../services/dataService.js";
+import { DataStore }
+from "../../../services/dataService.js";
 
 const MONTH_MAP={
 
     JAN:0,
+
     FEB:1,
+
     MAR:2,
+
     APR:3,
+
     MAY:4,
+
     JUN:5,
+
     JUNE:5,
+
     JUL:6,
+
     JULY:6,
+
     AUG:7,
+
     SEP:8,
+
     OCT:9,
+
     NOV:10,
+
     DEC:11
 
 };
