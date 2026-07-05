@@ -164,6 +164,8 @@ export async function renderDailySalesTrend(
 
         ()=>chart.resize()
 
+
+        
     );
 
 }
