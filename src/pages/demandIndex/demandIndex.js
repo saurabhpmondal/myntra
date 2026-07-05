@@ -3,18 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Demand Index
- * Version : V1.1
+ * Version : V7.1
  * =====================================================
  */
 
-import { createComponent } from "../../utils/createComponent.js";
+import { initializeDemandIndex }
+from "./services/demandIndexService.js";
 
-import { initializeDemandIndex } from "./services/demandIndexService.js";
+let pageContainer = null;
 
 /**
- * =====================================================
- * Render Demand Index
- * =====================================================
+ * ==========================================
+ * Render
+ * ==========================================
  */
 
 export async function renderDemandIndex(
@@ -23,125 +24,60 @@ export async function renderDemandIndex(
 
 ){
 
-    await createComponent({
+    pageContainer = target;
 
-        target,
+    // Hide global filter bar
 
-        html:"src/pages/demandIndex/demandIndex.html",
+    const filterBar =
 
-        css:"src/pages/demandIndex/demandIndex.css"
+        document.getElementById(
 
-    });
+            "filterbar"
+
+        );
+
+    if(
+
+        filterBar
+
+    ){
+
+        filterBar.style.display = "none";
+
+    }
 
     await initializeDemandIndex(
 
-        target
+        pageContainer
 
     );
 
 }
 
 /**
- * =====================================================
- * Loader
- * =====================================================
+ * ==========================================
+ * Cleanup
+ * Called when leaving Demand Index
+ * ==========================================
  */
 
-export function showDemandLoader(){
+export function destroyDemandIndex(){
 
-    const loader=
+    const filterBar =
 
         document.getElementById(
 
-            "demandLoader"
+            "filterbar"
 
         );
 
-    if(loader){
+    if(
 
-        loader.style.display="flex";
+        filterBar
 
-    }
+    ){
 
-}
-
-/**
- * =====================================================
- * Hide Loader
- * =====================================================
- */
-
-export function hideDemandLoader(){
-
-    const loader=
-
-        document.getElementById(
-
-            "demandLoader"
-
-        );
-
-    if(loader){
-
-        loader.style.display="none";
-
-    }
-
-}
-
-/**
- * =====================================================
- * Empty State
- * =====================================================
- */
-
-export function showDemandEmpty(
-
-    message="No data available."
-
-){
-
-    const empty=
-
-        document.getElementById(
-
-            "demandEmpty"
-
-        );
-
-    if(!empty){
-
-        return;
-
-    }
-
-    empty.innerHTML=
-
-        message;
-
-    empty.style.display="flex";
-
-}
-
-/**
- * =====================================================
- * Hide Empty State
- * =====================================================
- */
-
-export function hideDemandEmpty(){
-
-    const empty=
-
-        document.getElementById(
-
-            "demandEmpty"
-
-        );
-
-    if(empty){
-
-        empty.style.display="none";
+        filterBar.style.display = "";
 
     }
 
