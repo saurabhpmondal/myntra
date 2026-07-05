@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Insight Builder
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -19,19 +19,13 @@ export function buildInsights(
 
     /**
      * ==========================================
-     * Top FC
+     * Top Performing FC
      * ==========================================
      */
 
-    if(
+    if(fcReport.length){
 
-        fcReport.length
-
-    ){
-
-        const topFC=
-
-            fcReport[0];
+        const topFC=fcReport[0];
 
         insights.push({
 
@@ -40,7 +34,6 @@ export function buildInsights(
             title:"Top Performing FC",
 
             message:
-
                 `${topFC.fc} sold ${topFC.soldQty.toLocaleString()} units.`
 
         });
@@ -49,19 +42,13 @@ export function buildInsights(
 
     /**
      * ==========================================
-     * Top State
+     * Top Selling State
      * ==========================================
      */
 
-    if(
+    if(stateReport.length){
 
-        stateReport.length
-
-    ){
-
-        const topState=
-
-            stateReport[0];
+        const topState=stateReport[0];
 
         insights.push({
 
@@ -70,7 +57,6 @@ export function buildInsights(
             title:"Top Selling State",
 
             message:
-
                 `${topState.state} contributed ${topState.contribution.toFixed(1)}% of SJIT sales.`
 
         });
@@ -79,17 +65,13 @@ export function buildInsights(
 
     /**
      * ==========================================
-     * Highest Gap
+     * Biggest Stock Opportunity
      * ==========================================
      */
 
-    if(
+    if(fcReport.length){
 
-        fcReport.length
-
-    ){
-
-        const highestGap=
+        const opportunity=
 
             fcReport
 
@@ -99,31 +81,45 @@ export function buildInsights(
 
                 (a,b)=>
 
-                    b.gap-
+                    Math.abs(b.gap)-
 
-                    a.gap
+                    Math.abs(a.gap)
 
             )[0];
 
+        const type=
+
+            opportunity.gap>=0
+
+            ?
+
+            "warning"
+
+            :
+
+            "danger";
+
+        const action=
+
+            opportunity.gap>=0
+
+            ?
+
+            "Demand is higher than stock allocation."
+
+            :
+
+            "Stock allocation is higher than demand.";
+
         insights.push({
 
-            type:
+            type,
 
-                highestGap.gap>=0
-
-                ?
-
-                "warning"
-
-                :
-
-                "danger",
-
-            title:"Stock Opportunity",
+            title:"Operational Alert",
 
             message:
 
-                `${highestGap.fc} has a ${highestGap.gap.toFixed(1)}% stock-demand gap.`
+                `${opportunity.fc} shows a ${Math.abs(opportunity.gap).toFixed(1)}% gap. ${action}`
 
         });
 
