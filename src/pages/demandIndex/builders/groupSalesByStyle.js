@@ -39,15 +39,27 @@ export function groupSalesByStyle(
 
             if(
 
-                !grouped[styleId]
+                !grouped[
+
+                    styleId
+
+                ]
 
             ){
 
-                grouped[styleId]=[];
+                grouped[
+
+                    styleId
+
+                ]=[];
 
             }
 
-            grouped[styleId].push(
+            grouped[
+
+                styleId
+
+            ].push(
 
                 row
 
