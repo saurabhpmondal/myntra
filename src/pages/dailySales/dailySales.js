@@ -10,6 +10,8 @@
 import { renderDailySalesTable } from "../../components/dailySales/dailySalesTable/dailySalesTable.js";
 import { renderProjectionSummary } from "../../components/dailySales/projectionSummary/projectionSummary.js";
 import { renderBrandChannelPerformance } from "../../components/dailySales/brandChannelPerformance/brandChannelPerformance.js";
+import { renderDailySalesTrend }
+from "../../components/dailySales/dailySalesTrend/dailySalesTrend.js";
 
 let pageContainer = null;
 
