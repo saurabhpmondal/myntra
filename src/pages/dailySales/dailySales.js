@@ -90,7 +90,7 @@ export async function refreshDailySales(){
 
 /**
  * ==========================================
- * Section Factory
+ * Section Factory... 
  * ==========================================
  */
 
