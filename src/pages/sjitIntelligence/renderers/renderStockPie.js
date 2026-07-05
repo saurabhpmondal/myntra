@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : FC Stock Distribution
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -11,7 +11,7 @@ export async function renderStockPie(
 
     target,
 
-    rows
+    rows=[]
 
 ){
 
@@ -44,11 +44,8 @@ export async function renderStockPie(
         id="sjitStockPie"
 
         style="
-
             width:100%;
-
             height:420px;
-
         "
 
     ></div>
@@ -57,15 +54,47 @@ export async function renderStockPie(
 
 `;
 
+    const container=
+
+        document.getElementById(
+
+            "sjitStockPie"
+
+        );
+
+    if(
+
+        !container
+
+    ){
+
+        return;
+
+    }
+
+    const oldChart=
+
+        echarts.getInstanceByDom(
+
+            container
+
+        );
+
+    if(
+
+        oldChart
+
+    ){
+
+        oldChart.dispose();
+
+    }
+
     const chart=
 
         echarts.init(
 
-            document.getElementById(
-
-                "sjitStockPie"
-
-            )
+            container
 
         );
 
@@ -88,18 +117,16 @@ ${params.name}
 <br><br>
 
 Stock :
-
 ${Number(
 
-    params.value
+params.value
 
 ).toLocaleString()}
 
 <br>
 
 Contribution :
-
-${params.percent}%
+${params.percent.toFixed(1)}%
 
 `;
 
@@ -109,13 +136,17 @@ ${params.percent}%
 
         legend:{
 
-            bottom:0
+            bottom:0,
+
+            type:"scroll"
 
         },
 
         series:[
 
             {
+
+                name:"Stock",
 
                 type:"pie",
 
@@ -127,6 +158,26 @@ ${params.percent}%
 
                 ],
 
+                avoidLabelOverlap:true,
+
+                label:{
+
+                    show:false
+
+                },
+
+                emphasis:{
+
+                    label:{
+
+                        show:true,
+
+                        fontWeight:"bold"
+
+                    }
+
+                },
+
                 data:
 
                     rows.map(
@@ -135,11 +186,21 @@ ${params.percent}%
 
                             name:
 
-                                row.fc,
+                                row.fc ||
+
+                                row.shortName ||
+
+                                row.warehouseName ||
+
+                                "Unknown",
 
                             value:
 
-                                row.stock
+                                Number(
+
+                                    row.stock || 0
+
+                                )
 
                         })
 
