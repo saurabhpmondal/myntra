@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Intelligence Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -37,7 +37,10 @@ from "../renderers/renderRegionReport.js";
 import { buildSJITData }
 from "./sjitBuilder.js";
 
-import { SJITStore }
+import {
+    SJITStore,
+    resetSJITStore
+}
 from "./sjitStore.js";
 
 import { buildKPIs }
@@ -58,11 +61,19 @@ from "../calculations/buildRegionReport.js";
 import { buildMapData }
 from "../calculations/buildMapData.js";
 
+/**
+ * =====================================================
+ * Initialize
+ * =====================================================
+ */
+
 export async function initializeSJIT(
 
     target
 
 ){
+
+    resetSJITStore();
 
     await renderLayout(
 
@@ -70,45 +81,49 @@ export async function initializeSJIT(
 
     );
 
-    const warehouseRows=
+    /**
+     * ==========================================
+     * Build Dataset
+     * ==========================================
+     */
 
-        buildSJITData();
+    const {
 
-    const salesRows=
+        salesRows,
 
-        warehouseRows.salesRows ||
+        warehouseRows
 
-        [];
+    } = buildSJITData();
 
-    const fcRows=
+    SJITStore.rawSales = salesRows;
 
-        warehouseRows.warehouseRows ||
+    SJITStore.warehouseRows = warehouseRows;
 
-        warehouseRows;
+    /**
+     * ==========================================
+     * Calculations
+     * ==========================================
+     */
 
-    SJITStore.warehouseRows=
-
-        fcRows;
-
-    SJITStore.kpis=
+    SJITStore.kpis =
 
         buildKPIs(
 
-            fcRows,
+            warehouseRows,
 
             salesRows
 
         );
 
-    SJITStore.fcReport=
+    SJITStore.fcReport =
 
         buildFCReport(
 
-            fcRows
+            warehouseRows
 
         );
 
-    SJITStore.stateReport=
+    SJITStore.stateReport =
 
         buildStateReport(
 
@@ -116,7 +131,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.regionReport=
+    SJITStore.regionReport =
 
         buildRegionReport(
 
@@ -124,7 +139,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.mapData=
+    SJITStore.mapData =
 
         buildMapData(
 
@@ -132,11 +147,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.stockPie=
-
-        SJITStore.fcReport;
-
-    SJITStore.insights=
+    SJITStore.insights =
 
         buildInsights(
 
@@ -145,6 +156,14 @@ export async function initializeSJIT(
             SJITStore.stateReport
 
         );
+
+    SJITStore.loaded = true;
+
+    /**
+     * ==========================================
+     * Render
+     * ==========================================
+     */
 
     await renderHeader(
 
@@ -200,7 +219,7 @@ export async function initializeSJIT(
 
         ),
 
-        SJITStore.stockPie
+        SJITStore.fcReport
 
     );
 
