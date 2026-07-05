@@ -2,14 +2,16 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Stock Pie Renderer
- * Version : V1.0
+ * Module  : FC Stock Distribution
+ * Version : V1.1
  * =====================================================
  */
 
 export async function renderStockPie(
 
-    target
+    target,
+
+    rows
 
 ){
 
@@ -54,5 +56,107 @@ export async function renderStockPie(
 </div>
 
 `;
+
+    const chart=
+
+        echarts.init(
+
+            document.getElementById(
+
+                "sjitStockPie"
+
+            )
+
+        );
+
+    chart.setOption({
+
+        tooltip:{
+
+            trigger:"item",
+
+            formatter(params){
+
+                return `
+
+<strong>
+
+${params.name}
+
+</strong>
+
+<br><br>
+
+Stock :
+
+${Number(
+
+    params.value
+
+).toLocaleString()}
+
+<br>
+
+Contribution :
+
+${params.percent}%
+
+`;
+
+            }
+
+        },
+
+        legend:{
+
+            bottom:0
+
+        },
+
+        series:[
+
+            {
+
+                type:"pie",
+
+                radius:[
+
+                    "45%",
+
+                    "75%"
+
+                ],
+
+                data:
+
+                    rows.map(
+
+                        row=>({
+
+                            name:
+
+                                row.fc,
+
+                            value:
+
+                                row.stock
+
+                        })
+
+                    )
+
+            }
+
+        ]
+
+    });
+
+    window.addEventListener(
+
+        "resize",
+
+        ()=>chart.resize()
+
+    );
 
 }
