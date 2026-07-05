@@ -3,16 +3,13 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : State Report Renderer
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
 import {
-
     renderTable
-
 }
-
 from "../../../components/common/table/table.js";
 
 export async function renderStateReport(
@@ -29,29 +26,28 @@ export async function renderStateReport(
 
         title:"State Performance",
 
+        subtitle:"State-wise SJIT Sales",
+
         columns:[
 
             {
-
                 key:"state",
-
                 label:"State"
-
             },
 
             {
-
                 key:"soldQty",
-
-                label:"Sold Qty"
-
+                label:"Sold Qty",
+                format:"number"
             },
 
             {
-
                 key:"contribution",
+                label:"Contribution",
 
-                label:"Contribution %"
+                renderer:value=>
+
+`${Number(value||0).toFixed(1)}%`
 
             }
 
