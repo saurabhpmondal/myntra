@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : SJIT Header
- * Version : V1.0
+ * Module  : SJIT Intelligence Header
+ * Version : V1.1
  * =====================================================
  */
 
@@ -15,30 +15,85 @@ export async function renderHeader(
 
     target.innerHTML=`
 
-<div class="dashboard-card">
+<div class="di-header">
 
-    <div class="card-header">
+    <div class="di-header-left">
 
-        <div>
+        <h1>
 
-            <h2>
+            SJIT Intelligence
 
-                SJIT Intelligence
+        </h1>
 
-            </h2>
+        <p>
 
-            <p>
+            FC-wise Stock, Sales & Regional Performance.
 
-                Stock Performance & Regional Sales Analysis
+        </p>
 
-            </p>
+    </div>
 
-        </div>
+    <div class="di-header-right">
+
+        <button
+
+            id="sjitExportButton"
+
+            class="di-primary-btn"
+
+        >
+
+            ⬇ Export
+
+        </button>
 
     </div>
 
 </div>
 
 `;
+
+    bindEvents();
+
+}
+
+/**
+ * =====================================================
+ * Events
+ * =====================================================
+ */
+
+function bindEvents(){
+
+    const button=
+
+        document.getElementById(
+
+            "sjitExportButton"
+
+        );
+
+    if(
+
+        !button
+
+    ){
+
+        return;
+
+    }
+
+    button.onclick=()=>{
+
+        console.log(
+
+            "SJIT Export"
+
+        );
+
+        // Export service will be wired
+        // after integration.
+
+    };
 
 }
