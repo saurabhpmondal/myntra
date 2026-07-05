@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Builder
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -17,11 +17,41 @@ from "../../../config/warehouseMap.js";
 
 export function buildSJITData(){
 
-    const sales=
+    /**
+     * ==========================================
+     * SJIT Sales
+     * ==========================================
+     */
 
-        DataStore.sales || [];
+    const salesRows=
 
-    const stock=
+        (DataStore.sales || [])
+
+        .filter(
+
+            row=>
+
+                String(
+
+                    row.po_type || ""
+
+                )
+
+                .toUpperCase()
+
+                ===
+
+                "SJIT"
+
+        );
+
+    /**
+     * ==========================================
+     * SJIT Stock
+     * ==========================================
+     */
+
+    const stockRows=
 
         DataStore.sjitStock || [];
 
@@ -33,7 +63,7 @@ export function buildSJITData(){
      * ==========================================
      */
 
-    stock.forEach(
+    stockRows.forEach(
 
         row=>{
 
@@ -45,11 +75,7 @@ export function buildSJITData(){
 
                 );
 
-            if(
-
-                !warehouseId
-
-            ){
+            if(!warehouseId){
 
                 return;
 
@@ -123,27 +149,7 @@ export function buildSJITData(){
      * ==========================================
      */
 
-    sales
-
-    .filter(
-
-        row=>
-
-            String(
-
-                row.po_type || ""
-
-            )
-
-            .toUpperCase()
-
-            ===
-
-            "SJIT"
-
-    )
-
-    .forEach(
+    salesRows.forEach(
 
         row=>{
 
@@ -155,11 +161,7 @@ export function buildSJITData(){
 
                 );
 
-            if(
-
-                !warehouseId
-
-            ){
+            if(!warehouseId){
 
                 return;
 
@@ -257,64 +259,80 @@ export function buildSJITData(){
      * ==========================================
      */
 
-    return Object.values(
+    const warehouseRows=
 
-        warehouseMap
+        Object.values(
 
-    )
+            warehouseMap
 
-    .map(
+        )
 
-        row=>({
+        .map(
 
-            warehouseId:
+            row=>({
 
-                row.warehouseId,
+                warehouseId:
 
-            warehouseName:
+                    row.warehouseId,
 
-                row.warehouseName,
+                warehouseName:
 
-            shortName:
+                    row.warehouseName,
 
-                row.shortName,
+                shortName:
 
-            region:
+                    row.shortName,
 
-                row.region,
+                region:
 
-            stock:
+                    row.region,
 
-                row.stock,
+                stock:
 
-            soldQty:
+                    row.stock,
 
-                row.soldQty,
+                soldQty:
 
-            gmv:
+                    row.soldQty,
 
-                row.gmv,
+                gmv:
 
-            styleCount:
+                    row.gmv,
 
-                row.styles.size,
+                styleCount:
 
-            stateCount:
+                    row.styles.size,
 
-                row.states.size
+                stateCount:
 
-        })
+                    row.states.size
 
-    )
+            })
 
-    .sort(
+        )
 
-        (a,b)=>
+        .sort(
 
-            b.soldQty-
+            (a,b)=>
 
-            a.soldQty
+                b.soldQty-
 
-    );
+                a.soldQty
+
+        );
+
+    /**
+     * ==========================================
+     * Return
+     * ==========================================
+     */
+
+    return{
+
+        salesRows,
+
+        warehouseRows
+
+    };
 
 }
