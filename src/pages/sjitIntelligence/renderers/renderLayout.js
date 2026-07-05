@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Layout
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -15,18 +15,30 @@ export async function renderLayout(
 
     target.innerHTML=`
 
-<div id="sjitHeader"></div>
+<div class="dashboard-section">
 
-<div id="sjitKPIs"></div>
+    <div id="sjitHeader"></div>
 
-<div id="sjitInsights"></div>
+</div>
+
+<div class="dashboard-section">
+
+    <div id="sjitKPIs"></div>
+
+</div>
+
+<div class="dashboard-section">
+
+    <div id="sjitInsights"></div>
+
+</div>
 
 <div
+    class="dashboard-section"
     style="
         display:grid;
         grid-template-columns:2fr 1fr;
         gap:20px;
-        margin-top:20px;
     "
 >
 
@@ -36,17 +48,18 @@ export async function renderLayout(
 
 </div>
 
-<div
-    id="sjitFCReport"
-    style="margin-top:20px;"
-></div>
+<div class="dashboard-section">
+
+    <div id="sjitFCReport"></div>
+
+</div>
 
 <div
+    class="dashboard-section"
     style="
         display:grid;
         grid-template-columns:1fr 1fr;
         gap:20px;
-        margin-top:20px;
     "
 >
 
