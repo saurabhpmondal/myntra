@@ -3,27 +3,16 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Page
- * Version : V1.2
+ * Version : V1.3
  * =====================================================
  */
 
+import { renderDailySalesTrend } from "../../components/dailySales/dailySalesTrend/dailySalesTrend.js";
 import { renderDailySalesTable } from "../../components/dailySales/dailySalesTable/dailySalesTable.js";
 import { renderProjectionSummary } from "../../components/dailySales/projectionSummary/projectionSummary.js";
 import { renderBrandChannelPerformance } from "../../components/dailySales/brandChannelPerformance/brandChannelPerformance.js";
-import { renderDailySalesTrend }
-from "../../components/dailySales/dailySalesTrend/dailySalesTrend.js";
 
 let pageContainer = null;
-
-// ======================================
-// Daily Sales Trend
-// ======================================
-
-const trendSection = createSection();
-
-pageContainer.appendChild(trendSection);
-
-await renderDailySalesTrend(trendSection);
 
 /**
  * ==========================================
@@ -56,6 +45,16 @@ export async function refreshDailySales(){
     }
 
     pageContainer.innerHTML = "";
+
+    // ======================================
+    // Daily Sales Trend
+    // ======================================
+
+    const trendSection = createSection();
+
+    pageContainer.appendChild(trendSection);
+
+    await renderDailySalesTrend(trendSection);
 
     // ======================================
     // Daily Sales Table
