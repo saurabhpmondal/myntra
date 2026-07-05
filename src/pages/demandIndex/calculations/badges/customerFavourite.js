@@ -16,7 +16,15 @@ export function customerFavourite(
 
             row.rating || 0
 
-        )>=4
+        )>=3.8
+
+        &&
+
+        Number(
+
+            row.unitsSold || 0
+
+        )>=20
 
     ){
 
