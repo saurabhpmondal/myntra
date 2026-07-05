@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V2.1
+ * Version : V2.0
  * =====================================================
  */
 
@@ -25,19 +25,9 @@ import {
 
     destroyStyleEye
 
-}
+} from "../pages/styleEye/styleEye.js";
 
-from "../pages/styleEye/styleEye.js";
-
-import {
-
-    renderDemandIndex,
-
-    destroyDemandIndex
-
-}
-
-from "../pages/demandIndex/demandIndex.js";
+import { renderDemandIndex } from "../pages/demandIndex/demandIndex.js";
 
 import { renderAds } from "../components/ads/ads.js";
 
@@ -101,11 +91,7 @@ export async function openPage(
 
 ){
 
-    if(
-
-        !content
-
-    ){
+    if(!content){
 
         console.error(
 
@@ -123,21 +109,11 @@ export async function openPage(
      * ==========================================
      */
 
-    switch(
-
-        currentPage
-
-    ){
+    switch(currentPage){
 
         case "style-eye":
 
             destroyStyleEye();
-
-            break;
-
-        case "demand-index":
-
-            destroyDemandIndex();
 
             break;
 
@@ -149,11 +125,7 @@ export async function openPage(
 
     currentPage = page;
 
-    switch(
-
-        page
-
-    ){
+    switch(page){
 
         case "dashboard":
 
@@ -295,29 +267,17 @@ function comingSoon(
 
             word=>
 
-                word.charAt(
-
-                    0
-
-                )
+                word.charAt(0)
 
                 .toUpperCase()
 
                 +
 
-                word.slice(
-
-                    1
-
-                )
+                word.slice(1)
 
         )
 
-        .join(
-
-            " "
-
-        );
+        .join(" ");
 
     content.innerHTML = `
 
