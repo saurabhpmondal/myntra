@@ -1,141 +1,136 @@
 /**
- * =====================================================
- * Project Phoenix
- * Product : Myntra Analytics
- * Module  : Rating Enricher
- * Version : V2.1 (Debug)
- * =====================================================
- */
+
+=====================================================
+
+Project Phoenix
+
+Product : Myntra Analytics
+
+Module  : Rating Enricher
+
+Version : V2.0
+
+=====================================================
+*/
+
 
 import { DataStore }
 from "../../../services/dataService.js";
 
 export function enrichRatings(
 
-    rows
+rows
 
 ){
 
-    const ratingMap={};
+const ratingMap={};  
 
-    (
+(  
 
-        DataStore.traffic || []
+    DataStore.traffic || []  
 
-    ).forEach(
+).forEach(  
 
-        traffic=>{
+    row=>{  
 
-            const styleId=
+        const styleId=  
 
-                String(
+            String(  
 
-                    traffic.style_id || ""
+                row.style_id || ""  
 
-                ).trim();
+            ).trim();  
 
-            if(
+        if(  
 
-                !styleId
+            !styleId  
 
-            ){
+        ){  
 
-                return;
+            return;  
 
-            }
+        }  
 
-            ratingMap[
+        ratingMap[  
 
-                styleId
+            styleId  
 
-            ]=
+        ]=  
 
-                Number(
+            Number(  
 
-                    traffic.rating || 0
+                row.rating || 0  
 
-                );
+            );  
 
-        }
+    }  
 
-    );
+);  
 
-    let matched=0;
+rows.forEach(  
 
-    rows.forEach(
+    row=>{  
 
-        row=>{
+        row.rating=  
 
-            const key=
+            ratingMap[  
 
-                String(
+                row.styleId  
 
-                    row.styleId || ""
+            ] || 0;  
 
-                ).trim();
+    }  
 
-            row.rating=
+);  
 
-                ratingMap[key] || 0;
+return rows;
 
-            if(
+}
 
-                row.rating>0
+https://github.com/saurabhpmondal/myntra/blob/main/src%2Fpages%2FdemandIndex%2Fcalculations%2Fbadges%2FcustomerFavourite.js
 
-            ){
+/**
 
-                matched++;
+=====================================================
 
-            }
+Customer Favourite
 
-        }
+=====================================================
+*/
 
-    );
 
-    console.log(
+export function customerFavourite(
 
-        "Traffic Records :",
+row
 
-        DataStore.traffic.length
+){
 
-    );
+if(  
 
-    console.log(
+    Number(  
 
-        "Rating Map :",
+        row.rating || 0  
 
-        Object.keys(
+    )>=3.8  
 
-            ratingMap
+    &&  
 
-        ).length
+    Number(  
 
-    );
+        row.unitsSold || 0  
 
-    console.log(
+    )>=20  
 
-        "Matched Ratings :",
+){  
 
-        matched
+    return [  
 
-    );
+        "❤️ Customer Favourite"  
 
-    console.log(
+    ];  
 
-        "Sample Traffic :",
+}  
 
-        DataStore.traffic[0]
-
-    );
-
-    console.log(
-
-        "Sample Demand Row :",
-
-        rows[0]
-
-    );
-
-    return rows;
+return [];
 
 }
