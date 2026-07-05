@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Daily Sales Trend
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -30,12 +30,40 @@ export async function renderDailySalesTrend(
 
 <div class="dashboard-card">
 
+    <div class="card-header">
+
+        <div>
+
+            <h3>
+
+                Daily Sales Trend
+
+            </h3>
+
+            <p>
+
+                Units Sold & GMV by Day
+
+            </p>
+
+        </div>
+
+    </div>
+
     <div
+
         id="dailySalesTrendChart"
+
         style="
+
             width:100%;
+
             height:420px;
-        ">
+
+        "
+
+    >
+
     </div>
 
 </div>
@@ -58,7 +86,35 @@ export async function renderDailySalesTrend(
 
         tooltip:{
 
-            trigger:"axis"
+            trigger:"axis",
+
+            formatter(params){
+
+                let html=
+
+                    `<strong>${params[0].axisValue} Jul</strong><br><br>`;
+
+                params.forEach(
+
+                    item=>{
+
+                        html+=`
+
+${item.marker}
+
+${item.seriesName}: ${Number(item.value).toLocaleString()}
+
+<br>
+
+`;
+
+                    }
+
+                );
+
+                return html;
+
+            }
 
         },
 
@@ -164,9 +220,6 @@ export async function renderDailySalesTrend(
 
         ()=>chart.resize()
 
-
-        
     );
 
 }
-
