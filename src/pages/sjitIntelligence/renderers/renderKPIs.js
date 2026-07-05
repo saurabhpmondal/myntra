@@ -3,15 +3,23 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT KPI Renderer
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
+
+import {
+
+    formatNumber
+
+}
+
+from "../../../utils/formatter.js";
 
 export async function renderKPIs(
 
     target,
 
-    kpis
+    kpis={}
 
 ){
 
@@ -23,9 +31,13 @@ export async function renderKPIs(
 
         "Total Stock",
 
-        kpis.totalStock.toLocaleString(),
+        formatNumber(
 
-        "Current SJIT Stock"
+            kpis.totalStock || 0
+
+        ),
+
+        "Current SJIT Inventory"
 
     )}
 
@@ -33,9 +45,13 @@ export async function renderKPIs(
 
         "Total Sale",
 
-        kpis.totalSale.toLocaleString(),
+        formatNumber(
 
-        "SJIT Units Sold"
+            kpis.totalSale || 0
+
+        ),
+
+        "Total SJIT Units Sold"
 
     )}
 
@@ -43,9 +59,13 @@ export async function renderKPIs(
 
         "Sell Through",
 
-        kpis.sellThrough.toFixed(1)+"%",
+        `${Number(
 
-        "(Sale ÷ Stock) × 100"
+            kpis.sellThrough || 0
+
+        ).toFixed(1)}%`,
+
+        "Formula : (Sold Qty ÷ Current Stock) × 100"
 
     )}
 
@@ -63,7 +83,7 @@ export async function renderKPIs(
 
         "-",
 
-        "Highest Units Sold"
+        "Fulfilment Centre with Highest Units Sold"
 
     )}
 
@@ -81,7 +101,7 @@ export async function renderKPIs(
 
         "-",
 
-        "Highest Units Sold"
+        "State with Highest SJIT Sales"
 
     )}
 
@@ -90,6 +110,12 @@ export async function renderKPIs(
 `;
 
 }
+
+/**
+ * =====================================================
+ * KPI Card
+ * =====================================================
+ */
 
 function buildCard(
 
@@ -101,27 +127,27 @@ function buildCard(
 
 ){
 
-    return`
+    return `
 
 <div
 
-class="kpi-card"
+    class="kpi-card"
 
-title="${tooltip}"
+    title="${tooltip}"
 
 >
 
-<div class="kpi-title">
+    <div class="kpi-title">
 
-${title}
+        ${title}
 
-</div>
+    </div>
 
-<div class="kpi-value">
+    <div class="kpi-value">
 
-${value}
+        ${value}
 
-</div>
+    </div>
 
 </div>
 
