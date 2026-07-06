@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT KPI Renderer
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
@@ -33,7 +33,7 @@ export async function renderKPIs(
 
         formatNumber(
 
-            kpis.totalStock || 0
+            kpis.totalStock||0
 
         ),
 
@@ -47,11 +47,11 @@ export async function renderKPIs(
 
         formatNumber(
 
-            kpis.totalSale || 0
+            kpis.totalSale||0
 
         ),
 
-        "Total SJIT Units Sold"
+        "Last 30 Days SJIT Sale"
 
     )}
 
@@ -59,13 +59,13 @@ export async function renderKPIs(
 
         "Sell Through",
 
-        `${Number(
+        formatSellThrough(
 
-            kpis.sellThrough || 0
+            kpis.sellThrough
 
-        ).toFixed(1)}%`,
+        ),
 
-        "Formula : (Sold Qty ÷ Current Stock) × 100"
+        "Sold Qty ÷ Current Stock"
 
     )}
 
@@ -73,17 +73,13 @@ export async function renderKPIs(
 
         "Top FC",
 
-        kpis.topFC
+        getTopFC(
 
-        ?
+            kpis.topFC
 
-        kpis.topFC.fc
+        ),
 
-        :
-
-        "-",
-
-        "Fulfilment Centre with Highest Units Sold"
+        "Highest Selling Fulfilment Centre"
 
     )}
 
@@ -91,17 +87,13 @@ export async function renderKPIs(
 
         "Top State",
 
-        kpis.topState
+        getTopState(
 
-        ?
+            kpis.topState
 
-        kpis.topState[0]
+        ),
 
-        :
-
-        "-",
-
-        "State with Highest SJIT Sales"
+        "Highest Selling State"
 
     )}
 
@@ -123,19 +115,13 @@ function buildCard(
 
     value,
 
-    tooltip
+    subtitle
 
 ){
 
     return `
 
-<div
-
-    class="kpi-card"
-
-    title="${tooltip}"
-
->
+<div class="kpi-card">
 
     <div class="kpi-title">
 
@@ -149,8 +135,100 @@ function buildCard(
 
     </div>
 
+    <div class="kpi-subtitle">
+
+        ${subtitle}
+
+    </div>
+
 </div>
 
 `;
+
+}
+
+/**
+ * =====================================================
+ * Sell Through
+ * =====================================================
+ */
+
+function formatSellThrough(
+
+    value
+
+){
+
+    return `${
+
+        Number(
+
+            value||0
+
+        ).toFixed(1)
+
+    }%`;
+
+}
+
+/**
+ * =====================================================
+ * Top FC
+ * =====================================================
+ */
+
+function getTopFC(
+
+    fc
+
+){
+
+    if(!fc){
+
+        return "-";
+
+    }
+
+    return(
+
+        fc.shortName||
+
+        fc.fc||
+
+        fc.warehouseName||
+
+        "-"
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Top State
+ * =====================================================
+ */
+
+function getTopState(
+
+    state
+
+){
+
+    if(!state){
+
+        return "-";
+
+    }
+
+    return(
+
+        state.state||
+
+        state.name||
+
+        "-"
+
+    );
 
 }
