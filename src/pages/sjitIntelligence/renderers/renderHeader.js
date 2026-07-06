@@ -3,13 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Intelligence Header
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
 export async function renderHeader(
 
-    target
+    target,
+
+    analysisFrom,
+
+    analysisTo
 
 ){
 
@@ -27,25 +31,24 @@ export async function renderHeader(
 
         <p>
 
-            FC-wise Stock, Sales & Regional Performance.
+            FC-wise Stock, Sales & Regional Performance
 
         </p>
 
-    </div>
-
-    <div class="di-header-right">
-
-        <button
-
-            id="sjitExportButton"
-
-            class="di-primary-btn"
-
+        <small
+            style="
+                color:#64748b;
+                display:block;
+                margin-top:6px;
+            "
         >
 
-            ⬇ Export
+            Analysis Period :
+            ${formatDate(analysisFrom)}
+            -
+            ${formatDate(analysisTo)}
 
-        </button>
+        </small>
 
     </div>
 
@@ -53,47 +56,40 @@ export async function renderHeader(
 
 `;
 
-    bindEvents();
-
 }
 
 /**
  * =====================================================
- * Events
+ * Format Date
  * =====================================================
  */
 
-function bindEvents(){
+function formatDate(
 
-    const button=
+    date
 
-        document.getElementById(
+){
 
-            "sjitExportButton"
+    if(!date){
 
-        );
-
-    if(
-
-        !button
-
-    ){
-
-        return;
+        return "-";
 
     }
 
-    button.onclick=()=>{
+    return date.toLocaleDateString(
 
-        console.log(
+        "en-IN",
 
-            "SJIT Export"
+        {
 
-        );
+            day:"2-digit",
 
-        // Export service will be wired
-        // after integration.
+            month:"short",
 
-    };
+            year:"numeric"
+
+        }
+
+    );
 
 }
