@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -27,9 +27,11 @@ import {
 
 } from "../pages/styleEye/styleEye.js";
 
-import { renderDemandIndex } from "../pages/demandIndex/demandIndex.js";
+import {
 
-import { renderAds } from "../components/ads/ads.js";
+    renderDemandIndex
+
+} from "../pages/demandIndex/demandIndex.js";
 
 import {
 
@@ -37,9 +39,9 @@ import {
 
     destroySJITIntelligence
 
-}
+} from "../pages/sjitIntelligence/sjitIntelligence.js";
 
-from "../pages/sjitIntelligence/sjitIntelligence.js";
+import { renderAds } from "../components/ads/ads.js";
 
 let content = null;
 
@@ -127,6 +129,12 @@ export async function openPage(
 
             break;
 
+        case "sjit-intelligence":
+
+            destroySJITIntelligence();
+
+            break;
+
         default:
 
             break;
@@ -190,6 +198,16 @@ export async function openPage(
         case "sor-shipment":
 
             await renderSorShipment(
+
+                content
+
+            );
+
+            break;
+
+        case "sjit-intelligence":
+
+            await renderSJITIntelligence(
 
                 content
 
