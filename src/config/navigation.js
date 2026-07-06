@@ -51,6 +51,13 @@ export const Navigation = [
         filter:true
     },
 
+{
+    id:"sjit-intelligence",
+    title:"SJIT Intelligence",
+    icon:"map",
+    filter:false
+},
+
     {
         id:"new-launch",
         title:"New Launch",
