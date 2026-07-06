@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Intelligence Service
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -89,15 +89,25 @@ export async function initializeSJIT(
 
     const {
 
+        analysisFrom,
+
+        analysisTo,
+
         salesRows,
 
         warehouseRows
 
-    } = buildSJITData();
+    }=
 
-    SJITStore.rawSales = salesRows;
+    buildSJITData();
 
-    SJITStore.warehouseRows = warehouseRows;
+    SJITStore.rawSales=
+
+        salesRows;
+
+    SJITStore.warehouseRows=
+
+        warehouseRows;
 
     /**
      * ==========================================
@@ -105,7 +115,7 @@ export async function initializeSJIT(
      * ==========================================
      */
 
-    SJITStore.kpis =
+    SJITStore.kpis=
 
         buildKPIs(
 
@@ -115,7 +125,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.fcReport =
+    SJITStore.fcReport=
 
         buildFCReport(
 
@@ -123,7 +133,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.stateReport =
+    SJITStore.stateReport=
 
         buildStateReport(
 
@@ -131,7 +141,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.regionReport =
+    SJITStore.regionReport=
 
         buildRegionReport(
 
@@ -139,7 +149,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.mapData =
+    SJITStore.mapData=
 
         buildMapData(
 
@@ -147,7 +157,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.insights =
+    SJITStore.insights=
 
         buildInsights(
 
@@ -157,7 +167,7 @@ export async function initializeSJIT(
 
         );
 
-    SJITStore.loaded = true;
+    SJITStore.loaded=true;
 
     /**
      * ==========================================
@@ -171,7 +181,11 @@ export async function initializeSJIT(
 
             "sjitHeader"
 
-        )
+        ),
+
+        analysisFrom,
+
+        analysisTo
 
     );
 
