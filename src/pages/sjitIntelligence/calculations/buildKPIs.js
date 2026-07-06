@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT KPI Builder
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -47,7 +47,7 @@ export function buildKPIs(
 
     const totalSale=
 
-        warehouseRows.reduce(
+        salesRows.reduce(
 
             (sum,row)=>
 
@@ -55,7 +55,7 @@ export function buildKPIs(
 
                 Number(
 
-                    row.soldQty||0
+                    row.qty||0
 
                 ),
 
@@ -65,7 +65,7 @@ export function buildKPIs(
 
     /**
      * ==========================================
-     * Sell Through
+     * Sell Through %
      * ==========================================
      */
 
@@ -99,19 +99,7 @@ export function buildKPIs(
 
         ?
 
-        warehouseRows
-
-        .slice()
-
-        .sort(
-
-            (a,b)=>
-
-                b.soldQty-
-
-                a.soldQty
-
-        )[0]
+        warehouseRows[0]
 
         :
 
@@ -125,67 +113,47 @@ export function buildKPIs(
 
     const stateMap={};
 
-    salesRows.forEach(
+    salesRows.forEach(row=>{
 
-        row=>{
+        const state=
 
-            const state=
+            String(
 
-                String(
+                row.state||""
 
-                    row.state||
+            ).trim();
 
-                    ""
+        if(!state){
 
-                ).trim();
-
-            if(
-
-                !state
-
-            ){
-
-                return;
-
-            }
-
-            if(
-
-                !stateMap[
-
-                    state
-
-                ]
-
-            ){
-
-                stateMap[
-
-                    state
-
-                ]=0;
-
-            }
-
-            stateMap[
-
-                state
-
-            ]+=
-
-                Number(
-
-                    row.qty||0
-
-                );
+            return;
 
         }
 
-    );
+        if(!stateMap[state]){
+
+            stateMap[state]={
+
+                state,
+
+                soldQty:0
+
+            };
+
+        }
+
+        stateMap[state].soldQty+=
+
+            Number(
+
+                row.qty||0
+
+            );
+
+    });
 
     const topState=
 
-        Object.entries(
+        Object.values(
 
             stateMap
 
@@ -195,11 +163,19 @@ export function buildKPIs(
 
             (a,b)=>
 
-                b[1]-a[1]
+                b.soldQty-
+
+                a.soldQty
 
         )[0]||
 
         null;
+
+    /**
+     * ==========================================
+     * Return
+     * ==========================================
+     */
 
     return{
 
