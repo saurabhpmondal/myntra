@@ -3,231 +3,214 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : India Heat Map
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
+
+import {
+
+    registerIndiaMap
+
+}
+
+from "../services/mapService.js";
+
+let chart=null;
 
 export async function renderMap(
 
     target,
 
-    mapData=[]
+    data=[]
 
 ){
 
-    target.innerHTML=`
+    if(
 
-<div class="dashboard-card">
+        !target
 
-    <div class="card-header">
+    ){
 
-        <div>
-
-            <h3>
-
-                India Sales Heat Map
-
-            </h3>
-
-            <p>
-
-                State-wise SJIT Sales Distribution
-
-            </p>
-
-        </div>
-
-    </div>
-
-    <div
-
-        id="sjitIndiaMap"
-
-        style="
-
-            width:100%;
-
-            height:520px;
-
-        "
-
-    ></div>
-
-</div>
-
-`;
-
-    try{
-
-        const container=
-
-            document.getElementById(
-
-                "sjitIndiaMap"
-
-            );
-
-        if(
-
-            !container
-
-        ){
-
-            return;
-
-        }
-
-        const oldChart=
-
-            echarts.getInstanceByDom(
-
-                container
-
-            );
-
-        if(
-
-            oldChart
-
-        ){
-
-            oldChart.dispose();
-
-        }
-
-        const geoJson=
-
-            await fetch(
-
-                "src/assets/maps/india.json"
-
-            )
-
-            .then(
-
-                response=>response.json()
-
-            );
-
-        echarts.registerMap(
-
-            "india",
-
-            geoJson
-
-        );
-
-        const chart=
-
-            echarts.init(
-
-                container
-
-            );
-
-        chart.setOption({
-
-            tooltip:{
-
-                trigger:"item",
-
-                formatter(params){
-
-                    return `
-
-<strong>
-
-${params.name}
-
-</strong>
-
-<br><br>
-
-Sold Qty :
-${Number(
-
-params.value||0
-
-).toLocaleString()}
-
-`;
-
-                }
-
-            },
-
-            visualMap:{
-
-                min:0,
-
-                max:Math.max(
-
-                    ...mapData.map(
-
-                        row=>row.value
-
-                    ),
-
-                    1
-
-                ),
-
-                left:20,
-
-                bottom:20,
-
-                calculable:true
-
-            },
-
-            series:[
-
-                {
-
-                    type:"map",
-
-                    map:"india",
-
-                    roam:true,
-
-                    emphasis:{
-
-                        label:{
-
-                            show:true
-
-                        }
-
-                    },
-
-                    data:mapData
-
-                }
-
-            ]
-
-        });
-
-        window.addEventListener(
-
-            "resize",
-
-            ()=>chart.resize()
-
-        );
+        return;
 
     }
 
-    catch(error){
+    await registerIndiaMap();
 
-        console.error(
+    if(
 
-            "India Map",
+        chart
 
-            error
+    ){
+
+        chart.dispose();
+
+    }
+
+    chart=
+
+        echarts.init(
+
+            target
 
         );
 
+    chart.setOption({
+
+        backgroundColor:"#ffffff",
+
+        tooltip:{
+
+            trigger:"item",
+
+            formatter(params){
+
+                const value=
+
+                    params.value||0;
+
+                return `
+
+<b>${params.name}</b>
+
+<br>
+
+Units Sold :
+
+${value}
+
+`;
+
+            }
+
+        },
+
+        visualMap:{
+
+            min:0,
+
+            max:getMaxValue(
+
+                data
+
+            ),
+
+            left:"left",
+
+            bottom:20,
+
+            calculable:true,
+
+            text:[
+
+                "High",
+
+                "Low"
+
+            ],
+
+            inRange:{
+
+                color:[
+
+                    "#FFF5F7",
+
+                    "#FFD6DF",
+
+                    "#FF9CB2",
+
+                    "#FF5A80",
+
+                    "#E91E63"
+
+                ]
+
+            }
+
+        },
+
+        series:[
+
+            {
+
+                name:"SJIT Sale",
+
+                type:"map",
+
+                map:"india",
+
+                roam:true,
+
+                zoom:1.1,
+
+                emphasis:{
+
+                    label:{
+
+                        show:true
+
+                    }
+
+                },
+
+                data
+
+            }
+
+        ]
+
+    });
+
+    window.addEventListener(
+
+        "resize",
+
+        ()=>{
+
+            chart.resize();
+
+        }
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Maximum Value
+ * =====================================================
+ */
+
+function getMaxValue(
+
+    rows
+
+){
+
+    if(
+
+        !rows.length
+
+    ){
+
+        return 1;
+
     }
+
+    return Math.max(
+
+        ...rows.map(
+
+            row=>
+
+                Number(
+
+                    row.value||0
+
+                )
+
+        )
+
+    );
 
 }
