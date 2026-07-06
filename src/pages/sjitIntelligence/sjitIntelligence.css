@@ -288,3 +288,37 @@
     }
 
 }
+
+/* =====================================================
+   REPORT GRID
+===================================================== */
+
+.report-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:24px;
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1200px){
+
+    .chart-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .report-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
