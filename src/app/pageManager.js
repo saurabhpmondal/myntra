@@ -31,6 +31,16 @@ import { renderDemandIndex } from "../pages/demandIndex/demandIndex.js";
 
 import { renderAds } from "../components/ads/ads.js";
 
+import {
+
+    renderSJITIntelligence,
+
+    destroySJITIntelligence
+
+}
+
+from "../pages/sjitIntelligence/sjitIntelligence.js";
+
 let content = null;
 
 let currentPage = "dashboard";
