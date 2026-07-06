@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Layout
- * Version : V1.1
+ * Version : V2.0
  * =====================================================
  */
 
@@ -13,59 +13,89 @@ export async function renderLayout(
 
 ){
 
+    /**
+     * ==========================================
+     * Load CSS Once
+     * ==========================================
+     */
+
+    if(
+
+        !document.getElementById(
+
+            "sjit-css"
+
+        )
+
+    ){
+
+        const link=
+
+            document.createElement(
+
+                "link"
+
+            );
+
+        link.id="sjit-css";
+
+        link.rel="stylesheet";
+
+        link.href=
+
+            "src/pages/sjitIntelligence/sjitIntelligence.css";
+
+        document.head.appendChild(
+
+            link
+
+        );
+
+    }
+
     target.innerHTML=`
 
-<div class="dashboard-section">
+<div class="sjit-page">
 
-    <div id="sjitHeader"></div>
+    <section class="dashboard-section">
 
-</div>
+        <div id="sjitHeader"></div>
 
-<div class="dashboard-section">
+    </section>
 
-    <div id="sjitKPIs"></div>
+    <section class="dashboard-section">
 
-</div>
+        <div id="sjitKPIs"></div>
 
-<div class="dashboard-section">
+    </section>
 
-    <div id="sjitInsights"></div>
+    <section class="dashboard-section">
 
-</div>
+        <div id="sjitInsights"></div>
 
-<div
-    class="dashboard-section"
-    style="
-        display:grid;
-        grid-template-columns:2fr 1fr;
-        gap:20px;
-    "
->
+    </section>
 
-    <div id="sjitMap"></div>
+    <section class="dashboard-section chart-grid">
 
-    <div id="sjitPie"></div>
+        <div id="sjitMap"></div>
 
-</div>
+        <div id="sjitPie"></div>
 
-<div class="dashboard-section">
+    </section>
 
-    <div id="sjitFCReport"></div>
+    <section class="dashboard-section">
 
-</div>
+        <div id="sjitFCReport"></div>
 
-<div
-    class="dashboard-section"
-    style="
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:20px;
-    "
->
+    </section>
 
-    <div id="sjitStateReport"></div>
+    <section class="dashboard-section report-grid">
 
-    <div id="sjitRegionReport"></div>
+        <div id="sjitStateReport"></div>
+
+        <div id="sjitRegionReport"></div>
+
+    </section>
 
 </div>
 
