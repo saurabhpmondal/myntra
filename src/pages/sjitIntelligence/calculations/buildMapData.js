@@ -3,9 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : India Map Data Builder
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
+
+import {
+
+    normalizeState
+
+}
+
+from "../../../config/stateMap.js";
 
 export function buildMapData(
 
@@ -21,11 +29,11 @@ export function buildMapData(
 
             const state=
 
-                String(
+                normalizeState(
 
-                    row.state || ""
+                    row.state
 
-                ).trim();
+                );
 
             if(
 
@@ -39,39 +47,45 @@ export function buildMapData(
 
             if(
 
-                !stateMap[
-
-                    state
-
-                ]
+                !stateMap[state]
 
             ){
 
-                stateMap[
+                stateMap[state]={
 
-                    state
+                    name:state,
 
-                ]=0;
+                    value:0,
+
+                    styles:new Set()
+
+                };
 
             }
 
-            stateMap[
-
-                state
-
-            ]+=
+            stateMap[state].value+=
 
                 Number(
 
-                    row.qty || 0
+                    row.qty||0
 
                 );
+
+            stateMap[state].styles.add(
+
+                String(
+
+                    row.style_id||""
+
+                )
+
+            );
 
         }
 
     );
 
-    return Object.entries(
+    return Object.values(
 
         stateMap
 
@@ -79,11 +93,15 @@ export function buildMapData(
 
     .map(
 
-        ([state,soldQty])=>({
+        row=>({
 
-            name:state,
+            name:row.name,
 
-            value:soldQty
+            value:row.value,
+
+            styleCount:
+
+                row.styles.size
 
         })
 
