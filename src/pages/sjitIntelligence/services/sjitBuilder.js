@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Builder
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -15,35 +15,174 @@ import {
 }
 from "../../../config/warehouseMap.js";
 
+import {
+    IntelligenceConfig
+}
+from "../../../config/intelligence.js";
+
+const MonthMap={
+
+    JAN:0,
+    FEB:1,
+    MAR:2,
+    APR:3,
+    MAY:4,
+    JUNE:5,
+    JULY:6,
+    AUG:7,
+    SEP:8,
+    OCT:9,
+    NOV:10,
+    DEC:11
+
+};
+
 export function buildSJITData(){
 
     /**
      * ==========================================
+     * Latest Available Date
+     * ==========================================
+     */
+
+    let latestDate=null;
+
+    (DataStore.sales||[]).forEach(row=>{
+
+        const month=
+
+            MonthMap[
+                String(
+                    row.month||""
+                ).toUpperCase()
+            ];
+
+        if(month===undefined){
+
+            return;
+
+        }
+
+        const date=new Date(
+
+            Number(row.year),
+
+            month,
+
+            Number(row.date)
+
+        );
+
+        if(
+
+            !latestDate ||
+
+            date>latestDate
+
+        ){
+
+            latestDate=date;
+
+        }
+
+    });
+
+    /**
+     * ==========================================
+     * Analysis Window
+     * ==========================================
+     */
+
+    const analysisTo=
+
+        latestDate||
+
+        new Date();
+
+    const analysisFrom=
+
+        new Date(
+
+            analysisTo
+
+        );
+
+    analysisFrom.setDate(
+
+        analysisTo.getDate()
+
+        -
+
+        IntelligenceConfig.analysisDays
+
+    );
+
+    /**
+     * ==========================================
      * SJIT Sales
+     * Last Analysis Window
      * ==========================================
      */
 
     const salesRows=
 
-        (DataStore.sales || [])
+        (DataStore.sales||[])
 
-        .filter(
+        .filter(row=>{
 
-            row=>
+            if(
 
                 String(
 
-                    row.po_type || ""
+                    row.po_type||""
 
-                )
+                ).toUpperCase()
 
-                .toUpperCase()
-
-                ===
+                !==
 
                 "SJIT"
 
-        );
+            ){
+
+                return false;
+
+            }
+
+            const month=
+
+                MonthMap[
+                    String(
+                        row.month||""
+                    ).toUpperCase()
+                ];
+
+            if(month===undefined){
+
+                return false;
+
+            }
+
+            const saleDate=
+
+                new Date(
+
+                    Number(row.year),
+
+                    month,
+
+                    Number(row.date)
+
+                );
+
+            return(
+
+                saleDate>=analysisFrom &&
+
+                saleDate<=analysisTo
+
+            );
+
+        });
 
     /**
      * ==========================================
@@ -53,7 +192,7 @@ export function buildSJITData(){
 
     const stockRows=
 
-        DataStore.sjitStock || [];
+        DataStore.sjitStock||[];
 
     const warehouseMap={};
 
@@ -63,85 +202,77 @@ export function buildSJITData(){
      * ==========================================
      */
 
-    stockRows.forEach(
+    stockRows.forEach(row=>{
 
-        row=>{
+        const warehouseId=
 
-            const warehouseId=
+            Number(
 
-                Number(
+                row.warehouse_id||0
 
-                    row.warehouse_id || 0
+            );
 
-                );
+        if(!warehouseId){
 
-            if(!warehouseId){
-
-                return;
-
-            }
-
-            if(
-
-                !warehouseMap[warehouseId]
-
-            ){
-
-                const warehouse=
-
-                    WarehouseMap[warehouseId] || {};
-
-                warehouseMap[warehouseId]={
-
-                    warehouseId,
-
-                    warehouseName:
-
-                        warehouse.name ||
-
-                        row.warehouse_name ||
-
-                        "",
-
-                    shortName:
-
-                        warehouse.shortName ||
-
-                        row.warehouse_name ||
-
-                        "",
-
-                    region:
-
-                        warehouse.region ||
-
-                        "Unknown",
-
-                    stock:0,
-
-                    soldQty:0,
-
-                    gmv:0,
-
-                    styles:new Set(),
-
-                    states:new Set()
-
-                };
-
-            }
-
-            warehouseMap[warehouseId].stock+=
-
-                Number(
-
-                    row.inventory_count || 0
-
-                );
+            return;
 
         }
 
-    );
+        if(!warehouseMap[warehouseId]){
+
+            const warehouse=
+
+                WarehouseMap[warehouseId]||{};
+
+            warehouseMap[warehouseId]={
+
+                warehouseId,
+
+                warehouseName:
+
+                    warehouse.name||
+
+                    row.warehouse_name||
+
+                    "",
+
+                shortName:
+
+                    warehouse.shortName||
+
+                    row.warehouse_name||
+
+                    "",
+
+                region:
+
+                    warehouse.region||
+
+                    "Unknown",
+
+                stock:0,
+
+                soldQty:0,
+
+                gmv:0,
+
+                styles:new Set(),
+
+                states:new Set()
+
+            };
+
+        }
+
+        warehouseMap[warehouseId].stock+=
+
+            Number(
+
+                row.inventory_count||0
+
+            );
+
+    });
 
     /**
      * ==========================================
@@ -149,109 +280,101 @@ export function buildSJITData(){
      * ==========================================
      */
 
-    salesRows.forEach(
+    salesRows.forEach(row=>{
 
-        row=>{
+        const warehouseId=
 
-            const warehouseId=
+            Number(
 
-                Number(
-
-                    row.warehouse_id || 0
-
-                );
-
-            if(!warehouseId){
-
-                return;
-
-            }
-
-            if(
-
-                !warehouseMap[warehouseId]
-
-            ){
-
-                const warehouse=
-
-                    WarehouseMap[warehouseId] || {};
-
-                warehouseMap[warehouseId]={
-
-                    warehouseId,
-
-                    warehouseName:
-
-                        warehouse.name ||
-
-                        "",
-
-                    shortName:
-
-                        warehouse.shortName ||
-
-                        "",
-
-                    region:
-
-                        warehouse.region ||
-
-                        "Unknown",
-
-                    stock:0,
-
-                    soldQty:0,
-
-                    gmv:0,
-
-                    styles:new Set(),
-
-                    states:new Set()
-
-                };
-
-            }
-
-            warehouseMap[warehouseId].soldQty+=
-
-                Number(
-
-                    row.qty || 0
-
-                );
-
-            warehouseMap[warehouseId].gmv+=
-
-                Number(
-
-                    row.final_amount || 0
-
-                );
-
-            warehouseMap[warehouseId].styles.add(
-
-                String(
-
-                    row.style_id || ""
-
-                )
+                row.warehouse_id||0
 
             );
 
-            warehouseMap[warehouseId].states.add(
+        if(!warehouseId){
 
-                String(
-
-                    row.state || ""
-
-                )
-
-            );
+            return;
 
         }
 
-    );
+        if(!warehouseMap[warehouseId]){
+
+            const warehouse=
+
+                WarehouseMap[warehouseId]||{};
+
+            warehouseMap[warehouseId]={
+
+                warehouseId,
+
+                warehouseName:
+
+                    warehouse.name||
+
+                    "",
+
+                shortName:
+
+                    warehouse.shortName||
+
+                    "",
+
+                region:
+
+                    warehouse.region||
+
+                    "Unknown",
+
+                stock:0,
+
+                soldQty:0,
+
+                gmv:0,
+
+                styles:new Set(),
+
+                states:new Set()
+
+            };
+
+        }
+
+        warehouseMap[warehouseId].soldQty+=
+
+            Number(
+
+                row.qty||0
+
+            );
+
+        warehouseMap[warehouseId].gmv+=
+
+            Number(
+
+                row.final_amount||0
+
+            );
+
+        warehouseMap[warehouseId].styles.add(
+
+            String(
+
+                row.style_id||""
+
+            )
+
+        );
+
+        warehouseMap[warehouseId].states.add(
+
+            String(
+
+                row.state||""
+
+            )
+
+        );
+
+    });
 
     /**
      * ==========================================
@@ -267,49 +390,51 @@ export function buildSJITData(){
 
         )
 
-        .map(
+        .map(row=>({
 
-            row=>({
+            warehouseId:
 
-                warehouseId:
+                row.warehouseId,
 
-                    row.warehouseId,
+            warehouseName:
 
-                warehouseName:
+                row.warehouseName,
 
-                    row.warehouseName,
+            shortName:
 
-                shortName:
+                row.shortName,
 
-                    row.shortName,
+            fc:
 
-                region:
+                row.shortName||
 
-                    row.region,
+                row.warehouseName,
 
-                stock:
+            region:
 
-                    row.stock,
+                row.region,
 
-                soldQty:
+            stock:
 
-                    row.soldQty,
+                row.stock,
 
-                gmv:
+            soldQty:
 
-                    row.gmv,
+                row.soldQty,
 
-                styleCount:
+            gmv:
 
-                    row.styles.size,
+                row.gmv,
 
-                stateCount:
+            styleCount:
 
-                    row.states.size
+                row.styles.size,
 
-            })
+            stateCount:
 
-        )
+                row.states.size
+
+        }))
 
         .sort(
 
@@ -328,6 +453,10 @@ export function buildSJITData(){
      */
 
     return{
+
+        analysisFrom,
+
+        analysisTo,
 
         salesRows,
 
