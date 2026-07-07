@@ -3,21 +3,53 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Layout
- * Version : V2.1
+ * Version : V2.2
  * =====================================================
  */
 
-export async function renderLayout(target){
+export async function renderLayout(
 
-    if(!document.getElementById("sjit-css")){
+    target
 
-        const link=document.createElement("link");
+){
+
+    /**
+     * ==========================================
+     * Load CSS Once
+     * ==========================================
+     */
+
+    if(
+
+        !document.getElementById(
+
+            "sjit-css"
+
+        )
+
+    ){
+
+        const link=
+
+            document.createElement(
+
+                "link"
+
+            );
 
         link.id="sjit-css";
-        link.rel="stylesheet";
-        link.href="src/pages/sjitIntelligence/sjitIntelligence.css";
 
-        document.head.appendChild(link);
+        link.rel="stylesheet";
+
+        link.href=
+
+            "src/pages/sjitIntelligence/sjitIntelligence.css";
+
+        document.head.appendChild(
+
+            link
+
+        );
 
     }
 
@@ -47,17 +79,9 @@ export async function renderLayout(target){
 
         <div class="chart-grid">
 
-            <div class="dashboard-card">
+            <div id="sjitMap"></div>
 
-                <div id="sjitMap"></div>
-
-            </div>
-
-            <div class="dashboard-card">
-
-                <div id="sjitPie"></div>
-
-            </div>
+            <div id="sjitPie"></div>
 
         </div>
 
