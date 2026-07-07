@@ -3,53 +3,21 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : SJIT Layout
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
-export async function renderLayout(
+export async function renderLayout(target){
 
-    target
+    if(!document.getElementById("sjit-css")){
 
-){
-
-    /**
-     * ==========================================
-     * Load CSS Once
-     * ==========================================
-     */
-
-    if(
-
-        !document.getElementById(
-
-            "sjit-css"
-
-        )
-
-    ){
-
-        const link=
-
-            document.createElement(
-
-                "link"
-
-            );
+        const link=document.createElement("link");
 
         link.id="sjit-css";
-
         link.rel="stylesheet";
+        link.href="src/pages/sjitIntelligence/sjitIntelligence.css";
 
-        link.href=
-
-            "src/pages/sjitIntelligence/sjitIntelligence.css";
-
-        document.head.appendChild(
-
-            link
-
-        );
+        document.head.appendChild(link);
 
     }
 
@@ -75,11 +43,23 @@ export async function renderLayout(
 
     </section>
 
-    <section class="dashboard-section chart-grid">
+    <section class="dashboard-section">
 
-        <div id="sjitMap"></div>
+        <div class="chart-grid">
 
-        <div id="sjitPie"></div>
+            <div class="dashboard-card">
+
+                <div id="sjitMap"></div>
+
+            </div>
+
+            <div class="dashboard-card">
+
+                <div id="sjitPie"></div>
+
+            </div>
+
+        </div>
 
     </section>
 
@@ -89,11 +69,15 @@ export async function renderLayout(
 
     </section>
 
-    <section class="dashboard-section report-grid">
+    <section class="dashboard-section">
 
-        <div id="sjitStateReport"></div>
+        <div class="report-grid">
 
-        <div id="sjitRegionReport"></div>
+            <div id="sjitStateReport"></div>
+
+            <div id="sjitRegionReport"></div>
+
+        </div>
 
     </section>
 
