@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : India Heat Map
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -25,11 +25,7 @@ export async function renderMap(
 
 ){
 
-    if(
-
-        !target
-
-    ){
+    if(!target){
 
         return;
 
@@ -37,11 +33,7 @@ export async function renderMap(
 
     await registerIndiaMap();
 
-    if(
-
-        chart
-
-    ){
+    if(chart){
 
         chart.dispose();
 
@@ -52,6 +44,26 @@ export async function renderMap(
         echarts.init(
 
             target
+
+        );
+
+    const maxValue=
+
+        Math.max(
+
+            ...data.map(
+
+                row=>
+
+                    Number(
+
+                        row.value||0
+
+                    )
+
+            ),
+
+            1
 
         );
 
@@ -67,17 +79,31 @@ export async function renderMap(
 
                 const value=
 
-                    params.value||0;
+                    Number(
+
+                        params.value||0
+
+                    );
 
                 return `
 
-<b>${params.name}</b>
+<div style="padding:6px;min-width:160px;">
 
-<br>
+<div style="font-size:14px;font-weight:600;margin-bottom:6px;">
+
+${params.name}
+
+</div>
+
+<div>
 
 Units Sold :
 
-${value}
+<b>${value.toLocaleString()}</b>
+
+</div>
+
+</div>
 
 `;
 
@@ -89,17 +115,15 @@ ${value}
 
             min:0,
 
-            max:getMaxValue(
+            max:maxValue,
 
-                data
-
-            ),
-
-            left:"left",
+            left:20,
 
             bottom:20,
 
             calculable:true,
+
+            orient:"vertical",
 
             text:[
 
@@ -119,7 +143,7 @@ ${value}
 
                     "#FF9CB2",
 
-                    "#FF5A80",
+                    "#FF6B95",
 
                     "#E91E63"
 
@@ -133,23 +157,59 @@ ${value}
 
             {
 
-                name:"SJIT Sale",
+                name:"SJIT Sales",
 
                 type:"map",
 
-                map:"india",
+                map:"India",
 
                 roam:true,
 
-                zoom:1.1,
+                zoom:1.15,
+
+                scaleLimit:{
+
+                    min:1,
+
+                    max:8
+
+                },
+
+                selectedMode:false,
+
+                label:{
+
+                    show:false
+
+                },
 
                 emphasis:{
 
                     label:{
 
-                        show:true
+                        show:true,
+
+                        color:"#111827",
+
+                        fontWeight:"bold"
+
+                    },
+
+                    itemStyle:{
+
+                        borderColor:"#ffffff",
+
+                        borderWidth:1.5
 
                     }
+
+                },
+
+                itemStyle:{
+
+                    borderColor:"#ffffff",
+
+                    borderWidth:0.8
 
                 },
 
@@ -161,55 +221,41 @@ ${value}
 
     });
 
+    chart.off("click");
+
+    chart.on(
+
+        "click",
+
+        params=>{
+
+            console.log(
+
+                "State Selected :",
+
+                params.name,
+
+                params.value
+
+            );
+
+        }
+
+    );
+
     window.addEventListener(
 
         "resize",
 
         ()=>{
 
-            chart.resize();
+            if(chart){
+
+                chart.resize();
+
+            }
 
         }
-
-    );
-
-}
-
-/**
- * =====================================================
- * Maximum Value
- * =====================================================
- */
-
-function getMaxValue(
-
-    rows
-
-){
-
-    if(
-
-        !rows.length
-
-    ){
-
-        return 1;
-
-    }
-
-    return Math.max(
-
-        ...rows.map(
-
-            row=>
-
-                Number(
-
-                    row.value||0
-
-                )
-
-        )
 
     );
 
