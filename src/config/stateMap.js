@@ -93,7 +93,7 @@ export const StateMap={
 
     "UTTARANCHAL":"Uttarakhand",
 
-    "WEST BENGAL":"West Bengal"
+    "WEST BENGAL":"West Bengal", 
 
 "AN":"Andaman and Nicobar Islands",
 "AP":"Andhra Pradesh",
