@@ -31,6 +31,8 @@ export const StateMap={
 
     "DELHI":"Delhi",
 
+"DL":"Delhi",
+
     "NCT OF DELHI":"Delhi",
 
     "GOA":"Goa",
