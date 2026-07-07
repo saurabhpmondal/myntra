@@ -3,41 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : India Map Service
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
-let mapLoaded=false;
-
-let loadingPromise=null;
-
-/**
- * =====================================================
- * Register India Map
- * =====================================================
- */
+let registered=false;
 
 export async function registerIndiaMap(){
 
-    if(mapLoaded){
+    if(registered){
 
         return;
 
     }
-
-    if(loadingPromise){
-
-        return loadingPromise;
-
-    }
-
-    loadingPromise=loadMap();
-
-    await loadingPromise;
-
-}
-
-async function loadMap(){
 
     const response=
 
@@ -47,11 +25,7 @@ async function loadMap(){
 
         );
 
-    if(
-
-        !response.ok
-
-    ){
+    if(!response.ok){
 
         throw new Error(
 
@@ -61,18 +35,18 @@ async function loadMap(){
 
     }
 
-    const india=
+    const geoJson=
 
         await response.json();
 
     echarts.registerMap(
 
-        "india",
+        "India",
 
-        india
+        geoJson
 
     );
 
-    mapLoaded=true;
+    registered=true;
 
 }
