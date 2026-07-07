@@ -31,8 +31,6 @@ export const StateMap={
 
     "DELHI":"Delhi",
 
-"DL":"Delhi",
-
     "NCT OF DELHI":"Delhi",
 
     "GOA":"Goa",
@@ -96,6 +94,43 @@ export const StateMap={
     "UTTARANCHAL":"Uttarakhand",
 
     "WEST BENGAL":"West Bengal"
+
+"AN":"Andaman and Nicobar Islands",
+"AP":"Andhra Pradesh",
+"AR":"Arunachal Pradesh",
+"AS":"Assam",
+"BR":"Bihar",
+"CH":"Chandigarh",
+"CT":"Chhattisgarh",
+"DD":"Dadra and Nagar Haveli and Daman and Diu",
+"DL":"Delhi",
+"DN":"Dadra and Nagar Haveli and Daman and Diu",
+"GA":"Goa",
+"GJ":"Gujarat",
+"HP":"Himachal Pradesh",
+"HR":"Haryana",
+"JH":"Jharkhand",
+"JK":"Jammu and Kashmir",
+"KA":"Karnataka",
+"KL":"Kerala",
+"MH":"Maharashtra",
+"ML":"Meghalaya",
+"MN":"Manipur",
+"MP":"Madhya Pradesh",
+"MZ":"Mizoram",
+"NL":"Nagaland",
+"OR":"Odisha",
+"PB":"Punjab",
+"RJ":"Rajasthan",
+"SK":"Sikkim",
+"TG":"Telangana",
+"TN":"Tamil Nadu",
+"TR":"Tripura",
+"TS":"Telangana",
+"UP":"Uttar Pradesh",
+"UT":"Uttarakhand",
+"WB":"West Bengal"
+
 
 };
 
