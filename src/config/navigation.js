@@ -93,12 +93,12 @@ export const Navigation = [
     {
         id:"divider",
         divider:true,
-        title:"External Dashboards"
+        title:"Related Dashboards"
     },
 
     {
         id:"myntra-pricing",
-        title:"Myntra Reverse Pricing",
+        title:"Myntra Pricing",
         icon:"external-link",
         external:true,
         url:"https://saurabhpmondal.github.io/myntra-reverse-pricing/"
@@ -106,7 +106,7 @@ export const Navigation = [
 
     {
         id:"meesho-dashboard",
-        title:"Meesho Sales Dashboard",
+        title:"Meesho Dashboard",
         icon:"external-link",
         external:true,
         url:"https://saurabhpmondal.github.io/meesho/"
