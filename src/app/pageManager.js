@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V2.1
+ * Version : V2.2
  * =====================================================
  */
 
@@ -41,11 +41,23 @@ import {
 
 } from "../pages/sjitIntelligence/sjitIntelligence.js";
 
-import { renderAds } from "../components/ads/ads.js";
+import {
 
-let content = null;
+    renderNewLaunch,
 
-let currentPage = "dashboard";
+    destroyNewLaunch
+
+} from "../pages/newLaunch/newLaunch.js";
+
+import {
+
+    renderAds
+
+} from "../components/ads/ads.js";
+
+let content=null;
+
+let currentPage="dashboard";
 
 /**
  * =====================================================
@@ -59,7 +71,7 @@ export function initializePageManager(
 
 ){
 
-    content = container;
+    content=container;
 
 }
 
@@ -135,13 +147,19 @@ export async function openPage(
 
             break;
 
+        case "new-launch":
+
+            destroyNewLaunch();
+
+            break;
+
         default:
 
             break;
 
     }
 
-    currentPage = page;
+    currentPage=page;
 
     switch(page){
 
@@ -205,6 +223,16 @@ export async function openPage(
 
             break;
 
+        case "new-launch":
+
+            await renderNewLaunch(
+
+                content
+
+            );
+
+            break;
+
         case "sjit-intelligence":
 
             await renderSJITIntelligence(
@@ -249,8 +277,6 @@ export async function openPage(
 
         case "sales-drop":
 
-        case "new-launch":
-
             comingSoon(
 
                 page
@@ -285,7 +311,7 @@ function comingSoon(
 
 ){
 
-    const title =
+    const title=
 
         page
 
@@ -307,17 +333,21 @@ function comingSoon(
 
         .join(" ");
 
-    content.innerHTML = `
+    content.innerHTML=`
 
 <div class="dashboard-card" style="padding:60px;text-align:center;">
 
-<h2>${title}</h2>
+    <h2>
 
-<p>
+        ${title}
 
-This module is under development.
+    </h2>
 
-</p>
+    <p>
+
+        This module is under development.
+
+    </p>
 
 </div>
 
