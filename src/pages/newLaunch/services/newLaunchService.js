@@ -3,139 +3,114 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : New Launch Service
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
-import {
+import { buildLaunchDataset } from "./launchBuilder.js";
+import { NewLaunchStore, resetNewLaunchStore } from "./newLaunchStore.js";
 
-    buildLaunchDataset
+import { buildKPIs } from "../calculations/buildKPIs.js";
+import { buildInsights } from "../calculations/buildInsights.js";
+import { buildLaunchPerformance } from "../calculations/buildLaunchPerformance.js";
+import { buildLaunchAgeAnalysis } from "../calculations/buildLaunchAgeAnalysis.js";
+import { buildWeeklyLaunch } from "../calculations/buildWeeklyLaunch.js";
+import { buildDeadLaunch } from "../calculations/buildDeadLaunch.js";
 
-}
+import { renderLayout } from "../renderers/renderLayout.js";
+import { renderHeader } from "../renderers/renderHeader.js";
+import { renderKPIs } from "../renderers/renderKPIs.js";
+import { renderInsights } from "../renderers/renderInsights.js";
+import { renderLaunchPerformance } from "../renderers/renderLaunchPerformance.js";
+import { renderLaunchAgeAnalysis } from "../renderers/renderLaunchAgeAnalysis.js";
+import { renderWeeklyLaunch } from "../renderers/renderWeeklyLaunch.js";
+import { renderDeadLaunch } from "../renderers/renderDeadLaunch.js";
 
-from "./launchBuilder.js";
+async function refreshScreen(){
 
-import {
+    NewLaunchStore.kpis=
+        buildKPIs(
+            NewLaunchStore.filteredRows
+        );
 
-    NewLaunchStore,
+    NewLaunchStore.insights=
+        buildInsights(
+            NewLaunchStore.filteredRows,
+            NewLaunchStore.kpis
+        );
 
-    resetNewLaunchStore
+    NewLaunchStore.launchPerformance=
+        buildLaunchPerformance(
+            NewLaunchStore.filteredRows
+        );
 
-}
+    NewLaunchStore.launchAgeAnalysis=
+        buildLaunchAgeAnalysis(
+            NewLaunchStore.filteredRows
+        );
 
-from "./newLaunchStore.js";
+    NewLaunchStore.weeklyPerformance=
+        buildWeeklyLaunch(
+            NewLaunchStore.filteredRows
+        );
 
-import {
+    NewLaunchStore.deadLaunches=
+        buildDeadLaunch(
+            NewLaunchStore.filteredRows
+        );
 
-    buildKPIs
+    await renderHeader(
+        document.getElementById(
+            "newLaunchHeader"
+        ),
+        NewLaunchStore
+    );
 
-}
+    await renderKPIs(
+        document.getElementById(
+            "newLaunchKPIs"
+        ),
+        NewLaunchStore.kpis
+    );
 
-from "../calculations/buildKPIs.js";
+    await renderInsights(
+        document.getElementById(
+            "newLaunchInsights"
+        ),
+        NewLaunchStore.insights
+    );
 
-import {
+    await renderLaunchPerformance(
+        document.getElementById(
+            "newLaunchPerformance"
+        ),
+        NewLaunchStore.launchPerformance
+    );
 
-    buildInsights
+    await renderLaunchAgeAnalysis(
+        document.getElementById(
+            "newLaunchAgeAnalysis"
+        ),
+        NewLaunchStore.launchAgeAnalysis
+    );
 
-}
+    await renderWeeklyLaunch(
+        document.getElementById(
+            "newLaunchWeekly"
+        ),
+        NewLaunchStore.weeklyPerformance
+    );
 
-from "../calculations/buildInsights.js";
+    await renderDeadLaunch(
+        document.getElementById(
+            "newLaunchDead"
+        ),
+        NewLaunchStore.deadLaunches
+    );
 
-import {
-
-    buildLaunchPerformance
-
-}
-
-from "../calculations/buildLaunchPerformance.js";
-
-import {
-
-    buildLaunchAgeAnalysis
-
-}
-
-from "../calculations/buildLaunchAgeAnalysis.js";
-
-import {
-
-    buildWeeklyLaunch
-
-}
-
-from "../calculations/buildWeeklyLaunch.js";
-
-import {
-
-    buildDeadLaunch
-
-}
-
-from "../calculations/buildDeadLaunch.js";
-
-import {
-
-    renderLayout
-
-}
-
-from "../renderers/renderLayout.js";
-
-import {
-
-    renderHeader
-
-}
-
-from "../renderers/renderHeader.js";
-
-import {
-
-    renderKPIs
-
-}
-
-from "../renderers/renderKPIs.js";
-
-import {
-
-    renderInsights
-
-}
-
-from "../renderers/renderInsights.js";
-
-import {
-
-    renderLaunchPerformance
-
-}
-
-from "../renderers/renderLaunchPerformance.js";
-
-import {
-
-    renderLaunchAgeAnalysis
+    bindFilters();
 
 }
-
-from "../renderers/renderLaunchAgeAnalysis.js";
-
-import {
-
-    renderWeeklyLaunch
-
-}
-
-from "../renderers/renderWeeklyLaunch.js";
-
-import {
-
-    renderDeadLaunch
-
-}
-
-from "../renderers/renderDeadLaunch.js";
 
 /**
  * =====================================================
@@ -143,222 +118,128 @@ from "../renderers/renderDeadLaunch.js";
  * =====================================================
  */
 
-export async function initializeNewLaunch(
-
-    target
-
-){
+export async function initializeNewLaunch(target){
 
     resetNewLaunchStore();
 
-    /**
-     * ==========================================
-     * Layout
-     * ==========================================
-     */
-
-    await renderLayout(
-
-        target
-
-    );
-
-    /**
-     * ==========================================
-     * Dataset
-     * ==========================================
-     */
-
-    const launchRows=
-
-        buildLaunchDataset(
-
-            NewLaunchStore
-
-            .filters
-
-            .launchWindow
-
-        );
+    await renderLayout(target);
 
     NewLaunchStore.launchRows=
-
-        launchRows;
+        buildLaunchDataset(30);
 
     NewLaunchStore.filteredRows=[
-
-        ...launchRows
-
+        ...NewLaunchStore.launchRows
     ];
-
-    /**
-     * ==========================================
-     * KPI
-     * ==========================================
-     */
-
-    NewLaunchStore.kpis=
-
-        buildKPIs(
-
-            launchRows
-
-        );
-
-    /**
-     * ==========================================
-     * Insights
-     * ==========================================
-     */
-
-    NewLaunchStore.insights=
-
-        buildInsights(
-
-            launchRows,
-
-            NewLaunchStore.kpis
-
-        );
-
-    /**
-     * ==========================================
-     * Reports
-     * ==========================================
-     */
-
-    NewLaunchStore.launchPerformance=
-
-        buildLaunchPerformance(
-
-            launchRows
-
-        );
-
-    NewLaunchStore.launchAgeAnalysis=
-
-        buildLaunchAgeAnalysis(
-
-            launchRows
-
-        );
-
-    NewLaunchStore.weeklyPerformance=
-
-        buildWeeklyLaunch(
-
-            launchRows
-
-        );
-
-    NewLaunchStore.deadLaunches=
-
-        buildDeadLaunch(
-
-            launchRows
-
-        );
-
-    /**
-     * ==========================================
-     * Status
-     * ==========================================
-     */
 
     NewLaunchStore.loaded=true;
 
     NewLaunchStore.generatedOn=
-
         new Date();
 
-    /**
-     * ==========================================
-     * Render
-     * ==========================================
-     */
+    await refreshScreen();
 
-    await renderHeader(
+}
 
+/**
+ * =====================================================
+ * Bind Filters
+ * =====================================================
+ */
+
+function bindFilters(){
+
+    document.getElementById(
+        "nlLaunchWindow"
+    ).onchange=applyFilters;
+
+    document.getElementById(
+        "nlBrand"
+    ).onchange=applyFilters;
+
+    document.getElementById(
+        "nlStatus"
+    ).onchange=applyFilters;
+
+    document.getElementById(
+        "nlSearch"
+    ).oninput=applyFilters;
+
+}
+
+/**
+ * =====================================================
+ * Apply Filters
+ * =====================================================
+ */
+
+async function applyFilters(){
+
+    const launchWindow=
+        Number(
+            document.getElementById(
+                "nlLaunchWindow"
+            ).value
+        );
+
+    const brand=
         document.getElementById(
+            "nlBrand"
+        ).value;
 
-            "newLaunchHeader"
-
-        ),
-
-        NewLaunchStore
-
-    );
-
-    await renderKPIs(
-
+    const status=
         document.getElementById(
+            "nlStatus"
+        ).value;
 
-            "newLaunchKPIs"
-
-        ),
-
-        NewLaunchStore.kpis
-
-    );
-
-    await renderInsights(
-
+    const keyword=
         document.getElementById(
+            "nlSearch"
+        )
+        .value
+        .trim()
+        .toLowerCase();
 
-            "newLaunchInsights"
+    NewLaunchStore.launchRows=
+        buildLaunchDataset(
+            launchWindow
+        );
 
-        ),
+    NewLaunchStore.filteredRows=
+        NewLaunchStore.launchRows.filter(
+            row=>{
 
-        NewLaunchStore.insights
+                if(
+                    brand &&
+                    row.brand!==brand
+                ){
+                    return false;
+                }
 
-    );
+                if(
+                    status &&
+                    row.status!==status
+                ){
+                    return false;
+                }
 
-    await renderLaunchPerformance(
+                if(
+                    keyword &&
+                    !String(
+                        row.styleId
+                    )
+                    .toLowerCase()
+                    .includes(
+                        keyword
+                    )
+                ){
+                    return false;
+                }
 
-        document.getElementById(
+                return true;
 
-            "newLaunchPerformance"
+            }
+        );
 
-        ),
-
-        NewLaunchStore.launchPerformance
-
-    );
-
-    await renderLaunchAgeAnalysis(
-
-        document.getElementById(
-
-            "newLaunchAgeAnalysis"
-
-        ),
-
-        NewLaunchStore.launchAgeAnalysis
-
-    );
-
-    await renderWeeklyLaunch(
-
-        document.getElementById(
-
-            "newLaunchWeekly"
-
-        ),
-
-        NewLaunchStore.weeklyPerformance
-
-    );
-
-    await renderDeadLaunch(
-
-        document.getElementById(
-
-            "newLaunchDead"
-
-        ),
-
-        NewLaunchStore.deadLaunches
-
-    );
+    await refreshScreen();
 
 }
