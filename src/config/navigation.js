@@ -73,11 +73,11 @@ export const Navigation = [
     },
 
     {
-        id:"sjit",
-        title:"SJIT Intelligence",
-        icon:"map",
-        filter:false
-    },
+    id:"sjit-intelligence",
+    title:"SJIT Intelligence",
+    icon:"map",
+    filter:false
+},
 
     {
         id:"ads",
