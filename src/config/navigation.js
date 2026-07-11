@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Navigation
- * Version : V2.2
+ * Version : V3.0
  * =====================================================
  */
 
@@ -51,13 +51,6 @@ export const Navigation = [
         filter:true
     },
 
-{
-    id:"sjit-intelligence",
-    title:"SJIT Intelligence",
-    icon:"map",
-    filter:false
-},
-
     {
         id:"new-launch",
         title:"New Launch",
@@ -80,10 +73,51 @@ export const Navigation = [
     },
 
     {
+        id:"sjit",
+        title:"SJIT Intelligence",
+        icon:"map",
+        filter:false
+    },
+
+    {
         id:"ads",
         title:"Ads",
         icon:"megaphone",
         filter:false
+    },
+
+    /* ==========================================
+       External Dashboards
+    ========================================== */
+
+    {
+        id:"divider",
+        divider:true,
+        title:"External Dashboards"
+    },
+
+    {
+        id:"myntra-pricing",
+        title:"Myntra Reverse Pricing",
+        icon:"external-link",
+        external:true,
+        url:"https://saurabhpmondal.github.io/myntra-reverse-pricing/"
+    },
+
+    {
+        id:"meesho-dashboard",
+        title:"Meesho Sales Dashboard",
+        icon:"external-link",
+        external:true,
+        url:"https://saurabhpmondal.github.io/meesho/"
+    },
+
+    {
+        id:"nykaa-dashboard",
+        title:"Nykaa Dashboard",
+        icon:"external-link",
+        external:true,
+        url:"https://saurabhpmondal.github.io/nykaa-fashion-pricing/"
     }
 
 ];
