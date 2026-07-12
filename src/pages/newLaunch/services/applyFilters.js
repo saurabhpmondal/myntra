@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Apply Filters
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -31,13 +31,15 @@ import {
 
 from "./refreshDashboard.js";
 
-export async function applyFilters(){
+import {
 
-    /**
-     * ==========================================
-     * Rebuild Launch Dataset
-     * ==========================================
-     */
+    bindFilters
+
+}
+
+from "./bindFilters.js";
+
+export async function applyFilters(){
 
     NewLaunchStore.launchRows=
 
@@ -51,12 +53,6 @@ export async function applyFilters(){
 
         );
 
-    /**
-     * ==========================================
-     * Read Filters
-     * ==========================================
-     */
-
     const{
 
         brand,
@@ -68,12 +64,6 @@ export async function applyFilters(){
     }=
 
     NewLaunchStore.filters;
-
-    /**
-     * ==========================================
-     * Filter Dataset
-     * ==========================================
-     */
 
     NewLaunchStore.filteredRows=
 
@@ -135,22 +125,17 @@ export async function applyFilters(){
 
         );
 
-    /**
-     * ==========================================
-     * Update Time
-     * ==========================================
-     */
-
     NewLaunchStore.generatedOn=
 
         new Date();
 
+    await refreshDashboard();
+
     /**
-     * ==========================================
-     * Refresh Dashboard
-     * ==========================================
+     * Header recreated.
+     * Bind fresh controls.
      */
 
-    await refreshDashboard();
+    bindFilters();
 
 }
