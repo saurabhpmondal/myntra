@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Age Analysis
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -101,28 +101,29 @@ const AGE_BUCKETS=[
 
 /**
  * =====================================================
- * Build Report
+ * Build Launch Age Analysis
  * =====================================================
  */
 
 export function buildLaunchAgeAnalysis(){
 
     /**
-     * Always use complete launch dataset.
-     * This report is independent of Launch Window filter.
+     * Always use complete launch history.
+     * This report is NOT dependent on
+     * Launch Window, Brand, Status or Search.
      */
 
-    const launchRows=
+    const rows=
 
-        NewLaunchStore.launchRows||[];
+        NewLaunchStore.launchRowsAll||[];
 
     return AGE_BUCKETS.map(
 
         bucket=>{
 
-            const rows=
+            const bucketRows=
 
-                launchRows.filter(
+                rows.filter(
 
                     row=>
 
@@ -136,11 +137,11 @@ export function buildLaunchAgeAnalysis(){
 
             const launches=
 
-                rows.length;
+                bucketRows.length;
 
             const soldStyles=
 
-                rows.filter(
+                bucketRows.filter(
 
                     row=>
 
@@ -160,17 +161,17 @@ export function buildLaunchAgeAnalysis(){
 
             const unitsSold=
 
-                rows.reduce(
+                bucketRows.reduce(
 
                     (
 
-                        sum,
+                        total,
 
                         row
 
                     )=>
 
-                        sum+
+                        total+
 
                         Number(
 
@@ -184,17 +185,17 @@ export function buildLaunchAgeAnalysis(){
 
             const revenue=
 
-                rows.reduce(
+                bucketRows.reduce(
 
                     (
 
-                        sum,
+                        total,
 
                         row
 
                     )=>
 
-                        sum+
+                        total+
 
                         Number(
 
@@ -208,9 +209,13 @@ export function buildLaunchAgeAnalysis(){
 
             const successRate=
 
-                launches
+                launches===0
 
                 ?
+
+                0
+
+                :
 
                 (
 
@@ -218,11 +223,7 @@ export function buildLaunchAgeAnalysis(){
 
                     launches
 
-                )*100
-
-                :
-
-                0;
+                )*100;
 
             return{
 
