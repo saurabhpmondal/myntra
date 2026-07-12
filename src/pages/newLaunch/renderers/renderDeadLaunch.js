@@ -3,19 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dead Launch Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import {
 
-    formatNumber,
-
-    formatCurrency
+    renderTable
 
 }
 
-from "../../../utils/formatter.js";
+from "../../../components/common/table/table.js";
 
 export async function renderDeadLaunch(
 
@@ -25,229 +23,155 @@ export async function renderDeadLaunch(
 
 ){
 
-    target.innerHTML=`
+    await renderTable({
 
-<div class="table-card">
+        target,
 
-    <div class="table-header">
+        title:
 
-        <h3>
+            "Dead Launch Report",
 
-            Dead Launch Report
+        subtitle:
 
-        </h3>
+            `${rows.length} Styles`,
 
-        <span>
+        columns:[
 
-            ${formatNumber(
+            {
 
-                rows.length
+                key:"sr",
 
-            )} Styles
+                label:"#"
 
-        </span>
+            },
 
-    </div>
+            {
 
-    <div class="table-responsive">
+                key:"styleId",
 
-        <table class="phoenix-table">
+                label:"Style ID"
 
-            <thead>
+            },
 
-                <tr>
+            {
 
-                    <th>#</th>
+                key:"brand",
 
-                    <th>Style ID</th>
+                label:"Brand"
 
-                    <th>Brand</th>
+            },
 
-                    <th>Launch Date</th>
+            {
 
-                    <th>Launch Age</th>
+                key:"launchDate",
 
-                    <th>Orders</th>
+                label:"Launch Date",
 
-                    <th>Revenue</th>
+                renderer:value=>
 
-                    <th>Days Without Sale</th>
+                    formatDate(
 
-                </tr>
+                        value
 
-            </thead>
+                    )
 
-            <tbody>
+            },
 
-                ${
+            {
 
-                    rows.length
+                key:"launchAge",
 
-                    ?
+                label:"Launch Age",
 
-                    rows.map(
+                renderer:value=>
 
-                        (
+                    `${value} Days`
 
-                            row,
+            },
 
-                            index
+            {
 
-                        )=>
+                key:"orders",
 
-                            buildRow(
+                label:"Orders",
 
-                                row,
+                format:"number"
 
-                                index
+            },
 
-                            )
+            {
 
-                    ).join("")
+                key:"revenue",
 
-                    :
+                label:"Revenue",
 
-                    buildEmpty()
+                format:"currency"
 
-                }
+            },
 
-            </tbody>
+            {
 
-        </table>
+                key:"daysWithoutSale",
 
-    </div>
+                label:"Days Without Sale",
 
-</div>
+                renderer:value=>
 
-`;
+                    buildDaysBadge(
+
+                        value
+
+                    )
+
+            }
+
+        ],
+
+        rows:
+
+            rows.map(
+
+                (
+
+                    row,
+
+                    index
+
+                )=>({
+
+                    sr:
+
+                        index+1,
+
+                    ...row
+
+                })
+
+            )
+
+    });
 
 }
 
 /**
  * =====================================================
- * Row
+ * Days Badge
  * =====================================================
  */
 
-function buildRow(
+function buildDaysBadge(
 
-    row,
-
-    index
+    value
 
 ){
 
     return `
 
-<tr>
+<span class="badge-danger">
 
-    <td>
+${value ?? 0} Days
 
-        ${index+1}
-
-    </td>
-
-    <td>
-
-        <b>
-
-            ${row.styleId}
-
-        </b>
-
-    </td>
-
-    <td>
-
-        ${row.brand}
-
-    </td>
-
-    <td>
-
-        ${formatDate(
-
-            row.launchDate
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${row.launchAge} Days
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.orders
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatCurrency(
-
-            row.revenue
-
-        )}
-
-    </td>
-
-    <td>
-
-        <span class="badge-danger">
-
-            ${row.daysWithoutSale} Days
-
-        </span>
-
-    </td>
-
-</tr>
-
-`;
-
-}
-
-/**
- * =====================================================
- * Empty
- * =====================================================
- */
-
-function buildEmpty(){
-
-    return `
-
-<tr>
-
-<td
-
-colspan="8"
-
-style="
-
-padding:50px;
-
-text-align:center;
-
-color:#64748b;
-
-"
-
->
-
-🎉 No Dead Launches Found
-
-</td>
-
-</tr>
+</span>
 
 `;
 
@@ -261,19 +185,35 @@ color:#64748b;
 
 function formatDate(
 
-    date
+    value
 
 ){
 
     if(
 
-        !date
+        !value
 
     ){
 
         return "-";
 
     }
+
+    const date=
+
+        value instanceof Date
+
+        ?
+
+        value
+
+        :
+
+        new Date(
+
+            value
+
+        );
 
     return date.toLocaleDateString(
 
