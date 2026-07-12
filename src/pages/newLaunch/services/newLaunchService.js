@@ -47,7 +47,7 @@ import { renderWeeklyLaunch } from "../renderers/renderWeeklyLaunch.js";
 
 import { renderDeadLaunch } from "../renderers/renderDeadLaunch.js";
 
-let debounceTimer = null;
+let debounceTimer=null;
 
 /**
  * =====================================================
@@ -69,39 +69,36 @@ export async function initializeNewLaunch(
 
     );
 
-    NewLaunchStore.launchRows =
+    NewLaunchStore.launchRows=
 
         buildLaunchDataset(
 
-            30
+            NewLaunchStore.filters.launchWindow
 
         );
 
-    NewLaunchStore.filteredRows = [
+    NewLaunchStore.filteredRows=[
 
         ...NewLaunchStore.launchRows
 
     ];
 
-    NewLaunchStore.loaded = true;
+    NewLaunchStore.loaded=true;
 
-    NewLaunchStore.generatedOn =
+    NewLaunchStore.generatedOn=
 
         new Date();
 
     /**
-     * IMPORTANT
-     * Render header first.
-     * Header creates all filter controls.
+     * Render first.
+     * Header creates filter controls.
      */
 
     await refreshScreen();
 
     /**
-     * Now controls exist.
+     * Controls now exist.
      */
-
-    populateBrandFilter();
 
     bindFilters();
 
@@ -115,7 +112,7 @@ export async function initializeNewLaunch(
 
 async function refreshScreen(){
 
-    NewLaunchStore.kpis =
+    NewLaunchStore.kpis=
 
         buildKPIs(
 
@@ -123,7 +120,7 @@ async function refreshScreen(){
 
         );
 
-    NewLaunchStore.insights =
+    NewLaunchStore.insights=
 
         buildInsights(
 
@@ -133,7 +130,7 @@ async function refreshScreen(){
 
         );
 
-    NewLaunchStore.launchPerformance =
+    NewLaunchStore.launchPerformance=
 
         buildLaunchPerformance(
 
@@ -141,7 +138,7 @@ async function refreshScreen(){
 
         );
 
-    NewLaunchStore.launchAgeAnalysis =
+    NewLaunchStore.launchAgeAnalysis=
 
         buildLaunchAgeAnalysis(
 
@@ -149,7 +146,7 @@ async function refreshScreen(){
 
         );
 
-    NewLaunchStore.weeklyPerformance =
+    NewLaunchStore.weeklyPerformance=
 
         buildWeeklyLaunch(
 
@@ -157,7 +154,7 @@ async function refreshScreen(){
 
         );
 
-    NewLaunchStore.deadLaunches =
+    NewLaunchStore.deadLaunches=
 
         buildDeadLaunch(
 
@@ -176,12 +173,6 @@ async function refreshScreen(){
         NewLaunchStore
 
     );
-
-    /**
-     * Header recreates filters every render.
-     */
-
-    populateBrandFilter();
 
     await renderKPIs(
 
@@ -259,97 +250,13 @@ async function refreshScreen(){
 
 /**
  * =====================================================
- * Brand Filter
- * =====================================================
- */
-
-function populateBrandFilter(){
-
-    const brand =
-
-        document.getElementById(
-
-            "nlBrand"
-
-        );
-
-    if(
-
-        !brand
-
-    ){
-
-        return;
-
-    }
-
-    const current =
-
-        brand.value;
-
-    brand.innerHTML =
-
-        `<option value="">All Brands</option>`;
-
-    const brands =
-
-        [
-
-            ...new Set(
-
-                NewLaunchStore.launchRows
-
-                .map(
-
-                    row=>row.brand
-
-                )
-
-                .filter(Boolean)
-
-            )
-
-        ]
-
-        .sort();
-
-    brands.forEach(
-
-        item=>{
-
-            brand.insertAdjacentHTML(
-
-                "beforeend",
-
-                `<option value="${item}">${item}</option>`
-
-            );
-
-        }
-
-    );
-
-    if(
-
-        current
-
-    ){
-
-        brand.value = current;
-
-    }
-
-}
-
-/**
- * =====================================================
  * Bind Filters
  * =====================================================
  */
 
 function bindFilters(){
 
-    const launchWindow =
+    const launchWindow=
 
         document.getElementById(
 
@@ -357,7 +264,7 @@ function bindFilters(){
 
         );
 
-    const brand =
+    const brand=
 
         document.getElementById(
 
@@ -365,7 +272,7 @@ function bindFilters(){
 
         );
 
-    const status =
+    const status=
 
         document.getElementById(
 
@@ -373,7 +280,7 @@ function bindFilters(){
 
         );
 
-    const search =
+    const search=
 
         document.getElementById(
 
@@ -397,19 +304,41 @@ function bindFilters(){
 
     }
 
-    launchWindow.onchange =
+    launchWindow.onchange=()=>{
 
-        applyFilters;
+        NewLaunchStore.filters.launchWindow=
 
-    brand.onchange =
+            Number(
 
-        applyFilters;
+                launchWindow.value
 
-    status.onchange =
+            );
 
-        applyFilters;
+        applyFilters();
 
-    search.oninput = ()=>{
+    };
+
+    brand.onchange=()=>{
+
+        NewLaunchStore.filters.brand=
+
+            brand.value;
+
+        applyFilters();
+
+    };
+
+    status.onchange=()=>{
+
+        NewLaunchStore.filters.status=
+
+            status.value;
+
+        applyFilters();
+
+    };
+
+    search.oninput=()=>{
 
         clearTimeout(
 
@@ -417,11 +346,23 @@ function bindFilters(){
 
         );
 
-        debounceTimer =
+        debounceTimer=
 
             setTimeout(
 
-                applyFilters,
+                ()=>{
+
+                    NewLaunchStore.filters.search=
+
+                        search.value
+
+                        .trim()
+
+                        .toLowerCase();
+
+                    applyFilters();
+
+                },
 
                 300
 
@@ -439,57 +380,31 @@ function bindFilters(){
 
 async function applyFilters(){
 
-    const launchWindow =
-
-        Number(
-
-            document.getElementById(
-
-                "nlLaunchWindow"
-
-            ).value
-
-        );
-
-    const brand =
-
-        document.getElementById(
-
-            "nlBrand"
-
-        ).value;
-
-    const status =
-
-        document.getElementById(
-
-            "nlStatus"
-
-        ).value;
-
-    const keyword =
-
-        document.getElementById(
-
-            "nlSearch"
-
-        )
-
-        .value
-
-        .trim()
-
-        .toLowerCase();
-
-    NewLaunchStore.launchRows =
+    NewLaunchStore.launchRows=
 
         buildLaunchDataset(
 
-            launchWindow
+            NewLaunchStore
+
+            .filters
+
+            .launchWindow
 
         );
 
-    NewLaunchStore.filteredRows =
+    const{
+
+        brand,
+
+        status,
+
+        search
+
+    }=
+
+    NewLaunchStore.filters;
+
+    NewLaunchStore.filteredRows=
 
         NewLaunchStore.launchRows.filter(
 
@@ -499,7 +414,7 @@ async function applyFilters(){
 
                     brand &&
 
-                    row.brand !== brand
+                    row.brand!==brand
 
                 ){
 
@@ -511,7 +426,7 @@ async function applyFilters(){
 
                     status &&
 
-                    row.status !== status
+                    row.status!==status
 
                 ){
 
@@ -521,7 +436,7 @@ async function applyFilters(){
 
                 if(
 
-                    keyword &&
+                    search &&
 
                     !String(
 
@@ -533,7 +448,7 @@ async function applyFilters(){
 
                     .includes(
 
-                        keyword
+                        search
 
                     )
 
@@ -549,8 +464,40 @@ async function applyFilters(){
 
         );
 
+    NewLaunchStore.generatedOn=
+
+        new Date();
+
     await refreshScreen();
 
-    bindFilters();
+}
+
+/**
+ * =====================================================
+ * Refresh Current Page
+ * =====================================================
+ */
+
+export async function refreshNewLaunch(){
+
+    await applyFilters();
+
+}
+
+/**
+ * =====================================================
+ * Destroy
+ * =====================================================
+ */
+
+export function destroyNewLaunch(){
+
+    clearTimeout(
+
+        debounceTimer
+
+    );
+
+    debounceTimer=null;
 
 }
