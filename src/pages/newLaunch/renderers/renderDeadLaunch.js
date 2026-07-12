@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Dead Launch Renderer
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -33,7 +33,7 @@ export async function renderDeadLaunch(
 
         subtitle:
 
-            `${rows.length} Styles`,
+            "Identify launches with no sales so they can be reviewed for pricing, content or marketing improvements.",
 
         columns:[
 
