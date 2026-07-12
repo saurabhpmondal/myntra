@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : New Launch Store
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -21,11 +21,28 @@ export const NewLaunchStore={
 
     /**
      * ==========================================
-     * Processed Launch Dataset
+     * Complete Launch Dataset
+     * (Never Filtered)
+     * ==========================================
+     */
+
+    launchRowsAll:[],
+
+    /**
+     * ==========================================
+     * Launch Window Dataset
+     * (30 / 45 / 60 / 90)
      * ==========================================
      */
 
     launchRows:[],
+
+    /**
+     * ==========================================
+     * Final Filtered Dataset
+     * (Brand / Status / Search)
+     * ==========================================
+     */
 
     filteredRows:[],
 
@@ -94,6 +111,8 @@ export function resetNewLaunchStore(){
     NewLaunchStore.rawMaster=[];
 
     NewLaunchStore.rawSales=[];
+
+    NewLaunchStore.launchRowsAll=[];
 
     NewLaunchStore.launchRows=[];
 
