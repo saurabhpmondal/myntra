@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Performance Renderer
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -33,7 +33,7 @@ export async function renderLaunchPerformance(
 
         subtitle:
 
-            `${rows.length} Styles`,
+            "Rank launched styles by sales, revenue and status to identify winning and underperforming launches.",
 
         columns:[
 
@@ -175,7 +175,7 @@ export async function renderLaunchPerformance(
 
 /**
  * =====================================================
- * Status
+ * Status Badge
  * =====================================================
  */
 
@@ -267,7 +267,7 @@ ${status??"-"}
 
 /**
  * =====================================================
- * Date
+ * Format Date
  * =====================================================
  */
 
