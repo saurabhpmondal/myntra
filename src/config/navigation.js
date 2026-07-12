@@ -38,8 +38,8 @@ export const Navigation = [
     },
 
     {
-        id:"SJIT shipment",
-        title:"Shipment",
+        id:"shipment",
+        title:"SJIT Shipment",
         icon:"truck",
         filter:true
     },
