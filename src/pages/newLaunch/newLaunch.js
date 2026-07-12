@@ -3,13 +3,15 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : New Launch Intelligence
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import {
 
-    initializeNewLaunch
+    initializeNewLaunch,
+
+    destroyNewLaunch as destroyService
 
 }
 
@@ -48,6 +50,8 @@ export async function renderNewLaunch(
  */
 
 export function destroyNewLaunch(){
+
+    destroyService();
 
     pageContainer=null;
 
