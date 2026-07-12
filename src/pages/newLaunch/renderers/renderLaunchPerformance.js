@@ -3,18 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Performance Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import {
 
-    formatNumber,
-    formatCurrency
+    renderTable
 
 }
 
-from "../../../utils/formatter.js";
+from "../../../components/common/table/table.js";
 
 export async function renderLaunchPerformance(
 
@@ -24,221 +23,159 @@ export async function renderLaunchPerformance(
 
 ){
 
-    target.innerHTML=`
+    await renderTable({
 
-<div class="table-card">
+        target,
 
-    <div class="table-header">
+        title:
 
-        <h3>
+            "Launch Performance",
 
-            Launch Performance
+        subtitle:
 
-        </h3>
+            `${rows.length} Styles`,
 
-        <span>
+        columns:[
 
-            ${formatNumber(
+            {
 
-                rows.length
+                key:"sr",
 
-            )} Styles
+                label:"#"
 
-        </span>
+            },
 
-    </div>
+            {
 
-    <div class="table-responsive">
+                key:"styleId",
 
-        <table class="phoenix-table">
+                label:"Style ID"
 
-            <thead>
+            },
 
-                <tr>
+            {
 
-                    <th>#</th>
+                key:"brand",
 
-                    <th>Style ID</th>
+                label:"Brand"
 
-                    <th>Brand</th>
+            },
 
-                    <th>Launch Date</th>
+            {
 
-                    <th>Launch Age</th>
+                key:"launchDate",
 
-                    <th>Units Sold</th>
+                label:"Launch Date",
 
-                    <th>Revenue</th>
+                renderer:value=>
 
-                    <th>Orders</th>
+                    formatDate(
 
-                    <th>ASP</th>
-
-                    <th>Status</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                ${rows.length
-
-                ?
-
-                rows.map(
-
-                    (
-
-                        row,
-
-                        index
-
-                    )=>
-
-                    buildRow(
-
-                        row,
-
-                        index
+                        value
 
                     )
 
-                ).join("")
+            },
 
-                :
+            {
 
-                buildEmpty()
+                key:"launchAge",
 
-                }
+                label:"Launch Age",
 
-            </tbody>
+                renderer:value=>
 
-        </table>
+                    `${value} Days`
 
-    </div>
+            },
 
-</div>
+            {
 
-`;
+                key:"units",
 
-}
+                label:"Units Sold",
 
-/**
- * =====================================================
- * Row
- * =====================================================
- */
+                format:"number"
 
-function buildRow(
+            },
 
-    row,
+            {
 
-    index
+                key:"revenue",
 
-){
+                label:"Revenue",
 
-    return `
+                format:"currency"
 
-<tr>
+            },
 
-    <td>
+            {
 
-        ${index+1}
+                key:"orders",
 
-    </td>
+                label:"Orders",
 
-    <td>
+                format:"number"
 
-        <b>
+            },
 
-            ${row.styleId}
+            {
 
-        </b>
+                key:"asp",
 
-    </td>
+                label:"ASP",
 
-    <td>
+                format:"currency"
 
-        ${row.brand}
+            },
 
-    </td>
+            {
 
-    <td>
+                key:"status",
 
-        ${formatDate(
+                label:"Status",
 
-            row.launchDate
+                renderer:value=>
 
-        )}
+                    buildStatus(
 
-    </td>
+                        value
 
-    <td>
+                    )
 
-        ${row.launchAge} Days
+            }
 
-    </td>
+        ],
 
-    <td>
+        rows:
 
-        ${formatNumber(
+            rows.map(
 
-            row.units
+                (
 
-        )}
+                    row,
 
-    </td>
+                    index
 
-    <td>
+                )=>({
 
-        ${formatCurrency(
+                    sr:
 
-            row.revenue
+                        index+1,
 
-        )}
+                    ...row
 
-    </td>
+                })
 
-    <td>
+            )
 
-        ${formatNumber(
-
-            row.orders
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatCurrency(
-
-            row.asp
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${buildStatus(
-
-            row.status
-
-        )}
-
-    </td>
-
-</tr>
-
-`;
+    });
 
 }
 
 /**
  * =====================================================
- * Status Badge
+ * Status
  * =====================================================
  */
 
@@ -254,7 +191,7 @@ function buildStatus(
 
     if(
 
-        status.includes(
+        status?.includes(
 
             "Hot"
 
@@ -270,7 +207,7 @@ function buildStatus(
 
     else if(
 
-        status.includes(
+        status?.includes(
 
             "Good"
 
@@ -286,7 +223,7 @@ function buildStatus(
 
     else if(
 
-        status.includes(
+        status?.includes(
 
             "Slow"
 
@@ -302,7 +239,7 @@ function buildStatus(
 
     else if(
 
-        status.includes(
+        status?.includes(
 
             "Dead"
 
@@ -320,47 +257,9 @@ function buildStatus(
 
 <span class="${cls}">
 
-    ${status}
+${status??"-"}
 
 </span>
-
-`;
-
-}
-
-/**
- * =====================================================
- * Empty
- * =====================================================
- */
-
-function buildEmpty(){
-
-    return `
-
-<tr>
-
-<td
-
-colspan="10"
-
-style="
-
-padding:50px;
-
-text-align:center;
-
-color:#64748b;
-
-"
-
->
-
-No Launch Data Available
-
-</td>
-
-</tr>
 
 `;
 
@@ -374,19 +273,35 @@ No Launch Data Available
 
 function formatDate(
 
-    date
+    value
 
 ){
 
     if(
 
-        !date
+        !value
 
     ){
 
         return "-";
 
     }
+
+    const date=
+
+        value instanceof Date
+
+        ?
+
+        value
+
+        :
+
+        new Date(
+
+            value
+
+        );
 
     return date.toLocaleDateString(
 
