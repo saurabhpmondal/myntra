@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -119,15 +119,13 @@ import {
 
 from "../renderers/renderDeadLaunch.js";
 
-import {
-
-    bindFilters
-
-}
-
-from "./bindFilters.js";
-
 export async function refreshDashboard(){
+
+    /**
+     * ==========================================
+     * Build Dashboard Data
+     * ==========================================
+     */
 
     NewLaunchStore.kpis=
 
@@ -178,6 +176,12 @@ export async function refreshDashboard(){
             NewLaunchStore.filteredRows
 
         );
+
+    /**
+     * ==========================================
+     * Render Dashboard
+     * ==========================================
+     */
 
     await renderHeader(
 
@@ -262,12 +266,5 @@ export async function refreshDashboard(){
         NewLaunchStore.deadLaunches
 
     );
-
-    /**
-     * Header gets recreated after every refresh.
-     * Rebind filter events.
-     */
-
-    bindFilters();
 
 }
