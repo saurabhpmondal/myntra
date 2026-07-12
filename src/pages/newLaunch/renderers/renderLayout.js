@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : New Launch Layout
- * Version : V1.0
+ * Version : V1.1
  * =====================================================
  */
 
@@ -79,11 +79,7 @@ export async function renderLayout(
 
     </section>
 
-    <section class="dashboard-section">
-
-        <div id="newLaunchPerformance"></div>
-
-    </section>
+    <!-- Report 1 -->
 
     <section class="dashboard-section">
 
@@ -91,11 +87,23 @@ export async function renderLayout(
 
     </section>
 
+    <!-- Report 2 -->
+
     <section class="dashboard-section">
 
         <div id="newLaunchWeekly"></div>
 
     </section>
+
+    <!-- Report 3 -->
+
+    <section class="dashboard-section">
+
+        <div id="newLaunchPerformance"></div>
+
+    </section>
+
+    <!-- Report 4 -->
 
     <section class="dashboard-section">
 
