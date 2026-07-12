@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Age Analysis Renderer
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
@@ -33,7 +33,7 @@ export async function renderLaunchAgeAnalysis(
 
         subtitle:
 
-            `${rows.length} Buckets`,
+            "Analyze contribution of styles across launch age buckets to understand lifecycle performance.",
 
         columns:[
 
