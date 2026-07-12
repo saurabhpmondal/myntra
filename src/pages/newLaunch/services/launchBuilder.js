@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Builder
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -14,23 +14,6 @@ import {
 }
 
 from "../../../services/dataService.js";
-
-const MONTH_MAP={
-
-    JAN:0,
-    FEB:1,
-    MAR:2,
-    APR:3,
-    MAY:4,
-    JUNE:5,
-    JULY:6,
-    AUG:7,
-    SEP:8,
-    OCT:9,
-    NOV:10,
-    DEC:11
-
-};
 
 /**
  * =====================================================
@@ -51,6 +34,10 @@ export function buildLaunchDataset(
     const sales=
 
         DataStore.sales||[];
+
+    const today=
+
+        new Date();
 
     /**
      * ==========================================
@@ -128,10 +115,6 @@ export function buildLaunchDataset(
      * ==========================================
      */
 
-    const today=
-
-        new Date();
-
     const rows=[];
 
     master.forEach(
@@ -142,11 +125,7 @@ export function buildLaunchDataset(
 
                 buildDate(
 
-                    row.date,
-
-                    row.month,
-
-                    row.year
+                    row
 
                 );
 
@@ -160,7 +139,7 @@ export function buildLaunchDataset(
 
             }
 
-            const age=
+            const launchAge=
 
                 getDaysBetween(
 
@@ -172,7 +151,7 @@ export function buildLaunchDataset(
 
             if(
 
-                age>
+                launchAge>
 
                 launchWindow
 
@@ -212,6 +191,62 @@ export function buildLaunchDataset(
 
                 sale.revenue;
 
+            const orders=
+
+                sale.orders.size;
+
+            const asp=
+
+                units
+
+                ?
+
+                revenue/units
+
+                :
+
+                0;
+
+            let status=
+
+                "🔴 Dead";
+
+            if(
+
+                units>=50
+
+            ){
+
+                status=
+
+                    "🚀 Hot";
+
+            }
+
+            else if(
+
+                units>=20
+
+            ){
+
+                status=
+
+                    "🟢 Good";
+
+            }
+
+            else if(
+
+                units>0
+
+            ){
+
+                status=
+
+                    "🟡 Slow";
+
+            }
+
             rows.push({
 
                 styleId,
@@ -226,31 +261,17 @@ export function buildLaunchDataset(
 
                 launchDate,
 
-                launchAge:age,
+                launchAge,
 
                 units,
 
                 revenue,
 
-                orders:
+                orders,
 
-                    sale.orders.size,
+                asp,
 
-                asp:
-
-                    units
-
-                    ?
-
-                    revenue/units
-
-                    :
-
-                    0,
-
-                status:
-
-                    "Pending"
+                status
 
             });
 
@@ -258,7 +279,15 @@ export function buildLaunchDataset(
 
     );
 
-    return rows;
+    return rows.sort(
+
+        (a,b)=>
+
+            b.revenue-
+
+            a.revenue
+
+    );
 
 }
 
@@ -270,31 +299,41 @@ export function buildLaunchDataset(
 
 function buildDate(
 
-    date,
-
-    month,
-
-    year
+    row
 
 ){
 
-    const monthIndex=
+    const year=
 
-        MONTH_MAP[
+        Number(
 
-            String(
+            row.year
 
-                month||""
+        );
 
-            )
+    const month=
 
-            .toUpperCase()
+        Number(
 
-        ];
+            row.month
+
+        );
+
+    const day=
+
+        Number(
+
+            row.date
+
+        );
 
     if(
 
-        monthIndex===undefined
+        !year ||
+
+        !month ||
+
+        !day
 
     ){
 
@@ -304,11 +343,11 @@ function buildDate(
 
     return new Date(
 
-        Number(year),
+        year,
 
-        monthIndex,
+        month-1,
 
-        Number(date)
+        day
 
     );
 
