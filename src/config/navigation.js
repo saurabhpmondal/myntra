@@ -25,20 +25,20 @@ export const Navigation = [
 
     {
         id:"business",
-        title:"Business",
+        title:"Business Report",
         icon:"briefcase-business",
         filter:true
     },
 
     {
         id:"growth",
-        title:"Growth",
+        title:"Growth Report",
         icon:"trending-up",
         filter:true
     },
 
     {
-        id:"shipment",
+        id:"SJIT shipment",
         title:"Shipment",
         icon:"truck",
         filter:true
@@ -74,14 +74,14 @@ export const Navigation = [
 
     {
     id:"sjit-intelligence",
-    title:"SJIT Intelligence",
+    title:"FBM Intelligence",
     icon:"map",
     filter:false
 },
 
     {
         id:"ads",
-        title:"Ads",
+        title:"PLA Ads",
         icon:"megaphone",
         filter:false
     },
