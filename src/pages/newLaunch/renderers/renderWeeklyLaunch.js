@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Weekly Launch Renderer
- * Version : V2.1
+ * Version : V3.0
  * =====================================================
  */
 
@@ -41,11 +41,19 @@ export async function renderWeeklyLaunch(
 
                 key:"launchWeek",
 
-                label:"Launch Week",
+                label:"Week",
 
                 renderer:value=>
 
                     `Week ${value}`
+
+            },
+
+            {
+
+                key:"ageRange",
+
+                label:"Launch Age"
 
             },
 
