@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : New Launch Header
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -22,6 +22,28 @@ export async function renderHeader(
     store=NewLaunchStore
 
 ){
+
+    const filters=
+
+        store.filters||{};
+
+    const brands=[
+
+        ...new Set(
+
+            (store.launchRows||[])
+
+            .map(
+
+                row=>row.brand
+
+            )
+
+            .filter(Boolean)
+
+        )
+
+    ].sort();
 
     target.innerHTML=`
 
@@ -55,25 +77,25 @@ export async function renderHeader(
 
             >
 
-                <option value="30">
+                <option value="30" ${filters.launchWindow===30?"selected":""}>
 
                     Last 30 Days
 
                 </option>
 
-                <option value="45">
+                <option value="45" ${filters.launchWindow===45?"selected":""}>
 
                     Last 45 Days
 
                 </option>
 
-                <option value="60">
+                <option value="60" ${filters.launchWindow===60?"selected":""}>
 
                     Last 60 Days
 
                 </option>
 
-                <option value="90">
+                <option value="90" ${filters.launchWindow===90?"selected":""}>
 
                     Last 90 Days
 
@@ -95,6 +117,26 @@ export async function renderHeader(
 
                 </option>
 
+                ${brands.map(
+
+                    brand=>`
+
+<option
+
+value="${brand}"
+
+${filters.brand===brand?"selected":""}
+
+>
+
+${brand}
+
+</option>
+
+`
+
+                ).join("")}
+
             </select>
 
             <select
@@ -105,31 +147,31 @@ export async function renderHeader(
 
             >
 
-                <option value="">
+                <option value="" ${filters.status===""?"selected":""}>
 
                     All Status
 
                 </option>
 
-                <option value="🚀 Hot">
+                <option value="🚀 Hot" ${filters.status==="🚀 Hot"?"selected":""}>
 
                     🚀 Hot
 
                 </option>
 
-                <option value="🟢 Good">
+                <option value="🟢 Good" ${filters.status==="🟢 Good"?"selected":""}>
 
                     🟢 Good
 
                 </option>
 
-                <option value="🟡 Slow">
+                <option value="🟡 Slow" ${filters.status==="🟡 Slow"?"selected":""}>
 
                     🟡 Slow
 
                 </option>
 
-                <option value="🔴 Dead">
+                <option value="🔴 Dead" ${filters.status==="🔴 Dead"?"selected":""}>
 
                     🔴 Dead
 
@@ -145,6 +187,8 @@ export async function renderHeader(
 
                 type="text"
 
+                value="${filters.search||""}"
+
                 placeholder="Search Style ID"
 
             >
@@ -153,11 +197,7 @@ export async function renderHeader(
 
         <div class="launch-header-info">
 
-            <span
-
-                class="launch-success"
-
-            >
+            <span class="launch-success">
 
                 Success Rate :
 
@@ -165,9 +205,7 @@ export async function renderHeader(
 
                     ${Number(
 
-                        store.kpis
-
-                        ?.successRate||0
+                        store.kpis?.successRate||0
 
                     ).toFixed(1)}%
 
@@ -175,11 +213,7 @@ export async function renderHeader(
 
             </span>
 
-            <span
-
-                class="launch-updated"
-
-            >
+            <span class="launch-updated">
 
                 Last Updated :
 
@@ -200,12 +234,6 @@ export async function renderHeader(
 `;
 
 }
-
-/**
- * =====================================================
- * Format Date
- * =====================================================
- */
 
 function formatDate(
 
