@@ -85,52 +85,36 @@ export function getLaunchWindowOptions(){
 
         {
 
-            value:30,
+            label:"Last 30 Days",
 
-            label:"Last 30 Days"
-
-        },
-
-        {
-
-            value:45,
-
-            label:"Last 45 Days"
+            value:30
 
         },
 
         {
 
-            value:60,
+            label:"Last 45 Days",
 
-            label:"Last 60 Days"
+            value:45
 
         },
 
         {
 
-            value:90,
+            label:"Last 60 Days",
 
-            label:"Last 90 Days"
+            value:60
+
+        },
+
+        {
+
+            label:"Last 90 Days",
+
+            value:90
 
         }
 
     ];
-
-}
-
-/**
- * =====================================================
- * Current Filters
- * =====================================================
- */
-
-export function getCurrentFilters(){
-
-    return{
-
-        ...NewLaunchStore.filters
-
-    };
 
 }
