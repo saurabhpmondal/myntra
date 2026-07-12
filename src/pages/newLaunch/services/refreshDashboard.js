@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V1.1
+ * Version : V1.2
  * =====================================================
  */
 
@@ -122,9 +122,7 @@ from "../renderers/renderDeadLaunch.js";
 export async function refreshDashboard(){
 
     /**
-     * ==========================================
-     * Build Dashboard Data
-     * ==========================================
+     * KPI
      */
 
     NewLaunchStore.kpis=
@@ -134,6 +132,10 @@ export async function refreshDashboard(){
             NewLaunchStore.filteredRows
 
         );
+
+    /**
+     * Insights
+     */
 
     NewLaunchStore.insights=
 
@@ -145,25 +147,25 @@ export async function refreshDashboard(){
 
         );
 
-    NewLaunchStore.launchPerformance=
-
-        buildLaunchPerformance(
-
-            NewLaunchStore.filteredRows
-
-        );
+    /**
+     * Reports
+     */
 
     NewLaunchStore.launchAgeAnalysis=
 
-        buildLaunchAgeAnalysis(
-
-            NewLaunchStore.filteredRows
-
-        );
+        buildLaunchAgeAnalysis();
 
     NewLaunchStore.weeklyPerformance=
 
         buildWeeklyLaunch(
+
+            NewLaunchStore.filteredRows
+
+        );
+
+    NewLaunchStore.launchPerformance=
+
+        buildLaunchPerformance(
 
             NewLaunchStore.filteredRows
 
@@ -178,9 +180,7 @@ export async function refreshDashboard(){
         );
 
     /**
-     * ==========================================
-     * Render Dashboard
-     * ==========================================
+     * Render
      */
 
     await renderHeader(
@@ -219,17 +219,9 @@ export async function refreshDashboard(){
 
     );
 
-    await renderLaunchPerformance(
-
-        document.getElementById(
-
-            "newLaunchPerformance"
-
-        ),
-
-        NewLaunchStore.launchPerformance
-
-    );
+    /**
+     * Report 1
+     */
 
     await renderLaunchAgeAnalysis(
 
@@ -243,6 +235,10 @@ export async function refreshDashboard(){
 
     );
 
+    /**
+     * Report 2
+     */
+
     await renderWeeklyLaunch(
 
         document.getElementById(
@@ -254,6 +250,26 @@ export async function refreshDashboard(){
         NewLaunchStore.weeklyPerformance
 
     );
+
+    /**
+     * Report 3
+     */
+
+    await renderLaunchPerformance(
+
+        document.getElementById(
+
+            "newLaunchPerformance"
+
+        ),
+
+        NewLaunchStore.launchPerformance
+
+    );
+
+    /**
+     * Report 4
+     */
 
     await renderDeadLaunch(
 
