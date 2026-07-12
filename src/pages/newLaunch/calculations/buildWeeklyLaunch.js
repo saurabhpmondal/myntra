@@ -3,11 +3,9 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Weekly Launch Performance
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
-
-const MS_PER_DAY=86400000;
 
 /**
  * =====================================================
@@ -22,6 +20,12 @@ export function buildWeeklyLaunch(
 ){
 
     const weekMap={};
+
+    /**
+     * ==========================================
+     * Group Data
+     * ==========================================
+     */
 
     launchRows.forEach(
 
@@ -44,6 +48,12 @@ export function buildWeeklyLaunch(
                 weekMap[week]={
 
                     launchWeek:week,
+
+                    ageRange:getAgeRange(
+
+                        week
+
+                    ),
 
                     launches:0,
 
@@ -101,39 +111,83 @@ export function buildWeeklyLaunch(
 
     );
 
-    return Object.values(
+    /**
+     * ==========================================
+     * Create Continuous Weeks
+     * ==========================================
+     */
 
-        weekMap
+    const maxWeek=
 
-    )
+        Math.max(
 
-    .sort(
+            1,
 
-        (a,b)=>
+            ...Object.keys(
 
-            a.launchWeek-
+                weekMap
 
-            b.launchWeek
+            ).map(Number)
 
-    )
+        );
 
-    .map(
+    const report=[];
 
-        row=>({
+    for(
 
-            ...row,
+        let week=1;
+
+        week<=maxWeek;
+
+        week++
+
+    ){
+
+        if(
+
+            !weekMap[week]
+
+        ){
+
+            weekMap[week]={
+
+                launchWeek:week,
+
+                ageRange:getAgeRange(
+
+                    week
+
+                ),
+
+                launches:0,
+
+                soldStyles:0,
+
+                deadLaunches:0,
+
+                unitsSold:0,
+
+                revenue:0
+
+            };
+
+        }
+
+        report.push({
+
+            ...weekMap[week],
 
             successRate:
 
-                row.launches
+                weekMap[week].launches
 
                 ?
 
                 (
 
-                    row.soldStyles/
+                    weekMap[week].soldStyles/
 
-                    row.launches
+                    weekMap[week].launches
 
                 )*100
 
@@ -141,9 +195,11 @@ export function buildWeeklyLaunch(
 
                 0
 
-        })
+        });
 
-    );
+    }
+
+    return report;
 
 }
 
@@ -164,5 +220,33 @@ function getLaunchWeek(
         launchAge/7
 
     )+1;
+
+}
+
+/**
+ * =====================================================
+ * Age Range
+ * =====================================================
+ */
+
+function getAgeRange(
+
+    week
+
+){
+
+    const start=
+
+        (
+
+            week-1
+
+        )*7;
+
+    const end=
+
+        start+6;
+
+    return `${start}-${end} Days`;
 
 }
