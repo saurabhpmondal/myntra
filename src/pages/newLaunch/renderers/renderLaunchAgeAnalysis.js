@@ -3,19 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Age Analysis Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import {
 
-    formatNumber,
-
-    formatCompactCurrency
+    renderTable
 
 }
 
-from "../../../utils/formatter.js";
+from "../../../components/common/table/table.js";
 
 export async function renderLaunchAgeAnalysis(
 
@@ -25,214 +23,98 @@ export async function renderLaunchAgeAnalysis(
 
 ){
 
-    target.innerHTML=`
+    await renderTable({
 
-<div class="table-card">
+        target,
 
-    <div class="table-header">
+        title:
 
-        <h3>
+            "Launch Age Analysis",
 
-            Launch Age Analysis
+        subtitle:
 
-        </h3>
+            `${rows.length} Buckets`,
 
-        <span>
+        columns:[
 
-            ${formatNumber(
+            {
 
-                rows.length
+                key:"bucket",
 
-            )} Buckets
+                label:"Launch Age"
 
-        </span>
+            },
 
-    </div>
+            {
 
-    <div class="table-responsive">
+                key:"launches",
 
-        <table class="phoenix-table">
+                label:"Launches",
 
-            <thead>
+                format:"number"
 
-                <tr>
+            },
 
-                    <th>Launch Age</th>
+            {
 
-                    <th>Launches</th>
+                key:"soldStyles",
 
-                    <th>Sold Styles</th>
+                label:"Sold Styles",
 
-                    <th>Dead Launches</th>
+                format:"number"
 
-                    <th>Units Sold</th>
+            },
 
-                    <th>Revenue</th>
+            {
 
-                    <th>Success %</th>
+                key:"deadLaunches",
 
-                </tr>
+                label:"Dead Launches",
 
-            </thead>
+                format:"number"
 
-            <tbody>
+            },
 
-                ${
+            {
 
-                    rows.length
+                key:"unitsSold",
 
-                    ?
+                label:"Units Sold",
 
-                    rows.map(
+                format:"number"
 
-                        buildRow
+            },
 
-                    ).join("")
+            {
 
-                    :
+                key:"revenue",
 
-                    buildEmpty()
+                label:"Revenue",
 
-                }
+                format:"currency"
 
-            </tbody>
+            },
 
-        </table>
+            {
 
-    </div>
+                key:"successRate",
 
-</div>
+                label:"Success %",
 
-`;
+                renderer:value=>
 
-}
+                    `${Number(
 
-/**
- * =====================================================
- * Row
- * =====================================================
- */
+                        value||0
 
-function buildRow(
+                    ).toFixed(1)}%`
 
-    row
+            }
 
-){
+        ],
 
-    return `
+        rows
 
-<tr>
-
-    <td>
-
-        <b>
-
-            ${row.bucket} Days
-
-        </b>
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.launches
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.soldStyles
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.deadLaunches
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.unitsSold
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatCompactCurrency(
-
-            row.revenue
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${Number(
-
-            row.successRate||0
-
-        ).toFixed(1)}%
-
-    </td>
-
-</tr>
-
-`;
-
-}
-
-/**
- * =====================================================
- * Empty
- * =====================================================
- */
-
-function buildEmpty(){
-
-    return `
-
-<tr>
-
-<td
-
-colspan="7"
-
-style="
-
-padding:50px;
-
-text-align:center;
-
-color:#64748b;
-
-"
-
->
-
-No Launch Age Analysis Available
-
-</td>
-
-</tr>
-
-`;
+    });
 
 }
