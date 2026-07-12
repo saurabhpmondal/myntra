@@ -3,17 +3,9 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Apply Filters
- * Version : V1.2
+ * Version : V2.0
  * =====================================================
  */
-
-import {
-
-    buildLaunchDataset
-
-}
-
-from "./launchBuilder.js";
 
 import {
 
@@ -49,29 +41,13 @@ export async function applyFilters(){
 
     /**
      * ==========================================
-     * Build Launch Dataset
-     * ==========================================
-     */
-
-    NewLaunchStore.launchRows=
-
-        buildLaunchDataset(
-
-            NewLaunchStore
-
-            .filters
-
-            .launchWindow
-
-        );
-
-    /**
-     * ==========================================
      * Read Filters
      * ==========================================
      */
 
     const{
+
+        launchWindow,
 
         brand,
 
@@ -85,7 +61,27 @@ export async function applyFilters(){
 
     /**
      * ==========================================
-     * Apply Filters
+     * Launch Window
+     * ==========================================
+     */
+
+    NewLaunchStore.launchRows=
+
+        NewLaunchStore
+
+        .launchRowsAll
+
+        .filter(
+
+            row=>
+
+                row.launchAge<=launchWindow
+
+        );
+
+    /**
+     * ==========================================
+     * Brand + Status + Search
      * ==========================================
      */
 
@@ -151,7 +147,7 @@ export async function applyFilters(){
 
     /**
      * ==========================================
-     * Update Refresh Time
+     * Refresh Time
      * ==========================================
      */
 
@@ -169,8 +165,8 @@ export async function applyFilters(){
 
     /**
      * ==========================================
-     * Header Recreated
-     * Bind Fresh Events
+     * Header recreated
+     * Re-bind events
      * ==========================================
      */
 
