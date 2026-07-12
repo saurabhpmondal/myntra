@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Initialize New Launch
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -49,13 +49,39 @@ import {
 
 from "./bindFilters.js";
 
+import {
+
+    applyFilters
+
+}
+
+from "./applyFilters.js";
+
+/**
+ * =====================================================
+ * Initialize
+ * =====================================================
+ */
+
 export async function initializeNewLaunch(
 
     target
 
 ){
 
+    /**
+     * ==========================================
+     * Reset
+     * ==========================================
+     */
+
     resetNewLaunchStore();
+
+    /**
+     * ==========================================
+     * Layout
+     * ==========================================
+     */
 
     await renderLayout(
 
@@ -63,17 +89,32 @@ export async function initializeNewLaunch(
 
     );
 
-    NewLaunchStore.launchRows=
+    /**
+     * ==========================================
+     * Build Complete Launch Dataset
+     * (Never Filtered)
+     * ==========================================
+     */
+
+    NewLaunchStore.launchRowsAll=
 
         buildLaunchDataset(
 
-            NewLaunchStore
-
-            .filters
-
-            .launchWindow
+            99999
 
         );
+
+    /**
+     * ==========================================
+     * Working Dataset
+     * ==========================================
+     */
+
+    NewLaunchStore.launchRows=[
+
+        ...NewLaunchStore.launchRowsAll
+
+    ];
 
     NewLaunchStore.filteredRows=[
 
@@ -81,13 +122,40 @@ export async function initializeNewLaunch(
 
     ];
 
+    /**
+     * ==========================================
+     * Status
+     * ==========================================
+     */
+
     NewLaunchStore.loaded=true;
 
     NewLaunchStore.generatedOn=
 
         new Date();
 
+    /**
+     * ==========================================
+     * Apply Default Filters
+     * (30 Days)
+     * ==========================================
+     */
+
+    await applyFilters();
+
+    /**
+     * ==========================================
+     * Render Dashboard
+     * ==========================================
+     */
+
     await refreshDashboard();
+
+    /**
+     * ==========================================
+     * Bind Events
+     * ==========================================
+     */
 
     bindFilters();
 
