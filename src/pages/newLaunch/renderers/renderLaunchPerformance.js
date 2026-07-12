@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Launch Performance Renderer
- * Version : V2.1
+ * Version : V2.2
  * =====================================================
  */
 
@@ -49,7 +49,27 @@ export async function renderLaunchPerformance(
 
                 key:"styleId",
 
-                label:"Style ID"
+                label:"Style ID",
+
+                renderer:value=>`
+
+<a
+
+href="https://www.myntra.com/${value}"
+
+target="_blank"
+
+class="table-link"
+
+style="font-weight:600;"
+
+>
+
+${value}
+
+</a>
+
+`
 
             },
 
