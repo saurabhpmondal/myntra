@@ -3,19 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Weekly Launch Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
 import {
 
-    formatNumber,
-
-    formatCompactCurrency
+    renderTable
 
 }
 
-from "../../../utils/formatter.js";
+from "../../../components/common/table/table.js";
 
 export async function renderWeeklyLaunch(
 
@@ -25,214 +23,102 @@ export async function renderWeeklyLaunch(
 
 ){
 
-    target.innerHTML=`
+    await renderTable({
 
-<div class="table-card">
+        target,
 
-    <div class="table-header">
+        title:
 
-        <h3>
+            "Weekly Launch Performance",
 
-            Weekly Launch Performance
+        subtitle:
 
-        </h3>
+            `${rows.length} Weeks`,
 
-        <span>
+        columns:[
 
-            ${formatNumber(
+            {
 
-                rows.length
+                key:"launchWeek",
 
-            )} Weeks
+                label:"Launch Week",
 
-        </span>
+                renderer:value=>
 
-    </div>
+                    `Week ${value}`
 
-    <div class="table-responsive">
+            },
 
-        <table class="phoenix-table">
+            {
 
-            <thead>
+                key:"launches",
 
-                <tr>
+                label:"Launches",
 
-                    <th>Launch Week</th>
+                format:"number"
 
-                    <th>Launches</th>
+            },
 
-                    <th>Sold Styles</th>
+            {
 
-                    <th>Dead Launches</th>
+                key:"soldStyles",
 
-                    <th>Units Sold</th>
+                label:"Sold Styles",
 
-                    <th>Revenue</th>
+                format:"number"
 
-                    <th>Success %</th>
+            },
 
-                </tr>
+            {
 
-            </thead>
+                key:"deadLaunches",
 
-            <tbody>
+                label:"Dead Launches",
 
-                ${
+                format:"number"
 
-                    rows.length
+            },
 
-                    ?
+            {
 
-                    rows.map(
+                key:"unitsSold",
 
-                        buildRow
+                label:"Units Sold",
 
-                    ).join("")
+                format:"number"
 
-                    :
+            },
 
-                    buildEmpty()
+            {
 
-                }
+                key:"revenue",
 
-            </tbody>
+                label:"Revenue",
 
-        </table>
+                format:"currency"
 
-    </div>
+            },
 
-</div>
+            {
 
-`;
+                key:"successRate",
 
-}
+                label:"Success %",
 
-/**
- * =====================================================
- * Row
- * =====================================================
- */
+                renderer:value=>
 
-function buildRow(
+                    `${Number(
 
-    row
+                        value||0
 
-){
+                    ).toFixed(1)}%`
 
-    return `
+            }
 
-<tr>
+        ],
 
-    <td>
+        rows
 
-        <b>
-
-            Week ${row.launchWeek}
-
-        </b>
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.launches
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.soldStyles
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.deadLaunches
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatNumber(
-
-            row.unitsSold
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${formatCompactCurrency(
-
-            row.revenue
-
-        )}
-
-    </td>
-
-    <td>
-
-        ${Number(
-
-            row.successRate||0
-
-        ).toFixed(1)}%
-
-    </td>
-
-</tr>
-
-`;
-
-}
-
-/**
- * =====================================================
- * Empty
- * =====================================================
- */
-
-function buildEmpty(){
-
-    return `
-
-<tr>
-
-<td
-
-colspan="7"
-
-style="
-
-padding:50px;
-
-text-align:center;
-
-color:#64748b;
-
-"
-
->
-
-No Weekly Launch Performance Available
-
-</td>
-
-</tr>
-
-`;
+    });
 
 }
