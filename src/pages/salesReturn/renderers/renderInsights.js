@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Insights Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -15,13 +15,71 @@ export async function renderInsights(
 
 ){
 
+    /**
+     * =============================================
+     * Safety
+     * =============================================
+     */
+
+    if(
+
+        !target
+
+    ){
+
+        return;
+
+    }
+
+    if(
+
+        !Array.isArray(
+
+            insights
+
+        )
+
+    ){
+
+        insights=[];
+
+    }
+
+    /**
+     * =============================================
+     * Empty State
+     * =============================================
+     */
+
+    if(
+
+        !insights.length
+
+    ){
+
+        target.innerHTML="";
+
+        return;
+
+    }
+
+    /**
+     * =============================================
+     * Render
+     * =============================================
+     */
+
     target.innerHTML=
 
-        insights.map(
+        insights
+
+        .map(
 
             buildCard
 
-        ).join("");
+        )
+
+        .join("");
 
 }
 
@@ -33,7 +91,7 @@ export async function renderInsights(
 
 function buildCard(
 
-    insight
+    insight={}
 
 ){
 
@@ -47,13 +105,13 @@ function buildCard(
 
     <div class="insight-title">
 
-        ${insight.title}
+        ${insight.title??""}
 
     </div>
 
     <div class="insight-message">
 
-        ${insight.message}
+        ${insight.message??""}
 
     </div>
 
