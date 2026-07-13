@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Apply Filters
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -27,15 +27,63 @@ export function applyFilters(){
 
         salesRows,
 
+        returnRows,
+
         filters
 
     }=
 
     SalesReturnStore;
 
-    SalesReturnStore.filteredRows=
+    SalesReturnStore.filteredSalesRows=
 
-        salesRows.filter(
+        (salesRows||[]).filter(
+
+            row=>
+
+                matchMonth(
+
+                    row,
+
+                    filters.saleMonth
+
+                )
+
+                &&
+
+                matchBrand(
+
+                    row,
+
+                    filters.brand
+
+                )
+
+                &&
+
+                matchPOType(
+
+                    row,
+
+                    filters.poType
+
+                )
+
+                &&
+
+                matchStyle(
+
+                    row,
+
+                    filters.styleSearch
+
+                )
+
+        );
+
+    SalesReturnStore.filteredReturnRows=
+
+        (returnRows||[]).filter(
 
             row=>
 
@@ -97,7 +145,7 @@ function matchMonth(
 
     if(
 
-        !values.length
+        !values?.length
 
     ){
 
@@ -129,7 +177,7 @@ function matchBrand(
 
     if(
 
-        !values.length
+        !values?.length
 
     ){
 
@@ -161,7 +209,7 @@ function matchPOType(
 
     if(
 
-        !values.length
+        !values?.length
 
     ){
 
@@ -203,7 +251,9 @@ function matchStyle(
 
     return String(
 
-        row.styleId
+        row.styleId??
+
+        ""
 
     )
 
