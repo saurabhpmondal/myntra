@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Sales & Return Page
- * Version : V1.0
+ * Module  : Sales & Return
+ * Version : V2.0
  * =====================================================
  */
 
@@ -17,61 +17,33 @@ from "./dashboard/dashboard.js";
 
 import {
 
-    loadSalesReturn
+    destroyDashboard
 
 }
 
-from "./loadSalesReturn.js";
+from "./dashboard/dashboard.js";
 
-import {
-
-    SalesReturnStore
-
-}
-
-from "./store/salesReturnStore.js";
+let pageContainer=null;
 
 /**
  * =====================================================
- * Render Sales & Return
+ * Render
  * =====================================================
  */
 
 export async function renderSalesReturn(
 
-    container
+    target
 
 ){
 
-    container.innerHTML=`
+    pageContainer=
 
-<div id="salesReturnPage">
+        target;
 
-</div>
+    await initializeDashboard(
 
-`;
-
-    const page=
-
-        document.getElementById(
-
-            "salesReturnPage"
-
-        );
-
-    page.innerHTML=`
-
-<div id="salesReturnDashboard"></div>
-
-`;
-
-    await initializeDashboard();
-
-    await loadSalesReturn(
-
-        SalesReturnStore.salesRows,
-
-        SalesReturnStore.returnRows
+        pageContainer
 
     );
 
@@ -85,24 +57,8 @@ export async function renderSalesReturn(
 
 export function destroySalesReturn(){
 
-    const page=
+    destroyDashboard();
 
-        document.getElementById(
-
-            "salesReturnPage"
-
-        );
-
-    if(
-
-        page
-
-    ){
-
-        page.innerHTML="";
-
-    }
+    pageContainer=null;
 
 }
-
-
