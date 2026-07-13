@@ -2,60 +2,107 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Trend Analysis
+ * Module  : Trend Renderer
  * Version : V1.0
  * =====================================================
  */
 
 import {
 
-    REPORT_CONFIG
+    renderAdvancedTable
 
 }
 
-from "../config/reportConfig.js";
+from "../../../components/common/table/renderAdvancedTable.js";
+
+/**
+ * =====================================================
+ * Render Trend Report
+ * =====================================================
+ */
 
 export async function renderTrend(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    const config=
+    await renderAdvancedTable(
 
-        REPORT_CONFIG.TREND;
+        target,
 
-    target.innerHTML=`
+        {
 
-<div class="dashboard-card">
+            title:
 
-    <div class="dashboard-header">
+                "Monthly Trend",
 
-        <div>
+            subtitle:
 
-            <h3>
+                "Sales & Return Trend Analysis",
 
-                ${config.TITLE}
+            fixedColumns:[
 
-            </h3>
+                {
 
-            <p>
+                    key:"period",
 
-                ${config.SUBTITLE}
+                    label:"Month"
 
-            </p>
+                }
 
-        </div>
+            ],
 
-    </div>
+            metrics:[
 
-    <div
-    id="trendTable">
+                {
 
-    </div>
+                    key:"sale",
 
-</div>
+                    label:"Sale"
 
-`;
+                },
+
+                {
+
+                    key:"cancel",
+
+                    label:"Cancelled"
+
+                },
+
+                {
+
+                    key:"rto",
+
+                    label:"RTO"
+
+                },
+
+                {
+
+                    key:"cxReturn",
+
+                    label:"CX Return"
+
+                },
+
+                {
+
+                    key:"net",
+
+                    label:"Net"
+
+                }
+
+            ],
+
+            rows
+
+        }
+
+    );
 
 }
