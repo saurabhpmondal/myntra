@@ -2,8 +2,8 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Current Period
- * Version : V1.0
+ * Module  : Current Period Engine
+ * Version : V2.0
  * =====================================================
  */
 
@@ -17,7 +17,7 @@ from "../../store/salesReturnStore.js";
 
 /**
  * =====================================================
- * Get Current Period Rows
+ * Current Period Rows
  * =====================================================
  */
 
@@ -27,15 +27,13 @@ export function getCurrentPeriodRows(
 
 ){
 
-    const months=
+    const periods=
 
-        SalesReturnStore.filters.months;
+        SalesReturnStore.filters.periods;
 
     if(
 
-        !months||
-
-        !months.length
+        !periods.length
 
     ){
 
@@ -43,35 +41,29 @@ export function getCurrentPeriodRows(
 
     }
 
-    const selected=
-
-        new Set(
-
-            months.map(
-
-                month=>
-
-                    String(
-
-                        month
-
-                    ).trim()
-
-            )
-
-        );
-
     return rows.filter(
 
         row=>
 
-            selected.has(
+            periods.some(
 
-                String(
+                period=>
 
-                    row.month
+                    period.month===row.month
 
-                ).trim()
+                    &&
+
+                    Number(
+
+                        period.year
+
+                    )===
+
+                    Number(
+
+                        row.year
+
+                    )
 
             )
 
