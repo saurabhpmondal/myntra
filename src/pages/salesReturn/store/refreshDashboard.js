@@ -378,3 +378,75 @@ export async function refreshDashboard(){
 }
 
 
+console.log("========== SALES & RETURN ==========");
+
+console.log(
+    "Sales Rows:",
+    SalesReturnStore.salesRows.length
+);
+
+console.log(
+    "Return Rows:",
+    SalesReturnStore.returnRows.length
+);
+
+console.log(
+    "Filtered Sales:",
+    SalesReturnStore.filteredSalesRows.length
+);
+
+console.log(
+    "Filtered Returns:",
+    SalesReturnStore.filteredReturnRows.length
+);
+
+SalesReturnStore.normalizedRows =
+    buildOrderLineDataset(
+        SalesReturnStore.filteredSalesRows,
+        SalesReturnStore.filteredReturnRows
+    );
+
+console.log(
+    "Normalized Rows:",
+    SalesReturnStore.normalizedRows.length
+);
+
+console.log(
+    "Rows With Return:",
+    SalesReturnStore.normalizedRows.filter(
+        r => r.hasReturn
+    ).length
+);
+
+const dataset =
+    buildDataset(
+        SalesReturnStore.normalizedRows,
+        []
+    );
+
+console.log(
+    "Actual Rows:",
+    dataset.actualRows.length
+);
+
+console.log(
+    "Attributed Rows:",
+    dataset.attributedRows.length
+);
+
+SalesReturnStore.actualRows =
+    dataset.actualRows;
+
+SalesReturnStore.attributedRows =
+    dataset.attributedRows;
+
+SalesReturnStore.kpis =
+    buildKPIs(
+        SalesReturnStore.actualRows,
+        SalesReturnStore.attributedRows
+    );
+
+console.log(
+    "KPI:",
+    SalesReturnStore.kpis
+);
