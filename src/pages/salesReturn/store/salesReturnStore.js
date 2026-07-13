@@ -2,51 +2,73 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Sales & Return Store
- * Version : V2.0
+ * Module  : Sales Return Store
+ * Version : V1.0
  * =====================================================
  */
 
 export const SalesReturnStore={
 
     /**
-     * ==========================================
-     * Raw Data
-     * ==========================================
+     * =============================================
+     * Loading
+     * =============================================
      */
 
-    rawSales:[],
-
-    rawReturns:[],
+    loading:false,
 
     /**
-     * ==========================================
-     * Normalized Data
-     * ==========================================
+     * =============================================
+     * Raw Data
+     * =============================================
      */
 
-    orderLines:[],
+    salesRows:[],
+
+    returnRows:[],
+
+    /**
+     * =============================================
+     * Filtered Data
+     * =============================================
+     */
+
+    filteredSalesRows:[],
+
+    filteredReturnRows:[],
+
+    /**
+     * =============================================
+     * Normalized Dataset
+     * =============================================
+     */
+
+    normalizedRows:[],
 
     actualRows:[],
 
     attributedRows:[],
 
-    filteredRows:[],
-
     /**
-     * ==========================================
-     * Dashboard
-     * ==========================================
+     * =============================================
+     * KPI
+     * =============================================
      */
 
     kpis:{},
 
+    /**
+     * =============================================
+     * Dashboard
+     * =============================================
+     */
+
     insights:[],
 
     /**
-     * ==========================================
+     * =============================================
      * Reports
-     * ==========================================
+     * =============================================
      */
 
     poTypeReport:[],
@@ -60,87 +82,67 @@ export const SalesReturnStore={
     trendReport:[],
 
     /**
-     * ==========================================
+     * =============================================
      * Filters
-     * ==========================================
+     * =============================================
      */
 
     filters:{
 
-        periods:[],
+        saleMonth:[],
 
-        brands:[],
+        brand:[],
 
-        poTypes:[],
+        poType:[],
 
-        risks:[],
+        risk:[],
 
-        search:""
+        styleSearch:""
 
     },
 
     /**
-     * ==========================================
-     * Status
-     * ==========================================
+     * =============================================
+     * Lookup Values
+     * =============================================
      */
 
-    loaded:false,
+    lookup:{
 
-    generatedOn:null
-
-};
-
-/**
- * =====================================================
- * Reset Store
- * =====================================================
- */
-
-export function resetSalesReturnStore(){
-
-    SalesReturnStore.rawSales=[];
-
-    SalesReturnStore.rawReturns=[];
-
-    SalesReturnStore.orderLines=[];
-
-    SalesReturnStore.actualRows=[];
-
-    SalesReturnStore.attributedRows=[];
-
-    SalesReturnStore.filteredRows=[];
-
-    SalesReturnStore.kpis={};
-
-    SalesReturnStore.insights=[];
-
-    SalesReturnStore.poTypeReport=[];
-
-    SalesReturnStore.brandReport=[];
-
-    SalesReturnStore.styleReport=[];
-
-    SalesReturnStore.returnReasonReport=[];
-
-    SalesReturnStore.trendReport=[];
-
-    SalesReturnStore.filters={
-
-        periods:[],
+        months:[],
 
         brands:[],
 
         poTypes:[],
 
-        risks:[],
+        risks:[
 
-        search:""
+            "No Risk",
 
-    };
+            "Low Risk",
 
-    SalesReturnStore.loaded=false;
+            "Mid Risk",
 
-    SalesReturnStore.generatedOn=null;
+            "High Risk"
 
-}
+        ]
+
+    },
+
+    /**
+     * =============================================
+     * UI
+     * =============================================
+     */
+
+    ui:{
+
+        initialized:false,
+
+        activeTab:"dashboard",
+
+        lastRefresh:null
+
+    }
+
+};
