@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Navigation
- * Version : V3.0
+ * Version : V3.1
  * =====================================================
  */
 
@@ -20,6 +20,19 @@ export const Navigation = [
         id:"daily-sales",
         title:"Daily Sales",
         icon:"calendar-days",
+        filter:true
+    },
+
+    /**
+     * ==========================================
+     * NEW
+     * ==========================================
+     */
+
+    {
+        id:"sales-return",
+        title:"Sales & Return",
+        icon:"undo-2",
         filter:true
     },
 
@@ -73,11 +86,11 @@ export const Navigation = [
     },
 
     {
-    id:"sjit-intelligence",
-    title:"FBM Intelligence",
-    icon:"map",
-    filter:false
-},
+        id:"sjit-intelligence",
+        title:"FBM Intelligence",
+        icon:"map",
+        filter:false
+    },
 
     {
         id:"ads",
