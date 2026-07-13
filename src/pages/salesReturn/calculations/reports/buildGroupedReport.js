@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Grouped Report Builder
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -35,9 +35,17 @@ export function buildGroupedReport(
 
     previousRows=[],
 
-    field
+    config={}
 
 ){
+
+    const{
+
+        field,
+
+        label
+
+    }=config;
 
     const currentGroups=
 
@@ -83,21 +91,53 @@ export function buildGroupedReport(
 
     ).map(
 
-        key=>({
+        key=>{
 
-            key,
+            const current=
 
-            report:
+                currentGroups[key]||
 
-                buildReport(
+                [];
 
-                    currentGroups[key]||[],
+            const previous=
 
-                    previousGroups[key]||[]
+                previousGroups[key]||
 
-                )
+                [];
 
-        })
+            const source=
+
+                current[0]||
+
+                previous[0]||
+
+                {};
+
+            return{
+
+                key,
+
+                info:
+
+                    label(
+
+                        source
+
+                    ),
+
+                report:
+
+                    buildReport(
+
+                        current,
+
+                        previous
+
+                    )
+
+            };
+
+        }
 
     );
 
