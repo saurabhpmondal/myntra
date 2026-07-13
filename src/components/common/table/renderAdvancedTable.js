@@ -3,7 +3,7 @@
  * Project Phoenix
  * Common Component
  * Module  : Advanced Table
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -21,13 +21,23 @@ export async function renderAdvancedTable(
 
         subtitle="",
 
-        headerRows=[],
+        fixedColumns=[],
 
-        columns=[],
+        metrics=[],
 
         rows=[]
 
     }=config;
+
+    const columns=
+
+        buildColumns(
+
+            fixedColumns,
+
+            metrics
+
+        );
 
     target.innerHTML=`
 
@@ -37,17 +47,9 @@ export async function renderAdvancedTable(
 
         <div>
 
-            <h3>
+            <h3>${title}</h3>
 
-                ${title}
-
-            </h3>
-
-            <p>
-
-                ${subtitle}
-
-            </p>
+            <p>${subtitle}</p>
 
         </div>
 
@@ -61,9 +63,9 @@ export async function renderAdvancedTable(
 
                 ${buildHeader(
 
-                    headerRows,
+                    fixedColumns,
 
-                    columns
+                    metrics
 
                 )}
 
@@ -99,73 +101,133 @@ export async function renderAdvancedTable(
 
 function buildHeader(
 
-    headerRows=[],
+    fixedColumns,
 
-    columns=[]
+    metrics
 
 ){
 
-    if(
+    const top=[];
 
-        !headerRows.length
+    const bottom=[];
 
-    ){
+    fixedColumns.forEach(
 
-        return`
+        column=>{
+
+            top.push(
+
+                `<th rowspan="2">${column.label}</th>`
+
+            );
+
+        }
+
+    );
+
+    metrics.forEach(
+
+        metric=>{
+
+            top.push(
+
+                `<th colspan="3">${metric.label}</th>`
+
+            );
+
+            bottom.push(
+
+                "<th>GMV</th>",
+
+                "<th>Units</th>",
+
+                "<th>Growth</th>"
+
+            );
+
+        }
+
+    );
+
+    return`
 
 <tr>
 
-${columns.map(
+${top.join("")}
 
-column=>`
+</tr>
 
-<th>
+<tr>
 
-${column.label}
-
-</th>
-
-`
-
-).join("")}
+${bottom.join("")}
 
 </tr>
 
 `;
 
-    }
+}
 
-    return headerRows.map(
+/**
+ * =====================================================
+ * Columns
+ * =====================================================
+ */
 
-        row=>`
+function buildColumns(
 
-<tr>
+    fixedColumns,
 
-${row.map(
+    metrics
 
-cell=>`
+){
 
-<th
+    const columns=[];
 
-colspan="${cell.colspan||1}"
+    fixedColumns.forEach(
 
-rowspan="${cell.rowspan||1}"
+        column=>
 
->
+            columns.push(
 
-${cell.label}
+                column
 
-</th>
+            )
 
-`
+    );
 
-).join("")}
+    metrics.forEach(
 
-</tr>
+        metric=>{
 
-`
+            columns.push({
 
-    ).join("");
+                key:
+
+                    `${metric.key}.gmv.current`
+
+            });
+
+            columns.push({
+
+                key:
+
+                    `${metric.key}.units.current`
+
+            });
+
+            columns.push({
+
+                key:
+
+                    `${metric.key}.units.growth.value`
+
+            });
+
+        }
+
+    );
+
+    return columns;
 
 }
 
@@ -177,9 +239,9 @@ ${cell.label}
 
 function buildRows(
 
-    columns=[],
+    columns,
 
-    rows=[]
+    rows
 
 ){
 
@@ -195,35 +257,13 @@ column=>`
 
 <td>
 
-${
+${read(
 
-column.renderer
-
-?
-
-column.renderer(
-
-row[
+row,
 
 column.key
 
-],
-
-row
-
-)
-
-:
-
-row[
-
-column.key
-
-]??
-
-"-"
-
-}
+)}
 
 </td>
 
@@ -236,5 +276,41 @@ column.key
 `
 
     ).join("");
+
+}
+
+/**
+ * =====================================================
+ * Read Nested Value
+ * =====================================================
+ */
+
+function read(
+
+    row,
+
+    path
+
+){
+
+    return path
+
+        .split(".")
+
+        .reduce(
+
+            (
+
+                value,
+
+                key
+
+            )=>
+
+                value?.[key],
+
+            row
+
+        )??"-";
 
 }
