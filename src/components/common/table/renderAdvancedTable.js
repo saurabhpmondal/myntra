@@ -3,7 +3,13 @@
  * Project Phoenix
  * Common Component
  * Module  : Advanced Table
- * Version : V2.0
+ * Version : V3.0
+ * =====================================================
+ */
+
+/**
+ * =====================================================
+ * Render Advanced Table
  * =====================================================
  */
 
@@ -137,9 +143,17 @@ function buildHeader(
 
             bottom.push(
 
-                "<th>GMV</th>",
+                "<th>GMV</th>"
 
-                "<th>Units</th>",
+            );
+
+            bottom.push(
+
+                "<th>Units</th>"
+
+            );
+
+            bottom.push(
 
                 "<th>Growth</th>"
 
@@ -169,7 +183,7 @@ ${bottom.join("")}
 
 /**
  * =====================================================
- * Columns
+ * Build Columns
  * =====================================================
  */
 
@@ -203,7 +217,9 @@ function buildColumns(
 
                 key:
 
-                    `${metric.key}.gmv.current`
+                    `${metric.key}.gmv.current`,
+
+                type:"currency"
 
             });
 
@@ -211,7 +227,9 @@ function buildColumns(
 
                 key:
 
-                    `${metric.key}.units.current`
+                    `${metric.key}.units.current`,
+
+                type:"number"
 
             });
 
@@ -219,7 +237,9 @@ function buildColumns(
 
                 key:
 
-                    `${metric.key}.units.growth.value`
+                    `${metric.key}.units.growth.value`,
+
+                type:"growth"
 
             });
 
@@ -233,7 +253,7 @@ function buildColumns(
 
 /**
  * =====================================================
- * Rows
+ * Build Rows
  * =====================================================
  */
 
@@ -257,11 +277,11 @@ column=>`
 
 <td>
 
-${read(
+${renderCell(
 
-row,
+column,
 
-column.key
+row
 
 )}
 
@@ -281,17 +301,107 @@ column.key
 
 /**
  * =====================================================
+ * Render Cell
+ * =====================================================
+ */
+
+function renderCell(
+
+    column,
+
+    row
+
+){
+
+    const value=
+
+        read(
+
+            row,
+
+            column.key
+
+        );
+
+    switch(
+
+        column.type
+
+    ){
+
+        case "style":
+
+            return renderStyleLink(
+
+                value
+
+            );
+
+        case "currency":
+
+            return formatCurrency(
+
+                value
+
+            );
+
+        case "number":
+
+            return formatNumber(
+
+                value
+
+            );
+
+        case "percent":
+
+            return formatPercent(
+
+                value
+
+            );
+
+        case "growth":
+
+            return formatGrowth(
+
+                value
+
+            );
+
+        default:
+
+            return value??
+
+                "-";
+
+    }
+
+}
+
+/**
+ * =====================================================
  * Read Nested Value
  * =====================================================
  */
 
 function read(
 
-    row,
+    object,
 
     path
 
 ){
+
+    if(
+
+        !path
+
+    ){
+
+        return null;
+
+    }
 
     return path
 
@@ -309,8 +419,226 @@ function read(
 
                 value?.[key],
 
-            row
+            object
 
-        )??"-";
+        );
+
+}
+
+/**
+ * =====================================================
+ * Style Link
+ * =====================================================
+ */
+
+function renderStyleLink(
+
+    styleId
+
+){
+
+    if(
+
+        !styleId
+
+    ){
+
+        return "-";
+
+    }
+
+    return `
+
+<a
+
+href="https://www.myntra.com/${styleId}"
+
+target="_blank"
+
+class="phoenix-style-link"
+
+>
+
+${styleId}
+
+</a>
+
+`;
+
+}
+
+/**
+ * =====================================================
+ * Currency
+ * =====================================================
+ */
+
+function formatCurrency(
+
+    value=0
+
+){
+
+    return new Intl.NumberFormat(
+
+        "en-IN",
+
+        {
+
+            style:"currency",
+
+            currency:"INR",
+
+            maximumFractionDigits:0
+
+        }
+
+    ).format(
+
+        Number(
+
+            value||
+
+            0
+
+        )
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Number
+ * =====================================================
+ */
+
+function formatNumber(
+
+    value=0
+
+){
+
+    return new Intl.NumberFormat(
+
+        "en-IN"
+
+    ).format(
+
+        Number(
+
+            value||
+
+            0
+
+        )
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * Percent
+ * =====================================================
+ */
+
+function formatPercent(
+
+    value=0
+
+){
+
+    return `${
+
+        Number(
+
+            value||
+
+            0
+
+        ).toFixed(
+
+            2
+
+        )
+
+    }%`;
+
+}
+
+/**
+ * =====================================================
+ * Growth
+ * =====================================================
+ */
+
+function formatGrowth(
+
+    value=0
+
+){
+
+    value=
+
+        Number(
+
+            value||
+
+            0
+
+        );
+
+    const cls=
+
+        value>0
+
+        ?"growth-up"
+
+        :
+
+        value<0
+
+        ?"growth-down"
+
+        :
+
+        "growth-flat";
+
+    const icon=
+
+        value>0
+
+        ?"▲"
+
+        :
+
+        value<0
+
+        ?"▼"
+
+        :
+
+        "■";
+
+    return `
+
+<span class="${cls}">
+
+${icon}
+
+${Math.abs(
+
+        value
+
+    ).toFixed(
+
+        1
+
+    )}%
+
+</span>
+
+`;
 
 }
