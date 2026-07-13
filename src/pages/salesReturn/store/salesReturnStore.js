@@ -3,45 +3,25 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales Return Store
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
-export const SalesReturnStore={
+const DEFAULT_STATE = ()=>({
 
-    /**
-     * =============================================
-     * Loading
-     * =============================================
-     */
+    loaded:false,
 
     loading:false,
 
-    /**
-     * =============================================
-     * Raw Data
-     * =============================================
-     */
+    generatedOn:null,
 
     salesRows:[],
 
     returnRows:[],
 
-    /**
-     * =============================================
-     * Filtered Data
-     * =============================================
-     */
-
     filteredSalesRows:[],
 
     filteredReturnRows:[],
-
-    /**
-     * =============================================
-     * Normalized Dataset
-     * =============================================
-     */
 
     normalizedRows:[],
 
@@ -49,27 +29,9 @@ export const SalesReturnStore={
 
     attributedRows:[],
 
-    /**
-     * =============================================
-     * KPI
-     * =============================================
-     */
-
     kpis:{},
 
-    /**
-     * =============================================
-     * Dashboard
-     * =============================================
-     */
-
     insights:[],
-
-    /**
-     * =============================================
-     * Reports
-     * =============================================
-     */
 
     poTypeReport:[],
 
@@ -80,12 +42,6 @@ export const SalesReturnStore={
     returnReasonReport:[],
 
     trendReport:[],
-
-    /**
-     * =============================================
-     * Filters
-     * =============================================
-     */
 
     filters:{
 
@@ -100,12 +56,6 @@ export const SalesReturnStore={
         styleSearch:""
 
     },
-
-    /**
-     * =============================================
-     * Lookup Values
-     * =============================================
-     */
 
     lookup:{
 
@@ -129,12 +79,6 @@ export const SalesReturnStore={
 
     },
 
-    /**
-     * =============================================
-     * UI
-     * =============================================
-     */
-
     ui:{
 
         initialized:false,
@@ -145,4 +89,26 @@ export const SalesReturnStore={
 
     }
 
-};
+});
+
+export const SalesReturnStore=
+
+    DEFAULT_STATE();
+
+/**
+ * =====================================================
+ * Reset Store
+ * =====================================================
+ */
+
+export function resetSalesReturnStore(){
+
+    Object.assign(
+
+        SalesReturnStore,
+
+        DEFAULT_STATE()
+
+    );
+
+}
