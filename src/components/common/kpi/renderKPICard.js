@@ -1,7 +1,7 @@
 /**
  * =====================================================
  * Project Phoenix
- * Product : Phoenix
+ * Common Component
  * Module  : KPI Card
  * Version : V1.0
  * =====================================================
@@ -11,25 +11,17 @@ export async function renderKPICard(
 
     target,
 
-    {
+    config={}
+
+){
+
+    const{
 
         title,
 
         data
 
-    }
-
-){
-
-    if(
-
-        !target
-
-    ){
-
-        return;
-
-    }
+    }=config;
 
     target.innerHTML=`
 
@@ -41,7 +33,7 @@ export async function renderKPICard(
 
     </div>
 
-    <div class="kpi-main">
+    <div class="kpi-gmv">
 
         ${formatCurrency(
 
@@ -61,9 +53,7 @@ export async function renderKPICard(
 
     </div>
 
-    <div class="kpi-divider">
-
-    </div>
+    <div class="kpi-divider"></div>
 
     <div class="kpi-units">
 
@@ -93,6 +83,64 @@ export async function renderKPICard(
 
 /**
  * =====================================================
+ * Growth
+ * =====================================================
+ */
+
+function buildGrowth(
+
+    growth={}
+
+){
+
+    const{
+
+        value=0,
+
+        direction="flat"
+
+    }=growth;
+
+    const icon=
+
+        direction==="up"
+
+        ?"▲"
+
+        :
+
+        direction==="down"
+
+        ?"▼"
+
+        :
+
+        "■";
+
+    return `
+
+<span class="growth-${direction}">
+
+${icon}
+
+${Math.abs(
+
+    value
+
+).toFixed(
+
+    1
+
+)}%
+
+</span>
+
+`;
+
+}
+
+/**
+ * =====================================================
  * Currency
  * =====================================================
  */
@@ -103,11 +151,7 @@ function formatCurrency(
 
 ){
 
-    return Number(
-
-        value
-
-    ).toLocaleString(
+    return new Intl.NumberFormat(
 
         "en-IN",
 
@@ -120,6 +164,10 @@ function formatCurrency(
             maximumFractionDigits:0
 
         }
+
+    ).format(
+
+        value
 
     );
 
@@ -137,62 +185,14 @@ function formatNumber(
 
 ){
 
-    return Number(
-
-        value
-
-    ).toLocaleString(
+    return new Intl.NumberFormat(
 
         "en-IN"
 
+    ).format(
+
+        value
+
     );
-
-}
-
-/**
- * =====================================================
- * Growth
- * =====================================================
- */
-
-function buildGrowth(
-
-    growth={}
-
-){
-
-    if(
-
-        !growth
-
-    ){
-
-        return "-";
-
-    }
-
-    const icon=
-
-        growth.direction==="up"
-
-        ?"▲"
-
-        :
-
-        growth.direction==="down"
-
-        ?"▼"
-
-        :
-
-        "•";
-
-    return `
-
-${icon}
-
-${growth.value}%
-
-`;
 
 }
