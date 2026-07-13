@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : KPI Renderer
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -61,6 +61,34 @@ export async function renderKPIs(
 
 ){
 
+    if(
+
+        !target
+
+    ){
+
+        return;
+
+    }
+
+    target.innerHTML=`
+
+<div class="kpi-grid">
+
+    <div id="kpiSale"></div>
+
+    <div id="kpiCancel"></div>
+
+    <div id="kpiRTO"></div>
+
+    <div id="kpiCXReturn"></div>
+
+    <div id="kpiNet"></div>
+
+</div>
+
+`;
+
     await renderSaleKPI(
 
         document.getElementById(
@@ -69,7 +97,7 @@ export async function renderKPIs(
 
         ),
 
-        kpis.sale
+        kpis.sale||{}
 
     );
 
@@ -81,7 +109,7 @@ export async function renderKPIs(
 
         ),
 
-        kpis.cancel
+        kpis.cancel||{}
 
     );
 
@@ -93,7 +121,7 @@ export async function renderKPIs(
 
         ),
 
-        kpis.rto
+        kpis.rto||{}
 
     );
 
@@ -105,7 +133,7 @@ export async function renderKPIs(
 
         ),
 
-        kpis.cxReturn
+        kpis.cxReturn||{}
 
     );
 
@@ -117,7 +145,7 @@ export async function renderKPIs(
 
         ),
 
-        kpis.net
+        kpis.net||{}
 
     );
 
