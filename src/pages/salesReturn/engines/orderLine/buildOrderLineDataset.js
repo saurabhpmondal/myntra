@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Build Order Line Dataset
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -105,118 +105,10 @@ export function buildOrderLineDataset(
 
                 );
 
-            row.netUnits=
-
-                calculateNetUnits(
-
-                    row
-
-                );
-
-            row.netGMV=
-
-                calculateNetGMV(
-
-                    row
-
-                );
-
         }
 
     );
 
     return rows;
-
-}
-
-/**
- * =====================================================
- * Net Units
- * =====================================================
- */
-
-function calculateNetUnits(
-
-    row
-
-){
-
-    let units=
-
-        Number(
-
-            row.saleUnits||0
-
-        );
-
-    if(
-
-        row.isCancelled
-
-    ){
-
-        units--;
-
-    }
-
-    if(
-
-        row.isRTO
-
-    ){
-
-        units--;
-
-    }
-
-    if(
-
-        row.isCXReturn
-
-    ){
-
-        units--;
-
-    }
-
-    return units;
-
-}
-
-/**
- * =====================================================
- * Net GMV
- * =====================================================
- */
-
-function calculateNetGMV(
-
-    row
-
-){
-
-    let value=
-
-        Number(
-
-            row.saleGMV||0
-
-        );
-
-    if(
-
-        row.isCancelled||
-
-        row.isRTO||
-
-        row.isCXReturn
-
-    ){
-
-        value=0;
-
-    }
-
-    return value;
 
 }
