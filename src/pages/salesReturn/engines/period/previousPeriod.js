@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Previous Period
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -15,85 +15,61 @@ import {
 
 from "../../utils/monthIndex.js";
 
-import {
-
-    SalesReturnStore
-
-}
-
-from "../../store/salesReturnStore.js";
-
 /**
  * =====================================================
- * Get Previous Period Rows
+ * Get Previous Period
  * =====================================================
  */
 
-export function getPreviousPeriodRows(
+export function getPreviousPeriod(
 
-    rows=[]
+    months=[],
+
+    years=[]
 
 ){
 
-    const months=
+    const result=[];
 
-        SalesReturnStore.filters.months;
+    months.forEach(
 
-    if(
+        (
 
-        !months||
+            month,
 
-        !months.length
+            index
 
-    ){
+        )=>{
 
-        return [];
+            const previous=
 
-    }
+                getPreviousMonth(
 
-    const previousMonths=
+                    month,
 
-        months
+                    years[index]
 
-        .map(
+                );
 
-            getPreviousMonth
+            if(
 
-        )
+                previous
 
-        .filter(
+            ){
 
-            month=>
+                result.push(
 
-                month!==null
+                    previous
 
-        );
+                );
 
-    const lookup=
+            }
 
-        new Set(
-
-            previousMonths
-
-        );
-
-    return rows.filter(
-
-        row=>
-
-            lookup.has(
-
-                buildKey(
-
-                    row.month,
-
-                    row.year
-
-                )
-
-            )
+        }
 
     );
+
+    return result;
 
 }
 
@@ -105,109 +81,69 @@ export function getPreviousPeriodRows(
 
 function getPreviousMonth(
 
-    value
-
-){
-
-    const parts=
-
-        String(
-
-            value
-
-        ).split(
-
-            "-"
-
-        );
-
-    if(
-
-        parts.length!==2
-
-    ){
-
-        return null;
-
-    }
-
-    const month=
-
-        getMonthIndex(
-
-            parts[0]
-
-        );
-
-    let year=
-
-        Number(
-
-            parts[1]
-
-        );
-
-    if(
-
-        month===null||
-
-        !year
-
-    ){
-
-        return null;
-
-    }
-
-    let previousMonth=
-
-        month-1;
-
-    if(
-
-        previousMonth<0
-
-    ){
-
-        previousMonth=11;
-
-        year--;
-
-    }
-
-    return buildKey(
-
-        MONTH_NAMES[
-
-            previousMonth
-
-        ],
-
-        year
-
-    );
-
-}
-
-/**
- * =====================================================
- * Build Key
- * =====================================================
- */
-
-function buildKey(
-
     month,
 
     year
 
 ){
 
-    return `${month}-${year}`;
+    let index=
+
+        getMonthIndex(
+
+            month
+
+        );
+
+    let previousYear=
+
+        Number(
+
+            year
+
+        );
+
+    if(
+
+        index===null||
+
+        !previousYear
+
+    ){
+
+        return null;
+
+    }
+
+    index--;
+
+    if(
+
+        index<0
+
+    ){
+
+        index=11;
+
+        previousYear--;
+
+    }
+
+    return{
+
+        month:
+
+            MONTHS[index],
+
+        year:
+
+            previousYear
+
+    };
 
 }
 
-const MONTH_NAMES=[
+const MONTHS=[
 
     "Jan",
 
