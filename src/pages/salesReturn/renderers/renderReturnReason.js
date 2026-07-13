@@ -2,60 +2,75 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Return Reason Analysis
+ * Module  : Return Reason Renderer
  * Version : V1.0
  * =====================================================
  */
 
 import {
 
-    REPORT_CONFIG
+    renderAdvancedTable
 
 }
 
-from "../config/reportConfig.js";
+from "../../../components/common/table/renderAdvancedTable.js";
+
+/**
+ * =====================================================
+ * Render Return Reason Report
+ * =====================================================
+ */
 
 export async function renderReturnReason(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    const config=
+    await renderAdvancedTable(
 
-        REPORT_CONFIG.RETURN_REASON;
+        target,
 
-    target.innerHTML=`
+        {
 
-<div class="dashboard-card">
+            title:
 
-    <div class="dashboard-header">
+                "Customer Return Reasons",
 
-        <div>
+            subtitle:
 
-            <h3>
+                "Customer Return Analysis (CX Return Only)",
 
-                ${config.TITLE}
+            fixedColumns:[
 
-            </h3>
+                {
 
-            <p>
+                    key:"returnReason",
 
-                ${config.SUBTITLE}
+                    label:"Return Reason"
 
-            </p>
+                }
 
-        </div>
+            ],
 
-    </div>
+            metrics:[
 
-    <div
-    id="returnReasonTable">
+                {
 
-    </div>
+                    key:"cxReturn",
 
-</div>
+                    label:"CX Return"
 
-`;
+                }
+
+            ],
+
+            rows
+
+        }
+
+    );
 
 }
