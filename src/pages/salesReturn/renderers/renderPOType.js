@@ -2,60 +2,107 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : PO Type Performance
+ * Module  : PO Type Renderer
  * Version : V1.0
  * =====================================================
  */
 
 import {
 
-    REPORT_CONFIG
+    renderAdvancedTable
 
 }
 
-from "../config/reportConfig.js";
+from "../../../components/common/table/renderAdvancedTable.js";
+
+/**
+ * =====================================================
+ * Render PO Type Report
+ * =====================================================
+ */
 
 export async function renderPOType(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    const config=
+    await renderAdvancedTable(
 
-        REPORT_CONFIG.PO_TYPE;
+        target,
 
-    target.innerHTML=`
+        {
 
-<div class="dashboard-card">
+            title:
 
-    <div class="dashboard-header">
+                "PO Type Analysis",
 
-        <div>
+            subtitle:
 
-            <h3>
+                "Performance by Fulfilment Type",
 
-                ${config.TITLE}
+            fixedColumns:[
 
-            </h3>
+                {
 
-            <p>
+                    key:"poType",
 
-                ${config.SUBTITLE}
+                    label:"PO Type"
 
-            </p>
+                }
 
-        </div>
+            ],
 
-    </div>
+            metrics:[
 
-    <div
-    id="poTypeTable">
+                {
 
-    </div>
+                    key:"sale",
 
-</div>
+                    label:"Sale"
 
-`;
+                },
+
+                {
+
+                    key:"cancel",
+
+                    label:"Cancelled"
+
+                },
+
+                {
+
+                    key:"rto",
+
+                    label:"RTO"
+
+                },
+
+                {
+
+                    key:"cxReturn",
+
+                    label:"CX Return"
+
+                },
+
+                {
+
+                    key:"net",
+
+                    label:"Net"
+
+                }
+
+            ],
+
+            rows
+
+        }
+
+    );
 
 }
