@@ -3,9 +3,73 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales & Return Layout
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
+
+import {
+
+    renderHeader
+
+}
+
+from "./renderHeader.js";
+
+import {
+
+    renderFilters
+
+}
+
+from "./renderFilters.js";
+
+import {
+
+    renderKPIs
+
+}
+
+from "./renderKPIs.js";
+
+import {
+
+    renderPOType
+
+}
+
+from "./renderPOType.js";
+
+import {
+
+    renderBrand
+
+}
+
+from "./renderBrand.js";
+
+import {
+
+    renderStyle
+
+}
+
+from "./renderStyle.js";
+
+import {
+
+    renderReturnReason
+
+}
+
+from "./renderReturnReason.js";
+
+import {
+
+    renderTrend
+
+}
+
+from "./renderTrend.js";
 
 export async function renderLayout(
 
@@ -54,5 +118,85 @@ id="salesReturnPage">
 </div>
 
 `;
+
+    await renderHeader(
+
+        document.getElementById(
+
+            "salesReturnHeader"
+
+        )
+
+    );
+
+    await renderFilters(
+
+        document.getElementById(
+
+            "salesReturnFilters"
+
+        )
+
+    );
+
+    await renderKPIs(
+
+        document.getElementById(
+
+            "salesReturnKPIs"
+
+        )
+
+    );
+
+    await renderPOType(
+
+        document.getElementById(
+
+            "salesReturnPOType"
+
+        )
+
+    );
+
+    await renderBrand(
+
+        document.getElementById(
+
+            "salesReturnBrand"
+
+        )
+
+    );
+
+    await renderStyle(
+
+        document.getElementById(
+
+            "salesReturnStyle"
+
+        )
+
+    );
+
+    await renderReturnReason(
+
+        document.getElementById(
+
+            "salesReturnReason"
+
+        )
+
+    );
+
+    await renderTrend(
+
+        document.getElementById(
+
+            "salesReturnTrend"
+
+        )
+
+    );
 
 }
