@@ -3,25 +3,19 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales & Return
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
 import {
 
-    initializeDashboard
+    startSalesReturn,
+
+    stopSalesReturn
 
 }
 
-from "./dashboard/dashboard.js";
-
-import {
-
-    destroyDashboard
-
-}
-
-from "./dashboard/dashboard.js";
+from "./services/salesReturnService.js";
 
 let pageContainer=null;
 
@@ -41,7 +35,7 @@ export async function renderSalesReturn(
 
         target;
 
-    await initializeDashboard(
+    await startSalesReturn(
 
         pageContainer
 
@@ -57,7 +51,7 @@ export async function renderSalesReturn(
 
 export function destroySalesReturn(){
 
-    destroyDashboard();
+    stopSalesReturn();
 
     pageContainer=null;
 
