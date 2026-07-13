@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Load Sales & Return
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -17,27 +17,19 @@ from "./store/salesReturnStore.js";
 
 import {
 
+    initializeDashboard
+
+}
+
+from "./dashboard/dashboard.js";
+
+import {
+
     applyFilters
 
 }
 
 from "./filters/applyFilters.js";
-
-import {
-
-    renderFilters
-
-}
-
-from "./filters/renderFilters.js";
-
-import {
-
-    initializeSearch
-
-}
-
-from "./filters/searchEngine.js";
 
 import {
 
@@ -49,7 +41,7 @@ from "./store/refreshDashboard.js";
 
 /**
  * =====================================================
- * Load Sales & Return
+ * Load Sales & Return Module
  * =====================================================
  */
 
@@ -61,36 +53,80 @@ export async function loadSalesReturn(
 
 ){
 
+    SalesReturnStore.loading=true;
+
     /**
-     * Store Data
+     * =============================================
+     * Load Raw Data
+     * =============================================
      */
 
     SalesReturnStore.salesRows=
 
-        salesRows;
+        Array.isArray(
+
+            salesRows
+
+        )
+
+        ?
+
+        salesRows
+
+        :
+
+        [];
 
     SalesReturnStore.returnRows=
 
-        returnRows;
+        Array.isArray(
+
+            returnRows
+
+        )
+
+        ?
+
+        returnRows
+
+        :
+
+        [];
 
     /**
-     * Initialize Filters
-     */
-
-    renderFilters();
-
-    initializeSearch();
-
-    /**
-     * Apply Default Filters
+     * =============================================
+     * Apply Filters
+     * =============================================
      */
 
     applyFilters();
 
     /**
-     * Load Dashboard
+     * =============================================
+     * Initialize Dashboard
+     * =============================================
+     */
+
+    await initializeDashboard();
+
+    /**
+     * =============================================
+     * Refresh Dashboard
+     * =============================================
      */
 
     await refreshDashboard();
+
+    /**
+     * =============================================
+     * Update UI State
+     * =============================================
+     */
+
+    SalesReturnStore.loading=false;
+
+    SalesReturnStore.ui.lastRefresh=
+
+        new Date();
 
 }
