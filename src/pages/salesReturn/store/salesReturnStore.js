@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales & Return Store
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -21,7 +21,7 @@ export const SalesReturnStore={
 
     /**
      * ==========================================
-     * Processed Data
+     * Normalized Data
      * ==========================================
      */
 
@@ -67,7 +67,7 @@ export const SalesReturnStore={
 
     filters:{
 
-        months:[],
+        periods:[],
 
         brands:[],
 
@@ -127,7 +127,7 @@ export function resetSalesReturnStore(){
 
     SalesReturnStore.filters={
 
-        months:[],
+        periods:[],
 
         brands:[],
 
