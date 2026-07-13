@@ -2,60 +2,135 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Style Performance
+ * Module  : Style Renderer
  * Version : V1.0
  * =====================================================
  */
 
 import {
 
-    REPORT_CONFIG
+    renderAdvancedTable
 
 }
 
-from "../config/reportConfig.js";
+from "../../../components/common/table/renderAdvancedTable.js";
+
+/**
+ * =====================================================
+ * Render Style Report
+ * =====================================================
+ */
 
 export async function renderStyle(
 
-    target
+    target,
+
+    rows=[]
 
 ){
 
-    const config=
+    await renderAdvancedTable(
 
-        REPORT_CONFIG.STYLE;
+        target,
 
-    target.innerHTML=`
+        {
 
-<div class="dashboard-card">
+            title:
 
-    <div class="dashboard-header">
+                "Style Performance",
 
-        <div>
+            subtitle:
 
-            <h3>
+                "Sales vs Returns by Style",
 
-                ${config.TITLE}
+            fixedColumns:[
 
-            </h3>
+                {
 
-            <p>
+                    key:"styleId",
 
-                ${config.SUBTITLE}
+                    label:"Style ID",
 
-            </p>
+                    clickable:true,
 
-        </div>
+                    type:"style"
 
-    </div>
+                },
 
-    <div
-    id="styleTable">
+                {
 
-    </div>
+                    key:"brand",
 
-</div>
+                    label:"Brand"
 
-`;
+                },
+
+                {
+
+                    key:"poType",
+
+                    label:"PO Type"
+
+                },
+
+                {
+
+                    key:"articleType",
+
+                    label:"Article"
+
+                }
+
+            ],
+
+            metrics:[
+
+                {
+
+                    key:"sale",
+
+                    label:"Sale"
+
+                },
+
+                {
+
+                    key:"cancel",
+
+                    label:"Cancelled"
+
+                },
+
+                {
+
+                    key:"rto",
+
+                    label:"RTO"
+
+                },
+
+                {
+
+                    key:"cxReturn",
+
+                    label:"CX Return"
+
+                },
+
+                {
+
+                    key:"net",
+
+                    label:"Net"
+
+                }
+
+            ],
+
+            rows
+
+        }
+
+    );
 
 }
