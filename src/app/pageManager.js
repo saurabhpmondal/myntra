@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Page Manager
- * Version : V2.2
+ * Version : V2.3
  * =====================================================
  */
 
@@ -20,44 +20,36 @@ import { renderShipment } from "../pages/shipment/shipment.js";
 import { renderSorShipment } from "../pages/sorShipment/sorShipment.js";
 
 import {
-
     renderStyleEye,
-
     destroyStyleEye
-
 } from "../pages/styleEye/styleEye.js";
 
 import {
-
     renderDemandIndex
-
 } from "../pages/demandIndex/demandIndex.js";
 
 import {
-
     renderSJITIntelligence,
-
     destroySJITIntelligence
-
 } from "../pages/sjitIntelligence/sjitIntelligence.js";
 
 import {
-
     renderNewLaunch,
-
     destroyNewLaunch
-
 } from "../pages/newLaunch/newLaunch.js";
 
 import {
+    renderSalesReturn,
+    destroySalesReturn
+} from "../pages/salesReturn/salesReturn.js";
 
+import {
     renderAds
-
 } from "../components/ads/ads.js";
 
-let content=null;
+let content = null;
 
-let currentPage="dashboard";
+let currentPage = "dashboard";
 
 /**
  * =====================================================
@@ -65,13 +57,9 @@ let currentPage="dashboard";
  * =====================================================
  */
 
-export function initializePageManager(
+export function initializePageManager(container){
 
-    container
-
-){
-
-    content=container;
+    content = container;
 
 }
 
@@ -95,11 +83,7 @@ export function getCurrentPage(){
 
 export async function refreshCurrentPage(){
 
-    await openPage(
-
-        currentPage
-
-    );
+    await openPage(currentPage);
 
 }
 
@@ -109,18 +93,12 @@ export async function refreshCurrentPage(){
  * =====================================================
  */
 
-export async function openPage(
-
-    page
-
-){
+export async function openPage(page){
 
     if(!content){
 
         console.error(
-
             "Page Manager not initialized."
-
         );
 
         return;
@@ -153,123 +131,91 @@ export async function openPage(
 
             break;
 
+        case "sales-return":
+
+            destroySalesReturn();
+
+            break;
+
         default:
 
             break;
 
     }
 
-    currentPage=page;
+    currentPage = page;
 
     switch(page){
 
         case "dashboard":
 
-            await renderDashboard(
-
-                content
-
-            );
+            await renderDashboard(content);
 
             break;
 
         case "daily-sales":
 
-            await renderDailySales(
+            await renderDailySales(content);
 
-                content
+            break;
 
-            );
+        case "sales-return":
+
+            await renderSalesReturn(content);
 
             break;
 
         case "business":
 
-            await renderBusiness(
-
-                content
-
-            );
+            await renderBusiness(content);
 
             break;
 
         case "growth":
 
-            await renderGrowthPage(
-
-                content
-
-            );
+            await renderGrowthPage(content);
 
             break;
 
         case "shipment":
 
-            await renderShipment(
-
-                content
-
-            );
+            await renderShipment(content);
 
             break;
 
         case "sor-shipment":
 
-            await renderSorShipment(
-
-                content
-
-            );
+            await renderSorShipment(content);
 
             break;
 
         case "new-launch":
 
-            await renderNewLaunch(
-
-                content
-
-            );
+            await renderNewLaunch(content);
 
             break;
 
         case "sjit-intelligence":
 
-            await renderSJITIntelligence(
-
-                content
-
-            );
+            await renderSJITIntelligence(content);
 
             break;
 
         case "style-eye":
 
-            await renderStyleEye(
-
-                content
-
-            );
+            await renderStyleEye(content);
 
             break;
 
         case "demand-index":
 
-            await renderDemandIndex(
-
-                content
-
-            );
+            await renderDemandIndex(content);
 
             break;
 
         case "ads":
 
-            await renderAds(
-
-                content
-
-            );
+            await renderAds(content);
 
             break;
 
@@ -277,21 +223,13 @@ export async function openPage(
 
         case "sales-drop":
 
-            comingSoon(
-
-                page
-
-            );
+            comingSoon(page);
 
             break;
 
         default:
 
-            await renderDashboard(
-
-                content
-
-            );
+            await renderDashboard(content);
 
             break;
 
@@ -305,49 +243,24 @@ export async function openPage(
  * =====================================================
  */
 
-function comingSoon(
+function comingSoon(page){
 
-    page
-
-){
-
-    const title=
-
-        page
-
+    const title = page
         .split("-")
-
         .map(
-
-            word=>
-
-                word.charAt(0)
-
-                .toUpperCase()
-
-                +
-
+            word =>
+                word.charAt(0).toUpperCase() +
                 word.slice(1)
-
         )
-
         .join(" ");
 
-    content.innerHTML=`
+    content.innerHTML = `
 
 <div class="dashboard-card" style="padding:60px;text-align:center;">
 
-    <h2>
+    <h2>${title}</h2>
 
-        ${title}
-
-    </h2>
-
-    <p>
-
-        This module is under development.
-
-    </p>
+    <p>This module is under development.</p>
 
 </div>
 
