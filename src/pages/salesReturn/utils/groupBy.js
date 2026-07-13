@@ -9,7 +9,7 @@
 
 /**
  * =====================================================
- * Group Rows
+ * Group By
  * =====================================================
  */
 
@@ -21,17 +21,21 @@ export function groupBy(
 
 ){
 
-    const groups={};
+    return rows.reduce(
 
-    rows.forEach(
+        (
 
-        row=>{
+            groups,
+
+            row
+
+        )=>{
 
             const value=
 
                 row?.[key]??
 
-                "Unknown";
+                "__BLANK__";
 
             if(
 
@@ -49,11 +53,33 @@ export function groupBy(
 
             );
 
-        }
+            return groups;
+
+        },
+
+        {}
 
     );
 
-    return groups;
+}
+
+/**
+ * =====================================================
+ * Group Keys
+ * =====================================================
+ */
+
+export function getGroupKeys(
+
+    groups={}
+
+){
+
+    return Object.keys(
+
+        groups
+
+    );
 
 }
 
@@ -63,51 +89,15 @@ export function groupBy(
  * =====================================================
  */
 
-export function groupValues(
+export function getGroupValues(
 
-    rows=[],
-
-    key
+    groups={}
 
 ){
 
     return Object.values(
 
-        groupBy(
-
-            rows,
-
-            key
-
-        )
-
-    );
-
-}
-
-/**
- * =====================================================
- * Group Entries
- * =====================================================
- */
-
-export function groupEntries(
-
-    rows=[],
-
-    key
-
-){
-
-    return Object.entries(
-
-        groupBy(
-
-            rows,
-
-            key
-
-        )
+        groups
 
     );
 
