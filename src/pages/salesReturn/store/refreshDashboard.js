@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -17,11 +17,19 @@ from "./salesReturnStore.js";
 
 import {
 
-    comparePeriods
+    buildOrderLineDataset
 
 }
 
-from "../engines/period/comparePeriods.js";
+from "../engines/normalization/buildOrderLineDataset.js";
+
+import {
+
+    buildDataset
+
+}
+
+from "../engines/dataset/buildDataset.js";
 
 import {
 
@@ -143,38 +151,64 @@ from "../renderers/renderTrend.js";
 
 export async function refreshDashboard(){
 
-    const{
+    /**
+     * =============================================
+     * Normalize Dataset
+     * =============================================
+     */
 
-        current,
+    SalesReturnStore.normalizedRows=
 
-        previous
+        buildOrderLineDataset(
 
-    }=
+            SalesReturnStore.filteredSalesRows,
 
-    comparePeriods(
+            SalesReturnStore.filteredReturnRows
 
-        SalesReturnStore.filteredRows,
-
-        SalesReturnStore.filters.periods
-
-    );
+        );
 
     /**
+     * =============================================
+     * Build Dataset
+     * =============================================
+     */
+
+    const dataset=
+
+        buildDataset(
+
+            SalesReturnStore.normalizedRows
+
+        );
+
+    SalesReturnStore.actualRows=
+
+        dataset.actualRows;
+
+    SalesReturnStore.attributedRows=
+
+        dataset.attributedRows;
+
+    /**
+     * =============================================
      * KPI
+     * =============================================
      */
 
     SalesReturnStore.kpis=
 
         buildKPIs(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
     /**
+     * =============================================
      * Insights
+     * =============================================
      */
 
     SalesReturnStore.insights=
@@ -186,16 +220,18 @@ export async function refreshDashboard(){
         );
 
     /**
+     * =============================================
      * Reports
+     * =============================================
      */
 
     SalesReturnStore.poTypeReport=
 
         buildPOTypeReport(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
@@ -203,9 +239,9 @@ export async function refreshDashboard(){
 
         buildBrandReport(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
@@ -213,9 +249,9 @@ export async function refreshDashboard(){
 
         buildStyleReport(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
@@ -223,9 +259,9 @@ export async function refreshDashboard(){
 
         buildReturnReasonReport(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
@@ -233,14 +269,16 @@ export async function refreshDashboard(){
 
         buildTrendReport(
 
-            current,
+            SalesReturnStore.actualRows,
 
-            previous
+            SalesReturnStore.attributedRows
 
         );
 
     /**
+     * =============================================
      * Render
+     * =============================================
      */
 
     await renderKPIs(
@@ -326,5 +364,15 @@ export async function refreshDashboard(){
         SalesReturnStore.trendReport
 
     );
+
+    /**
+     * =============================================
+     * Update State
+     * =============================================
+     */
+
+    SalesReturnStore.ui.lastRefresh=
+
+        new Date();
 
 }
