@@ -3,11 +3,11 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales Return Store
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
-const DEFAULT_STATE = ()=>({
+const INITIAL_STATE={
 
     loaded:false,
 
@@ -89,26 +89,51 @@ const DEFAULT_STATE = ()=>({
 
     }
 
-});
+};
 
 export const SalesReturnStore=
 
-    DEFAULT_STATE();
+    structuredClone(
+
+        INITIAL_STATE
+
+    );
 
 /**
  * =====================================================
- * Reset Store
+ * Reset
+ * Preserve raw loaded data
  * =====================================================
  */
 
 export function resetSalesReturnStore(){
 
+    const sales=
+
+        SalesReturnStore.salesRows;
+
+    const returns=
+
+        SalesReturnStore.returnRows;
+
     Object.assign(
 
         SalesReturnStore,
 
-        DEFAULT_STATE()
+        structuredClone(
+
+            INITIAL_STATE
+
+        )
 
     );
+
+    SalesReturnStore.salesRows=
+
+        sales;
+
+    SalesReturnStore.returnRows=
+
+        returns;
 
 }
