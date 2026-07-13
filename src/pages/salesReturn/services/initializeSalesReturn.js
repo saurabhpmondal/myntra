@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Initialize Sales & Return
- * Version : V1.0
+ * Version : V2.0
  * =====================================================
  */
 
@@ -25,6 +25,30 @@ import {
 
 from "../renderers/renderLayout.js";
 
+import {
+
+    applyFilters
+
+}
+
+from "../filters/applyFilters.js";
+
+import {
+
+    refreshDashboard
+
+}
+
+from "../store/refreshDashboard.js";
+
+import {
+
+    renderFilters
+
+}
+
+from "../filters/renderFilters.js";
+
 /**
  * =====================================================
  * Initialize
@@ -38,13 +62,17 @@ export async function initializeSalesReturn(
 ){
 
     /**
-     * Reset Store
+     * ==========================================
+     * Reset
+     * ==========================================
      */
 
     resetSalesReturnStore();
 
     /**
-     * Render Layout
+     * ==========================================
+     * Layout
+     * ==========================================
      */
 
     await renderLayout(
@@ -54,7 +82,28 @@ export async function initializeSalesReturn(
     );
 
     /**
+     * ==========================================
+     * IMPORTANT
+     * Keep previously loaded data after reset
+     * ==========================================
+     */
+
+    SalesReturnStore.filteredSalesRows=[
+
+        ...SalesReturnStore.salesRows
+
+    ];
+
+    SalesReturnStore.filteredReturnRows=[
+
+        ...SalesReturnStore.returnRows
+
+    ];
+
+    /**
+     * ==========================================
      * Status
+     * ==========================================
      */
 
     SalesReturnStore.loaded=true;
@@ -62,5 +111,29 @@ export async function initializeSalesReturn(
     SalesReturnStore.generatedOn=
 
         new Date();
+
+    /**
+     * ==========================================
+     * Apply Default Filters
+     * ==========================================
+     */
+
+    applyFilters();
+
+    /**
+     * ==========================================
+     * Refresh Dashboard
+     * ==========================================
+     */
+
+    await refreshDashboard();
+
+    /**
+     * ==========================================
+     * Bind Filters
+     * ==========================================
+     */
+
+    renderFilters();
 
 }
