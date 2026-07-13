@@ -2,43 +2,123 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : KPI Layout
+ * Module  : KPI Renderer
  * Version : V1.0
+ * =====================================================
+ */
+
+import {
+
+    renderSaleKPI
+
+}
+
+from "./kpis/renderSaleKPI.js";
+
+import {
+
+    renderCancelKPI
+
+}
+
+from "./kpis/renderCancelKPI.js";
+
+import {
+
+    renderRTOKPI
+
+}
+
+from "./kpis/renderRTOKPI.js";
+
+import {
+
+    renderCXReturnKPI
+
+}
+
+from "./kpis/renderCXReturnKPI.js";
+
+import {
+
+    renderNetKPI
+
+}
+
+from "./kpis/renderNetKPI.js";
+
+/**
+ * =====================================================
+ * Render KPIs
  * =====================================================
  */
 
 export async function renderKPIs(
 
-    target
+    target,
+
+    kpis={}
 
 ){
 
-    target.innerHTML=`
+    await renderSaleKPI(
 
-<div class="kpi-grid">
+        document.getElementById(
 
-    <div
-    id="kpiSale">
-    </div>
+            "kpiSale"
 
-    <div
-    id="kpiCancel">
-    </div>
+        ),
 
-    <div
-    id="kpiRTO">
-    </div>
+        kpis.sale
 
-    <div
-    id="kpiCXReturn">
-    </div>
+    );
 
-    <div
-    id="kpiNet">
-    </div>
+    await renderCancelKPI(
 
-</div>
+        document.getElementById(
 
-`;
+            "kpiCancel"
+
+        ),
+
+        kpis.cancel
+
+    );
+
+    await renderRTOKPI(
+
+        document.getElementById(
+
+            "kpiRTO"
+
+        ),
+
+        kpis.rto
+
+    );
+
+    await renderCXReturnKPI(
+
+        document.getElementById(
+
+            "kpiCXReturn"
+
+        ),
+
+        kpis.cxReturn
+
+    );
+
+    await renderNetKPI(
+
+        document.getElementById(
+
+            "kpiNet"
+
+        ),
+
+        kpis.net
+
+    );
 
 }
