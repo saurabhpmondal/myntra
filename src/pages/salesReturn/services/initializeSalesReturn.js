@@ -7,29 +7,11 @@
  * =====================================================
  */
 
-import {
+import { resetSalesReturnStore } from "../store/salesReturnStore.js";
 
-    resetSalesReturnStore
+import { refreshDashboard } from "./refreshDashboard.js";
 
-}
-
-from "../store/salesReturnStore.js";
-
-import {
-
-    renderLayout
-
-}
-
-from "../renderers/renderLayout.js";
-
-import {
-
-    refreshDashboard
-
-}
-
-from "./refreshDashboard.js";
+import { renderLayout } from "../renderers/renderLayout.js";
 
 /**
  * =====================================================
@@ -60,7 +42,7 @@ export async function initializeSalesReturn(
     );
 
     /**
-     * Load Dashboard
+     * Load Data
      */
 
     await refreshDashboard();
