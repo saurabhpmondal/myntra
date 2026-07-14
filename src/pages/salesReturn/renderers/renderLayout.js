@@ -3,200 +3,108 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales & Return Layout
- * Version : V2.0
+ * Version : V2.1
  * =====================================================
  */
 
 import {
-
     renderHeader
-
-}
-
-from "./renderHeader.js";
+} from "./renderHeader.js";
 
 import {
-
     renderFilters
-
-}
-
-from "./renderFilters.js";
+} from "./renderFilters.js";
 
 import {
-
     renderKPIs
-
-}
-
-from "./renderKPIs.js";
+} from "./renderKPIs.js";
 
 import {
+    renderInsights
+} from "./renderInsights.js";
 
+import {
     renderPOType
-
-}
-
-from "./renderPOType.js";
+} from "./renderPOType.js";
 
 import {
-
     renderBrand
-
-}
-
-from "./renderBrand.js";
+} from "./renderBrand.js";
 
 import {
-
     renderStyle
-
-}
-
-from "./renderStyle.js";
+} from "./renderStyle.js";
 
 import {
-
     renderReturnReason
-
-}
-
-from "./renderReturnReason.js";
+} from "./renderReturnReason.js";
 
 import {
-
     renderTrend
+} from "./renderTrend.js";
 
-}
+export async function renderLayout(target){
 
-from "./renderTrend.js";
+    target.innerHTML = `
 
-export async function renderLayout(
+<div class="sales-return-page" id="salesReturnPage">
 
-    target
+    <div id="salesReturnHeader"></div>
 
-){
+    <div id="salesReturnFilters"></div>
 
-    target.innerHTML=`
+    <div id="salesReturnKPIs"></div>
 
-<div
-class="sales-return-page"
-id="salesReturnPage">
+    <div id="salesReturnInsights"></div>
 
-    <div
-    id="salesReturnHeader">
-    </div>
+    <div id="salesReturnPOType"></div>
 
-    <div
-    id="salesReturnFilters">
-    </div>
+    <div id="salesReturnBrand"></div>
 
-    <div
-    id="salesReturnKPIs">
-    </div>
+    <div id="salesReturnStyle"></div>
 
-    <div
-    id="salesReturnPOType">
-    </div>
+    <div id="salesReturnReturnReason"></div>
 
-    <div
-    id="salesReturnBrand">
-    </div>
-
-    <div
-    id="salesReturnStyle">
-    </div>
-
-    <div
-    id="salesReturnReason">
-    </div>
-
-    <div
-    id="salesReturnTrend">
-    </div>
+    <div id="salesReturnTrend"></div>
 
 </div>
 
 `;
 
     await renderHeader(
-
-        document.getElementById(
-
-            "salesReturnHeader"
-
-        )
-
+        document.getElementById("salesReturnHeader")
     );
 
     await renderFilters(
-
-        document.getElementById(
-
-            "salesReturnFilters"
-
-        )
-
+        document.getElementById("salesReturnFilters")
     );
 
     await renderKPIs(
+        document.getElementById("salesReturnKPIs")
+    );
 
-        document.getElementById(
-
-            "salesReturnKPIs"
-
-        )
-
+    await renderInsights(
+        document.getElementById("salesReturnInsights")
     );
 
     await renderPOType(
-
-        document.getElementById(
-
-            "salesReturnPOType"
-
-        )
-
+        document.getElementById("salesReturnPOType")
     );
 
     await renderBrand(
-
-        document.getElementById(
-
-            "salesReturnBrand"
-
-        )
-
+        document.getElementById("salesReturnBrand")
     );
 
     await renderStyle(
-
-        document.getElementById(
-
-            "salesReturnStyle"
-
-        )
-
+        document.getElementById("salesReturnStyle")
     );
 
     await renderReturnReason(
-
-        document.getElementById(
-
-            "salesReturnReason"
-
-        )
-
+        document.getElementById("salesReturnReturnReason")
     );
 
     await renderTrend(
-
-        document.getElementById(
-
-            "salesReturnTrend"
-
-        )
-
+        document.getElementById("salesReturnTrend")
     );
 
 }
