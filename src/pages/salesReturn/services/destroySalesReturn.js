@@ -2,31 +2,29 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Destroy Sales & Return
- * Version : V1.0
- * =====================================================
- */
-
-import {
-
-    resetSalesReturnStore
-
-}
-
-from "../store/salesReturnStore.js";
-
-/**
- * =====================================================
- * Destroy Module
+ * Module  : Destroy
+ * Version : V12.0
  * =====================================================
  */
 
 export function destroySalesReturnPage(){
 
-    /**
-     * Reset Store
-     */
+    const page =
 
-    resetSalesReturnStore();
+        document.getElementById(
+
+            "salesReturnPage"
+
+        );
+
+    if(
+
+        page
+
+    ){
+
+        page.remove();
+
+    }
 
 }
