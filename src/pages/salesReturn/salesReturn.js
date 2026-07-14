@@ -2,149 +2,58 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Sales Return Store
+ * Module  : Sales & Return V12
  * Version : V12.0
  * =====================================================
  */
 
-export const SalesReturnStore={
+export async function renderSalesReturn(container){
 
-    /**
-     * Status
-     */
+    container.innerHTML = `
 
-    loaded:false,
+    <div class="page">
 
-    loading:false,
+        <div class="page-header">
 
-    generatedOn:null,
+            <h1>Sales & Return</h1>
 
-    /**
-     * Raw Data
-     */
+            <p>
+                Phoenix V12 is currently under development.
+            </p>
 
-    sales:[],
+        </div>
 
-    returns:[],
+        <div class="card">
 
-    /**
-     * Global Filter Output
-     */
+            <div
+                style="
+                    padding:60px;
+                    text-align:center;
+                    color:#666;
+                ">
 
-    filteredSales:[],
+                <h2>🚧 Sales & Return V12</h2>
 
-    filteredReturns:[],
+                <p>
+                    Module rebuild in progress.
+                </p>
 
-    /**
-     * Lookup
-     */
+                <p>
+                    Sprint 0 • Foundation
+                </p>
 
-    orderLookup:{},
+            </div>
 
-    /**
-     * Dashboard
-     */
+        </div>
 
-    dashboard:{
+    </div>
 
-        saleGMV:0,
-        saleUnits:0,
+    `;
 
-        cancelGMV:0,
-        cancelUnits:0,
+}
 
-        rtoGMV:0,
-        rtoUnits:0,
+export function destroySalesReturn(){
 
-        cxGMV:0,
-        cxUnits:0,
-
-        netGMV:0,
-        netUnits:0
-
-    },
-
-    /**
-     * Reports
-     */
-
-    reports:{
-
-        poType:[],
-
-        brand:[],
-
-        style:[],
-
-        returnReason:[],
-
-        trend:[]
-
-    },
-
-    /**
-     * UI
-     */
-
-    ui:{
-
-        lastRefresh:null
-
-    }
-
-};
-
-export function resetSalesReturnStore(){
-
-    SalesReturnStore.loaded=false;
-
-    SalesReturnStore.loading=false;
-
-    SalesReturnStore.generatedOn=null;
-
-    SalesReturnStore.sales=[];
-
-    SalesReturnStore.returns=[];
-
-    SalesReturnStore.filteredSales=[];
-
-    SalesReturnStore.filteredReturns=[];
-
-    SalesReturnStore.orderLookup={};
-
-    SalesReturnStore.dashboard={
-
-        saleGMV:0,
-        saleUnits:0,
-
-        cancelGMV:0,
-        cancelUnits:0,
-
-        rtoGMV:0,
-        rtoUnits:0,
-
-        cxGMV:0,
-        cxUnits:0,
-
-        netGMV:0,
-        netUnits:0
-
-    };
-
-    SalesReturnStore.reports={
-
-        poType:[],
-
-        brand:[],
-
-        style:[],
-
-        returnReason:[],
-
-        trend:[]
-
-    };
-
-    SalesReturnStore.ui.lastRefresh=null;
+    // Nothing required for placeholder
 
 }
