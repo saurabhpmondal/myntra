@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Apply Filters
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
 
@@ -15,6 +15,40 @@ import {
 
 from "../store/salesReturnStore.js";
 
+import {
+
+    DataStore
+
+}
+
+from "../../../services/dataService.js";
+
+import {
+
+    FilterState,
+
+    getFilteredSales
+
+}
+
+from "../../../services/filterService.js";
+
+import {
+
+    LookupStore
+
+}
+
+from "../../../services/lookupService.js";
+
+import {
+
+    getPeriodKey
+
+}
+
+from "../../../services/periodService.js";
+
 /**
  * =====================================================
  * Apply Filters
@@ -23,73 +57,16 @@ from "../store/salesReturnStore.js";
 
 export function applyFilters(){
 
-    const filters=
-
-        SalesReturnStore.filters;
-
     /**
      * ==========================================
      * Sales
+     * (Uses Phoenix Global Filter Engine)
      * ==========================================
      */
 
-    SalesReturnStore.filteredSalesRows=
+    SalesReturnStore.filteredSalesRows =
 
-        (SalesReturnStore.salesRows||[])
-
-        .filter(
-
-            row=>
-
-                matchMonth(
-
-                    row,
-
-                    filters.saleMonth
-
-                )
-
-                &&
-
-                matchBrand(
-
-                    row,
-
-                    filters.brand
-
-                )
-
-                &&
-
-                matchCategory(
-
-                    row,
-
-                    filters.category
-
-                )
-
-                &&
-
-                matchERPStatus(
-
-                    row,
-
-                    filters.erpStatus
-
-                )
-
-                &&
-
-                matchStyle(
-
-                    row,
-
-                    filters.styleSearch
-
-                )
-
-        );
+        getFilteredSales();
 
     /**
      * ==========================================
@@ -97,320 +74,174 @@ export function applyFilters(){
      * ==========================================
      */
 
-    SalesReturnStore.filteredReturnRows=
+    SalesReturnStore.filteredReturnRows =
 
-        (SalesReturnStore.returnRows||[])
+        DataStore.returns.filter(
 
-        .filter(
+            row=>{
 
-            row=>
+                const product =
 
-                matchMonth(
+                    LookupStore.productMap[
 
-                    row,
+                        row.style_id
 
-                    filters.saleMonth
+                    ];
 
-                )
+                if(
 
-                &&
+                    !product
 
-                matchBrand(
+                ){
 
-                    row,
+                    return false;
 
-                    filters.brand
+                }
 
-                )
+                /**
+                 * Period
+                 */
 
-                &&
+                if(
 
-                matchCategory(
+                    FilterState.period!==null
 
-                    row,
+                ){
 
-                    filters.category
+                    const key=
 
-                )
+                        getPeriodKey(
 
-                &&
+                            row.month,
 
-                matchERPStatus(
+                            row.year
 
-                    row,
+                        );
 
-                    filters.erpStatus
+                    if(
 
-                )
+                        key!==FilterState.period
 
-                &&
+                    ){
 
-                matchStyle(
+                        return false;
 
-                    row,
+                    }
 
-                    filters.styleSearch
+                }
 
-                )
+                /**
+                 * Brand
+                 */
+
+                if(
+
+                    FilterState.brand!=="All"
+
+                    &&
+
+                    product.brand!==FilterState.brand
+
+                ){
+
+                    return false;
+
+                }
+
+                /**
+                 * Category
+                 */
+
+                if(
+
+                    FilterState.category!=="All"
+
+                    &&
+
+                    product.category!==FilterState.category
+
+                ){
+
+                    return false;
+
+                }
+
+                /**
+                 * ERP Status
+                 */
+
+                if(
+
+                    FilterState.erpStatus!=="All"
+
+                    &&
+
+                    product.erpStatus!==FilterState.erpStatus
+
+                ){
+
+                    return false;
+
+                }
+
+                /**
+                 * Search
+                 */
+
+                if(
+
+                    FilterState.search.trim()
+
+                ){
+
+                    const keyword=
+
+                        FilterState.search
+
+                        .trim()
+
+                        .toLowerCase();
+
+                    const matched=
+
+                        String(
+
+                            row.style_id||""
+
+                        )
+
+                        .toLowerCase()
+
+                        .includes(keyword)
+
+                        ||
+
+                        String(
+
+                            product.erpSku||""
+
+                        )
+
+                        .toLowerCase()
+
+                        .includes(keyword);
+
+                    if(
+
+                        !matched
+
+                    ){
+
+                        return false;
+
+                    }
+
+                }
+
+                return true;
+
+            }
 
         );
-
-}
-
-/**
- * =====================================================
- * Month
- * =====================================================
- */
-
-function matchMonth(
-
-    row,
-
-    values=[]
-
-){
-
-    if(
-
-        !values ||
-
-        !values.length
-
-    ){
-
-        return true;
-
-    }
-
-    const month=
-
-        String(
-
-            row.month??
-
-            row.sale_month??
-
-            ""
-
-        ).trim();
-
-    return values.includes(
-
-        month
-
-    );
-
-}
-
-/**
- * =====================================================
- * Brand
- * =====================================================
- */
-
-function matchBrand(
-
-    row,
-
-    values=[]
-
-){
-
-    if(
-
-        !values ||
-
-        !values.length
-
-    ){
-
-        return true;
-
-    }
-
-    const brand=
-
-        String(
-
-            row.brand??
-
-            ""
-
-        ).trim();
-
-    return values.includes(
-
-        brand
-
-    );
-
-}
-
-/**
- * =====================================================
- * Category
- * =====================================================
- */
-
-function matchCategory(
-
-    row,
-
-    values=[]
-
-){
-
-    if(
-
-        !values ||
-
-        !values.length
-
-    ){
-
-        return true;
-
-    }
-
-    const category=
-
-        String(
-
-            row.article_type??
-
-            row.category??
-
-            ""
-
-        ).trim();
-
-    return values.includes(
-
-        category
-
-    );
-
-}
-
-/**
- * =====================================================
- * ERP Status
- * =====================================================
- */
-
-function matchERPStatus(
-
-    row,
-
-    values=[]
-
-){
-
-    if(
-
-        !values ||
-
-        !values.length
-
-    ){
-
-        return true;
-
-    }
-
-    const status=
-
-        String(
-
-            row.erp_status??
-
-            row.status??
-
-            ""
-
-        ).trim();
-
-    return values.includes(
-
-        status
-
-    );
-
-}
-
-/**
- * =====================================================
- * Style Search
- * =====================================================
- */
-
-function matchStyle(
-
-    row,
-
-    keyword=""
-
-){
-
-    if(
-
-        !keyword
-
-    ){
-
-        return true;
-
-    }
-
-    keyword=
-
-        keyword
-
-        .toLowerCase()
-
-        .trim();
-
-    return(
-
-        String(
-
-            row.style_id??
-
-            row.styleId??
-
-            ""
-
-        )
-
-        .toLowerCase()
-
-        .includes(
-
-            keyword
-
-        )
-
-        ||
-
-        String(
-
-            row.erp_sku??
-
-            row.erpSku??
-
-            ""
-
-        )
-
-        .toLowerCase()
-
-        .includes(
-
-            keyword
-
-        )
-
-    );
 
 }
