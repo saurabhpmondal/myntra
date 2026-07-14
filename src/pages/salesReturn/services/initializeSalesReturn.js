@@ -3,9 +3,17 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Initialize Sales & Return
- * Version : V2.0
+ * Version : V3.0
  * =====================================================
  */
+
+import {
+
+    DataStore
+
+}
+
+from "../../../services/dataService.js";
 
 import {
 
@@ -27,27 +35,11 @@ from "../renderers/renderLayout.js";
 
 import {
 
-    applyFilters
+    loadSalesReturn
 
 }
 
-from "../filters/applyFilters.js";
-
-import {
-
-    refreshDashboard
-
-}
-
-from "../store/refreshDashboard.js";
-
-import {
-
-    renderFilters
-
-}
-
-from "../filters/renderFilters.js";
+from "../loadSalesReturn.js";
 
 /**
  * =====================================================
@@ -63,7 +55,21 @@ export async function initializeSalesReturn(
 
     /**
      * ==========================================
-     * Reset
+     * Preserve Loaded Data
+     * ==========================================
+     */
+
+    const existingSales=
+
+        SalesReturnStore.salesRows;
+
+    const existingReturns=
+
+        SalesReturnStore.returnRows;
+
+    /**
+     * ==========================================
+     * Reset Store
      * ==========================================
      */
 
@@ -71,7 +77,37 @@ export async function initializeSalesReturn(
 
     /**
      * ==========================================
-     * Layout
+     * Restore Data
+     * ==========================================
+     */
+
+    SalesReturnStore.salesRows=
+
+        existingSales.length
+
+        ?
+
+        existingSales
+
+        :
+
+        DataStore.sales;
+
+    SalesReturnStore.returnRows=
+
+        existingReturns.length
+
+        ?
+
+        existingReturns
+
+        :
+
+        DataStore.returns;
+
+    /**
+     * ==========================================
+     * Render Layout
      * ==========================================
      */
 
@@ -80,25 +116,6 @@ export async function initializeSalesReturn(
         container
 
     );
-
-    /**
-     * ==========================================
-     * IMPORTANT
-     * Keep previously loaded data after reset
-     * ==========================================
-     */
-
-    SalesReturnStore.filteredSalesRows=[
-
-        ...SalesReturnStore.salesRows
-
-    ];
-
-    SalesReturnStore.filteredReturnRows=[
-
-        ...SalesReturnStore.returnRows
-
-    ];
 
     /**
      * ==========================================
@@ -114,26 +131,16 @@ export async function initializeSalesReturn(
 
     /**
      * ==========================================
-     * Apply Default Filters
+     * Load Dashboard
      * ==========================================
      */
 
-    applyFilters();
+    await loadSalesReturn(
 
-    /**
-     * ==========================================
-     * Refresh Dashboard
-     * ==========================================
-     */
+        SalesReturnStore.salesRows,
 
-    await refreshDashboard();
+        SalesReturnStore.returnRows
 
-    /**
-     * ==========================================
-     * Bind Filters
-     * ==========================================
-     */
-
-    renderFilters();
+    );
 
 }
