@@ -2,109 +2,73 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Sales & Return Layout
- * Version : V2.1
+ * Module  : Layout
+ * Version : V12.0
  * =====================================================
  */
 
-import {
-    renderHeader
-} from "./renderHeader.js";
+export async function renderLayout(
 
-import {
-    renderFilters
-} from "./renderFilters.js";
+    target
 
-import {
-    renderKPIs
-} from "./renderKPIs.js";
-
-import {
-    renderInsights
-} from "./renderInsights.js";
-
-import {
-    renderPOType
-} from "./renderPOType.js";
-
-import {
-    renderBrand
-} from "./renderBrand.js";
-
-import {
-    renderStyle
-} from "./renderStyle.js";
-
-import {
-    renderReturnReason
-} from "./renderReturnReason.js";
-
-import {
-    renderTrend
-} from "./renderTrend.js";
-
-export async function renderLayout(target){
+){
 
     target.innerHTML = `
 
-<div class="sales-return-page" id="salesReturnPage">
+<div
+id="salesReturnPage"
+class="page">
 
-    <div id="salesReturnHeader"></div>
+    <div
+    class="page-header">
 
-    <div id="salesReturnFilters"></div>
+        <h1>
 
-    <div id="salesReturnKPIs"></div>
+            Sales & Return
 
-    <div id="salesReturnInsights"></div>
+        </h1>
 
-    <div id="salesReturnPOType"></div>
+        <p>
 
-    <div id="salesReturnBrand"></div>
+            Phoenix V12 Rebuild
 
-    <div id="salesReturnStyle"></div>
+        </p>
 
-    <div id="salesReturnReturnReason"></div>
+    </div>
 
-    <div id="salesReturnTrend"></div>
+    <div
+    class="card">
+
+        <div
+        style="
+            padding:80px;
+            text-align:center;
+        ">
+
+            <h2>
+
+                🚧 Sales & Return V12
+
+            </h2>
+
+            <p>
+
+                Module is being rebuilt from scratch.
+
+            </p>
+
+            <p>
+
+                Sprint 0 • Foundation Complete
+
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
 `;
-
-    await renderHeader(
-        document.getElementById("salesReturnHeader")
-    );
-
-    await renderFilters(
-        document.getElementById("salesReturnFilters")
-    );
-
-    await renderKPIs(
-        document.getElementById("salesReturnKPIs")
-    );
-
-    await renderInsights(
-        document.getElementById("salesReturnInsights")
-    );
-
-    await renderPOType(
-        document.getElementById("salesReturnPOType")
-    );
-
-    await renderBrand(
-        document.getElementById("salesReturnBrand")
-    );
-
-    await renderStyle(
-        document.getElementById("salesReturnStyle")
-    );
-
-    await renderReturnReason(
-        document.getElementById("salesReturnReturnReason")
-    );
-
-    await renderTrend(
-        document.getElementById("salesReturnTrend")
-    );
 
 }
