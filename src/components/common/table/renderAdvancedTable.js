@@ -3,7 +3,7 @@
  * Project Phoenix
  * Common Component
  * Module  : Advanced Table
- * Version : V3.0
+ * Version : V3.1
  * =====================================================
  */
 
@@ -21,6 +21,20 @@ export async function renderAdvancedTable(
 
 ){
 
+    if(!target){
+
+        console.warn(
+
+            "renderAdvancedTable: target not found",
+
+            config?.title
+
+        );
+
+        return;
+
+    }
+
     const{
 
         title="",
@@ -34,6 +48,14 @@ export async function renderAdvancedTable(
         rows=[]
 
     }=config;
+
+    const safeRows=
+
+        Array.isArray(rows)
+
+        ?rows
+
+        :[];
 
     const columns=
 
@@ -83,7 +105,7 @@ export async function renderAdvancedTable(
 
                     columns,
 
-                    rows
+                    safeRows
 
                 )}
 
@@ -119,15 +141,13 @@ function buildHeader(
 
     fixedColumns.forEach(
 
-        column=>{
+        column=>
 
             top.push(
 
                 `<th rowspan="2">${column.label}</th>`
 
-            );
-
-        }
+            )
 
     );
 
@@ -141,41 +161,19 @@ function buildHeader(
 
             );
 
-            bottom.push(
-
-                "<th>GMV</th>"
-
-            );
-
-            bottom.push(
-
-                "<th>Units</th>"
-
-            );
-
-            bottom.push(
-
-                "<th>Growth</th>"
-
-            );
+            bottom.push("<th>GMV</th>");
+            bottom.push("<th>Units</th>");
+            bottom.push("<th>Growth</th>");
 
         }
 
     );
 
-    return`
+    return `
 
-<tr>
+<tr>${top.join("")}</tr>
 
-${top.join("")}
-
-</tr>
-
-<tr>
-
-${bottom.join("")}
-
-</tr>
+<tr>${bottom.join("")}</tr>
 
 `;
 
@@ -183,7 +181,7 @@ ${bottom.join("")}
 
 /**
  * =====================================================
- * Build Columns
+ * Columns
  * =====================================================
  */
 
@@ -195,19 +193,7 @@ function buildColumns(
 
 ){
 
-    const columns=[];
-
-    fixedColumns.forEach(
-
-        column=>
-
-            columns.push(
-
-                column
-
-            )
-
-    );
+    const columns=[...fixedColumns];
 
     metrics.forEach(
 
@@ -215,9 +201,7 @@ function buildColumns(
 
             columns.push({
 
-                key:
-
-                    `${metric.key}.gmv.current`,
+                key:`${metric.key}.gmv.current`,
 
                 type:"currency"
 
@@ -225,9 +209,7 @@ function buildColumns(
 
             columns.push({
 
-                key:
-
-                    `${metric.key}.units.current`,
+                key:`${metric.key}.units.current`,
 
                 type:"number"
 
@@ -235,9 +217,7 @@ function buildColumns(
 
             columns.push({
 
-                key:
-
-                    `${metric.key}.units.growth.value`,
+                key:`${metric.key}.units.growth.value`,
 
                 type:"growth"
 
@@ -253,7 +233,7 @@ function buildColumns(
 
 /**
  * =====================================================
- * Build Rows
+ * Rows
  * =====================================================
  */
 
@@ -265,6 +245,24 @@ function buildRows(
 
 ){
 
+    if(!rows.length){
+
+        return `
+
+<tr>
+
+<td colspan="${columns.length}" style="text-align:center;padding:32px;">
+
+No data available
+
+</td>
+
+</tr>
+
+`;
+
+    }
+
     return rows.map(
 
         row=>`
@@ -275,17 +273,7 @@ ${columns.map(
 
 column=>`
 
-<td>
-
-${renderCell(
-
-column,
-
-row
-
-)}
-
-</td>
+<td>${renderCell(column,row)}</td>
 
 `
 
@@ -301,7 +289,7 @@ row
 
 /**
  * =====================================================
- * Render Cell
+ * Cell
  * =====================================================
  */
 
@@ -323,161 +311,59 @@ function renderCell(
 
         );
 
-    switch(
+    switch(column.type){
 
-        column.type
+        case"style":
 
-    ){
+            return renderStyleLink(value);
 
-        case "style":
+        case"currency":
 
-            return renderStyleLink(
+            return formatCurrency(value);
 
-                value
+        case"number":
 
-            );
+            return formatNumber(value);
 
-        case "currency":
+        case"percent":
 
-            return formatCurrency(
+            return formatPercent(value);
 
-                value
+        case"growth":
 
-            );
-
-        case "number":
-
-            return formatNumber(
-
-                value
-
-            );
-
-        case "percent":
-
-            return formatPercent(
-
-                value
-
-            );
-
-        case "growth":
-
-            return formatGrowth(
-
-                value
-
-            );
+            return formatGrowth(value);
 
         default:
 
-            return value??
-
-                "-";
+            return value??"-";
 
     }
 
 }
 
-/**
- * =====================================================
- * Read Nested Value
- * =====================================================
- */
+function read(object,path){
 
-function read(
+    if(!path)return null;
 
-    object,
+    return path.split(".").reduce(
 
-    path
+        (v,k)=>v?.[k],
 
-){
+        object
 
-    if(
-
-        !path
-
-    ){
-
-        return null;
-
-    }
-
-    return path
-
-        .split(".")
-
-        .reduce(
-
-            (
-
-                value,
-
-                key
-
-            )=>
-
-                value?.[key],
-
-            object
-
-        );
+    );
 
 }
 
-/**
- * =====================================================
- * Style Link
- * =====================================================
- */
+function renderStyleLink(styleId){
 
-function renderStyleLink(
+    if(!styleId)return"-";
 
-    styleId
-
-){
-
-    if(
-
-        !styleId
-
-    ){
-
-        return "-";
-
-    }
-
-    return `
-
-<a
-
-href="https://www.myntra.com/${styleId}"
-
-target="_blank"
-
-class="phoenix-style-link"
-
->
-
-${styleId}
-
-</a>
-
-`;
+    return `<a href="https://www.myntra.com/${styleId}" target="_blank" class="phoenix-style-link">${styleId}</a>`;
 
 }
 
-/**
- * =====================================================
- * Currency
- * =====================================================
- */
-
-function formatCurrency(
-
-    value=0
-
-){
+function formatCurrency(value=0){
 
     return new Intl.NumberFormat(
 
@@ -493,152 +379,34 @@ function formatCurrency(
 
         }
 
-    ).format(
-
-        Number(
-
-            value||
-
-            0
-
-        )
-
-    );
+    ).format(Number(value||0));
 
 }
 
-/**
- * =====================================================
- * Number
- * =====================================================
- */
-
-function formatNumber(
-
-    value=0
-
-){
+function formatNumber(value=0){
 
     return new Intl.NumberFormat(
 
         "en-IN"
 
-    ).format(
-
-        Number(
-
-            value||
-
-            0
-
-        )
-
-    );
+    ).format(Number(value||0));
 
 }
 
-/**
- * =====================================================
- * Percent
- * =====================================================
- */
+function formatPercent(value=0){
 
-function formatPercent(
-
-    value=0
-
-){
-
-    return `${
-
-        Number(
-
-            value||
-
-            0
-
-        ).toFixed(
-
-            2
-
-        )
-
-    }%`;
+    return `${Number(value||0).toFixed(2)}%`;
 
 }
 
-/**
- * =====================================================
- * Growth
- * =====================================================
- */
+function formatGrowth(value=0){
 
-function formatGrowth(
+    value=Number(value||0);
 
-    value=0
+    const cls=value>0?"growth-up":value<0?"growth-down":"growth-flat";
 
-){
+    const icon=value>0?"▲":value<0?"▼":"■";
 
-    value=
-
-        Number(
-
-            value||
-
-            0
-
-        );
-
-    const cls=
-
-        value>0
-
-        ?"growth-up"
-
-        :
-
-        value<0
-
-        ?"growth-down"
-
-        :
-
-        "growth-flat";
-
-    const icon=
-
-        value>0
-
-        ?"▲"
-
-        :
-
-        value<0
-
-        ?"▼"
-
-        :
-
-        "■";
-
-    return `
-
-<span class="${cls}">
-
-${icon}
-
-${Math.abs(
-
-        value
-
-    ).toFixed(
-
-        1
-
-    )}%
-
-</span>
-
-`;
+    return `<span class="${cls}">${icon} ${Math.abs(value).toFixed(1)}%</span>`;
 
 }
