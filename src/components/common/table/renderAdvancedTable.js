@@ -21,11 +21,15 @@ export async function renderAdvancedTable(
 
 ){
 
-    if(!target){
+    if(
+
+        !target
+
+    ){
 
         console.warn(
 
-            "renderAdvancedTable: target not found",
+            "AdvancedTable target not found",
 
             config?.title
 
@@ -51,7 +55,11 @@ export async function renderAdvancedTable(
 
     const safeRows=
 
-        Array.isArray(rows)
+        Array.isArray(
+
+            rows
+
+        )
 
         ?rows
 
@@ -141,13 +149,15 @@ function buildHeader(
 
     fixedColumns.forEach(
 
-        column=>
+        column=>{
 
             top.push(
 
                 `<th rowspan="2">${column.label}</th>`
 
-            )
+            );
+
+        }
 
     );
 
@@ -169,11 +179,19 @@ function buildHeader(
 
     );
 
-    return `
+    return`
 
-<tr>${top.join("")}</tr>
+<tr>
 
-<tr>${bottom.join("")}</tr>
+${top.join("")}
+
+</tr>
+
+<tr>
+
+${bottom.join("")}
+
+</tr>
 
 `;
 
@@ -181,7 +199,7 @@ function buildHeader(
 
 /**
  * =====================================================
- * Columns
+ * Build Columns
  * =====================================================
  */
 
@@ -193,7 +211,19 @@ function buildColumns(
 
 ){
 
-    const columns=[...fixedColumns];
+    const columns=[];
+
+    fixedColumns.forEach(
+
+        column=>
+
+            columns.push(
+
+                column
+
+            )
+
+    );
 
     metrics.forEach(
 
@@ -233,7 +263,7 @@ function buildColumns(
 
 /**
  * =====================================================
- * Rows
+ * Build Rows
  * =====================================================
  */
 
@@ -245,13 +275,17 @@ function buildRows(
 
 ){
 
-    if(!rows.length){
+    if(
 
-        return `
+        !rows.length
+
+    ){
+
+        return`
 
 <tr>
 
-<td colspan="${columns.length}" style="text-align:center;padding:32px;">
+<td colspan="${columns.length}">
 
 No data available
 
@@ -273,7 +307,17 @@ ${columns.map(
 
 column=>`
 
-<td>${renderCell(column,row)}</td>
+<td>
+
+${renderCell(
+
+column,
+
+row
+
+)}
+
+</td>
 
 `
 
@@ -289,7 +333,7 @@ column=>`
 
 /**
  * =====================================================
- * Cell
+ * Render Cell
  * =====================================================
  */
 
@@ -311,7 +355,11 @@ function renderCell(
 
         );
 
-    switch(column.type){
+    switch(
+
+        column.type
+
+    ){
 
         case"style":
 
@@ -341,29 +389,79 @@ function renderCell(
 
 }
 
-function read(object,path){
+function read(
 
-    if(!path)return null;
+    object,
 
-    return path.split(".").reduce(
+    path
 
-        (v,k)=>v?.[k],
+){
 
-        object
+    if(!path){
 
-    );
+        return null;
+
+    }
+
+    return path
+
+        .split(".")
+
+        .reduce(
+
+            (
+
+                value,
+
+                key
+
+            )=>
+
+                value?.[key],
+
+            object
+
+        );
 
 }
 
-function renderStyleLink(styleId){
+function renderStyleLink(
 
-    if(!styleId)return"-";
+    styleId
 
-    return `<a href="https://www.myntra.com/${styleId}" target="_blank" class="phoenix-style-link">${styleId}</a>`;
+){
+
+    if(!styleId){
+
+        return "-";
+
+    }
+
+    return `
+
+<a
+
+href="https://www.myntra.com/${styleId}"
+
+target="_blank"
+
+class="phoenix-style-link"
+
+>
+
+${styleId}
+
+</a>
+
+`;
 
 }
 
-function formatCurrency(value=0){
+function formatCurrency(
+
+    value=0
+
+){
 
     return new Intl.NumberFormat(
 
@@ -379,34 +477,100 @@ function formatCurrency(value=0){
 
         }
 
-    ).format(Number(value||0));
+    ).format(
+
+        Number(
+
+            value||0
+
+        )
+
+    );
 
 }
 
-function formatNumber(value=0){
+function formatNumber(
+
+    value=0
+
+){
 
     return new Intl.NumberFormat(
 
         "en-IN"
 
-    ).format(Number(value||0));
+    ).format(
+
+        Number(
+
+            value||0
+
+        )
+
+    );
 
 }
 
-function formatPercent(value=0){
+function formatPercent(
+
+    value=0
+
+){
 
     return `${Number(value||0).toFixed(2)}%`;
 
 }
 
-function formatGrowth(value=0){
+function formatGrowth(
+
+    value=0
+
+){
 
     value=Number(value||0);
 
-    const cls=value>0?"growth-up":value<0?"growth-down":"growth-flat";
+    const cls=
 
-    const icon=value>0?"▲":value<0?"▼":"■";
+        value>0
 
-    return `<span class="${cls}">${icon} ${Math.abs(value).toFixed(1)}%</span>`;
+        ?"growth-up"
+
+        :
+
+        value<0
+
+        ?"growth-down"
+
+        :
+
+        "growth-flat";
+
+    const icon=
+
+        value>0
+
+        ?"▲"
+
+        :
+
+        value<0
+
+        ?"▼"
+
+        :
+
+        "■";
+
+    return `
+
+<span class="${cls}">
+
+${icon}
+
+${Math.abs(value).toFixed(1)}%
+
+</span>
+
+`;
 
 }
