@@ -23,21 +23,21 @@ from "../store/salesReturnStore.js";
 
 export function applyFilters(){
 
-    const{
+    const filters=
 
-        salesRows,
+        SalesReturnStore.filters;
 
-        returnRows,
-
-        filters
-
-    }=
-
-    SalesReturnStore;
+    /**
+     * ==========================================
+     * Sales
+     * ==========================================
+     */
 
     SalesReturnStore.filteredSalesRows=
 
-        (salesRows||[]).filter(
+        (SalesReturnStore.salesRows||[])
+
+        .filter(
 
             row=>
 
@@ -61,11 +61,21 @@ export function applyFilters(){
 
                 &&
 
-                matchPOType(
+                matchCategory(
 
                     row,
 
-                    filters.poType
+                    filters.category
+
+                )
+
+                &&
+
+                matchERPStatus(
+
+                    row,
+
+                    filters.erpStatus
 
                 )
 
@@ -81,9 +91,17 @@ export function applyFilters(){
 
         );
 
+    /**
+     * ==========================================
+     * Returns
+     * ==========================================
+     */
+
     SalesReturnStore.filteredReturnRows=
 
-        (returnRows||[]).filter(
+        (SalesReturnStore.returnRows||[])
+
+        .filter(
 
             row=>
 
@@ -107,11 +125,21 @@ export function applyFilters(){
 
                 &&
 
-                matchPOType(
+                matchCategory(
 
                     row,
 
-                    filters.poType
+                    filters.category
+
+                )
+
+                &&
+
+                matchERPStatus(
+
+                    row,
+
+                    filters.erpStatus
 
                 )
 
@@ -145,7 +173,9 @@ function matchMonth(
 
     if(
 
-        !values?.length
+        !values ||
+
+        !values.length
 
     ){
 
@@ -153,9 +183,21 @@ function matchMonth(
 
     }
 
+    const month=
+
+        String(
+
+            row.month??
+
+            row.sale_month??
+
+            ""
+
+        ).trim();
+
     return values.includes(
 
-        row.month
+        month
 
     );
 
@@ -177,7 +219,9 @@ function matchBrand(
 
     if(
 
-        !values?.length
+        !values ||
+
+        !values.length
 
     ){
 
@@ -185,9 +229,19 @@ function matchBrand(
 
     }
 
+    const brand=
+
+        String(
+
+            row.brand??
+
+            ""
+
+        ).trim();
+
     return values.includes(
 
-        row.brand
+        brand
 
     );
 
@@ -195,11 +249,11 @@ function matchBrand(
 
 /**
  * =====================================================
- * PO Type
+ * Category
  * =====================================================
  */
 
-function matchPOType(
+function matchCategory(
 
     row,
 
@@ -209,7 +263,9 @@ function matchPOType(
 
     if(
 
-        !values?.length
+        !values ||
+
+        !values.length
 
     ){
 
@@ -217,9 +273,67 @@ function matchPOType(
 
     }
 
+    const category=
+
+        String(
+
+            row.article_type??
+
+            row.category??
+
+            ""
+
+        ).trim();
+
     return values.includes(
 
-        row.poType
+        category
+
+    );
+
+}
+
+/**
+ * =====================================================
+ * ERP Status
+ * =====================================================
+ */
+
+function matchERPStatus(
+
+    row,
+
+    values=[]
+
+){
+
+    if(
+
+        !values ||
+
+        !values.length
+
+    ){
+
+        return true;
+
+    }
+
+    const status=
+
+        String(
+
+            row.erp_status??
+
+            row.status??
+
+            ""
+
+        ).trim();
+
+    return values.includes(
+
+        status
 
     );
 
@@ -249,21 +363,53 @@ function matchStyle(
 
     }
 
-    return String(
-
-        row.styleId??
-
-        ""
-
-    )
-
-    .toLowerCase()
-
-    .includes(
+    keyword=
 
         keyword
 
         .toLowerCase()
+
+        .trim();
+
+    return(
+
+        String(
+
+            row.style_id??
+
+            row.styleId??
+
+            ""
+
+        )
+
+        .toLowerCase()
+
+        .includes(
+
+            keyword
+
+        )
+
+        ||
+
+        String(
+
+            row.erp_sku??
+
+            row.erpSku??
+
+            ""
+
+        )
+
+        .toLowerCase()
+
+        .includes(
+
+            keyword
+
+        )
 
     );
 
