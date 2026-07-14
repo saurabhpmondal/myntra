@@ -3,149 +3,64 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : KPI Renderer
- * Version : V2.0
+ * Version : V12.0
  * =====================================================
  */
 
-import {
+import { renderKPIGrid } from "../../../components/common/kpi/renderKPIGrid.js";
 
-    renderSaleKPI
+export async function renderKPIs(target,dashboard={}){
 
-}
-
-from "./kpis/renderSaleKPI.js";
-
-import {
-
-    renderCancelKPI
-
-}
-
-from "./kpis/renderCancelKPI.js";
-
-import {
-
-    renderRTOKPI
-
-}
-
-from "./kpis/renderRTOKPI.js";
-
-import {
-
-    renderCXReturnKPI
-
-}
-
-from "./kpis/renderCXReturnKPI.js";
-
-import {
-
-    renderNetKPI
-
-}
-
-from "./kpis/renderNetKPI.js";
-
-/**
- * =====================================================
- * Render KPIs
- * =====================================================
- */
-
-export async function renderKPIs(
-
-    target,
-
-    kpis={}
-
-){
-
-    if(
-
-        !target
-
-    ){
+    if(!target){
 
         return;
 
     }
 
-    target.innerHTML=`
+    const cards=[
 
-<div class="kpi-grid">
+        {
+            title:"Sale",
+            value:dashboard.sale?.gmv||0,
+            subValue:dashboard.sale?.units||0,
+            type:"currency-unit"
+        },
 
-    <div id="kpiSale"></div>
+        {
+            title:"Cancel",
+            value:dashboard.cancel?.gmv||0,
+            subValue:dashboard.cancel?.units||0,
+            type:"currency-unit"
+        },
 
-    <div id="kpiCancel"></div>
+        {
+            title:"RTO",
+            value:dashboard.rto?.gmv||0,
+            subValue:dashboard.rto?.units||0,
+            type:"currency-unit"
+        },
 
-    <div id="kpiRTO"></div>
+        {
+            title:"CX Return",
+            value:dashboard.cx?.gmv||0,
+            subValue:dashboard.cx?.units||0,
+            type:"currency-unit"
+        },
 
-    <div id="kpiCXReturn"></div>
+        {
+            title:"Net",
+            value:dashboard.net?.gmv||0,
+            subValue:dashboard.net?.units||0,
+            type:"currency-unit"
+        }
 
-    <div id="kpiNet"></div>
+    ];
 
-</div>
+    await renderKPIGrid(
 
-`;
+        target,
 
-    await renderSaleKPI(
-
-        document.getElementById(
-
-            "kpiSale"
-
-        ),
-
-        kpis.sale||{}
-
-    );
-
-    await renderCancelKPI(
-
-        document.getElementById(
-
-            "kpiCancel"
-
-        ),
-
-        kpis.cancel||{}
-
-    );
-
-    await renderRTOKPI(
-
-        document.getElementById(
-
-            "kpiRTO"
-
-        ),
-
-        kpis.rto||{}
-
-    );
-
-    await renderCXReturnKPI(
-
-        document.getElementById(
-
-            "kpiCXReturn"
-
-        ),
-
-        kpis.cxReturn||{}
-
-    );
-
-    await renderNetKPI(
-
-        document.getElementById(
-
-            "kpiNet"
-
-        ),
-
-        kpis.net||{}
+        cards
 
     );
 
