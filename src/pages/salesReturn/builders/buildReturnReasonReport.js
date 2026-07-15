@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Build Return Reason Report
- * Version : V12.0
+ * Version : V12.1
  * =====================================================
  */
 
@@ -18,6 +18,8 @@ export function buildReturnReasonReport(
 ){
 
     const report={};
+
+    let totalReturnUnits=0;
 
     returns.forEach(row=>{
 
@@ -35,51 +37,20 @@ export function buildReturnReasonReport(
 
         }
 
-        const key=
+        /**
+         * ------------------------------------------
+         * RTO has no reason.
+         * Show "RTO" instead of Unknown.
+         * ------------------------------------------
+         */
 
-            row.return_reason || "Unknown";
+        let reason=
 
-        if(!report[key]){
+            String(
 
-            report[key]={
+                row.return_reason||""
 
-                returnReason:key,
-
-                saleGMV:0,
-
-                saleUnits:0,
-
-                cancelGMV:0,
-
-                cancelUnits:0,
-
-                rtoGMV:0,
-
-                rtoUnits:0,
-
-                cxGMV:0,
-
-                cxUnits:0,
-
-                netGMV:0,
-
-                netUnits:0
-
-            };
-
-        }
-
-        const item=
-
-            report[key];
-
-        const gmv=
-
-            Number(
-
-                sale.final_amount
-
-            )||0;
+            ).trim();
 
         const type=
 
@@ -95,55 +66,69 @@ export function buildReturnReasonReport(
 
         if(type==="RTO"){
 
-            item.rtoGMV+=gmv;
-
-            item.rtoUnits++;
+            reason="RTO";
 
         }
 
-        else if(type==="RETURN"){
+        if(!reason){
 
-            item.cxGMV+=gmv;
-
-            item.cxUnits++;
+            reason="Unknown";
 
         }
+
+        if(!report[reason]){
+
+            report[reason]={
+
+                returnReason:reason,
+
+                returnGMV:0,
+
+                returnUnits:0,
+
+                contribution:0
+
+            };
+
+        }
+
+        const gmv=
+
+            Number(
+
+                sale.final_amount
+
+            )||0;
+
+        report[reason].returnGMV+=gmv;
+
+        report[reason].returnUnits++;
+
+        totalReturnUnits++;
 
     });
 
     Object.values(report).forEach(item=>{
 
-        item.netGMV=
+        item.contribution=
 
-            item.saleGMV
+            totalReturnUnits
 
-            -
+                ?
 
-            item.cancelGMV
+                (
 
-            -
+                    item.returnUnits
 
-            item.rtoGMV
+                    /
 
-            -
+                    totalReturnUnits
 
-            item.cxGMV;
+                )*100
 
-        item.netUnits=
+                :
 
-            item.saleUnits
-
-            -
-
-            item.cancelUnits
-
-            -
-
-            item.rtoUnits
-
-            -
-
-            item.cxUnits;
+                0;
 
     });
 
@@ -153,11 +138,9 @@ export function buildReturnReasonReport(
 
             (a,b)=>
 
-                (b.rtoGMV+b.cxGMV)
+                b.returnUnits-
 
-                -
-
-                (a.rtoGMV+a.cxGMV)
+                a.returnUnits
 
         );
 
