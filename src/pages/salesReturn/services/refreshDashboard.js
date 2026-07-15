@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V12.3
+ * Version : V12.4
  * =====================================================
  */
 
@@ -16,10 +16,12 @@ import { buildLookup } from "../engines/buildLookup.js";
 import { buildKPIs } from "../engines/buildKPIs.js";
 
 import { buildPOTypeReport } from "../builders/buildPOTypeReport.js";
+import { buildBrandReport } from "../builders/buildBrandReport.js";
 
 import { renderKPIs } from "../renderers/renderKPIs.js";
 
 import { renderPOTypeReport } from "../renderers/renderPOTypeReport.js";
+import { renderBrandReport } from "../renderers/renderBrandReport.js";
 
 /**
  * =====================================================
@@ -31,19 +33,13 @@ export async function refreshDashboard(){
 
     SalesReturnStore.loading = true;
 
-    /**
-     * ==========================================
-     * Reset
-     * ==========================================
-     */
+    SalesReturnStore.sales=[];
 
-    SalesReturnStore.sales = [];
+    SalesReturnStore.returns=[];
 
-    SalesReturnStore.returns = [];
+    SalesReturnStore.lookup={};
 
-    SalesReturnStore.lookup = {};
-
-    SalesReturnStore.dashboard = {
+    SalesReturnStore.dashboard={
 
         sale:{gmv:0,units:0},
 
@@ -57,7 +53,7 @@ export async function refreshDashboard(){
 
     };
 
-    SalesReturnStore.reports = {
+    SalesReturnStore.reports={
 
         poType:[],
 
@@ -73,21 +69,21 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Apply Global Filters
+     * Apply Global Filter
      * ==========================================
      */
 
-    const {
+    const{
 
         sales,
 
         returns
 
-    } = filterData();
+    }=filterData();
 
-    SalesReturnStore.sales = sales;
+    SalesReturnStore.sales=sales;
 
-    SalesReturnStore.returns = returns;
+    SalesReturnStore.returns=returns;
 
     /**
      * ==========================================
@@ -95,11 +91,13 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    SalesReturnStore.lookup = buildLookup(
+    SalesReturnStore.lookup=
 
-        SalesReturnStore.sales
+        buildLookup(
 
-    );
+            SalesReturnStore.sales
+
+        );
 
     /**
      * ==========================================
@@ -107,25 +105,39 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    SalesReturnStore.dashboard = buildKPIs(
+    SalesReturnStore.dashboard=
 
-        SalesReturnStore.sales,
+        buildKPIs(
 
-        SalesReturnStore.returns,
+            SalesReturnStore.sales,
 
-        SalesReturnStore.lookup
+            SalesReturnStore.returns,
 
-    );
+            SalesReturnStore.lookup
+
+        );
 
     /**
      * ==========================================
-     * PO Type Report
+     * Reports
      * ==========================================
      */
 
-    SalesReturnStore.reports.poType =
+    SalesReturnStore.reports.poType=
 
         buildPOTypeReport(
+
+            SalesReturnStore.sales,
+
+            SalesReturnStore.returns,
+
+            SalesReturnStore.lookup
+
+        );
+
+    SalesReturnStore.reports.brand=
+
+        buildBrandReport(
 
             SalesReturnStore.sales,
 
@@ -141,7 +153,7 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    const kpiContainer =
+    const kpiContainer=
 
         document.getElementById(
 
@@ -167,7 +179,7 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    const poContainer =
+    const poContainer=
 
         document.getElementById(
 
@@ -189,17 +201,47 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
+     * Render Brand
+     * ==========================================
+     */
+
+    const brandContainer=
+
+        document.getElementById(
+
+            "salesReturnBrand"
+
+        );
+
+    if(brandContainer){
+
+        await renderBrandReport(
+
+            brandContainer,
+
+            SalesReturnStore.reports.brand
+
+        );
+
+    }
+
+    /**
+     * ==========================================
      * Status
      * ==========================================
      */
 
-    SalesReturnStore.loading = false;
+    SalesReturnStore.loading=false;
 
-    SalesReturnStore.loaded = true;
+    SalesReturnStore.loaded=true;
 
-    SalesReturnStore.generatedOn = new Date();
+    SalesReturnStore.generatedOn=
 
-    SalesReturnStore.ui.lastRefresh = new Date();
+        new Date();
+
+    SalesReturnStore.ui.lastRefresh=
+
+        new Date();
 
     /**
      * ==========================================
@@ -249,9 +291,11 @@ export async function refreshDashboard(){
 
     );
 
-    console.table(
+    console.log(
 
-        SalesReturnStore.reports.poType
+        "Brands:",
+
+        SalesReturnStore.reports.brand.length
 
     );
 
