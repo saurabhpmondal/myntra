@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V12.5
+ * Version : V12.6
  * =====================================================
  */
 
@@ -18,12 +18,14 @@ import { buildKPIs } from "../engines/buildKPIs.js";
 import { buildPOTypeReport } from "../builders/buildPOTypeReport.js";
 import { buildBrandReport } from "../builders/buildBrandReport.js";
 import { buildStyleReport } from "../builders/buildStyleReport.js";
+import { buildReturnReasonReport } from "../builders/buildReturnReasonReport.js";
 
 import { renderKPIs } from "../renderers/renderKPIs.js";
 
 import { renderPOTypeReport } from "../renderers/renderPOTypeReport.js";
 import { renderBrandReport } from "../renderers/renderBrandReport.js";
 import { renderStyleReport } from "../renderers/renderStyleReport.js";
+import { renderReturnReasonReport } from "../renderers/renderReturnReasonReport.js";
 
 /**
  * =====================================================
@@ -41,13 +43,13 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    SalesReturnStore.sales=[];
+    SalesReturnStore.sales = [];
 
-    SalesReturnStore.returns=[];
+    SalesReturnStore.returns = [];
 
-    SalesReturnStore.lookup={};
+    SalesReturnStore.lookup = {};
 
-    SalesReturnStore.dashboard={
+    SalesReturnStore.dashboard = {
 
         sale:{gmv:0,units:0},
 
@@ -61,7 +63,7 @@ export async function refreshDashboard(){
 
     };
 
-    SalesReturnStore.reports={
+    SalesReturnStore.reports = {
 
         poType:[],
 
@@ -77,7 +79,7 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Apply Global Filter
+     * Apply Global Filters
      * ==========================================
      */
 
@@ -154,6 +156,18 @@ export async function refreshDashboard(){
     SalesReturnStore.reports.style =
 
         buildStyleReport(
+
+            SalesReturnStore.sales,
+
+            SalesReturnStore.returns,
+
+            SalesReturnStore.lookup
+
+        );
+
+    SalesReturnStore.reports.returnReason =
+
+        buildReturnReasonReport(
 
             SalesReturnStore.sales,
 
@@ -261,6 +275,30 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
+     * Render Return Reason
+     * ==========================================
+     */
+
+    const reasonContainer = document.getElementById(
+
+        "salesReturnReason"
+
+    );
+
+    if(reasonContainer){
+
+        await renderReturnReasonReport(
+
+            reasonContainer,
+
+            SalesReturnStore.reports.returnReason
+
+        );
+
+    }
+
+    /**
+     * ==========================================
      * Status
      * ==========================================
      */
@@ -330,6 +368,14 @@ export async function refreshDashboard(){
         "Styles:",
 
         SalesReturnStore.reports.style.length
+
+    );
+
+    console.log(
+
+        "Return Reasons:",
+
+        SalesReturnStore.reports.returnReason.length
 
     );
 
