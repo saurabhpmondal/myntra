@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V12.2
+ * Version : V12.3
  * =====================================================
  */
 
@@ -15,7 +15,11 @@ import { buildLookup } from "../engines/buildLookup.js";
 
 import { buildKPIs } from "../engines/buildKPIs.js";
 
+import { buildPOTypeReport } from "../builders/buildPOTypeReport.js";
+
 import { renderKPIs } from "../renderers/renderKPIs.js";
+
+import { renderPOTypeReport } from "../renderers/renderPOTypeReport.js";
 
 /**
  * =====================================================
@@ -41,30 +45,29 @@ export async function refreshDashboard(){
 
     SalesReturnStore.dashboard = {
 
-        sale:{
-            gmv:0,
-            units:0
-        },
+        sale:{gmv:0,units:0},
 
-        cancel:{
-            gmv:0,
-            units:0
-        },
+        cancel:{gmv:0,units:0},
 
-        rto:{
-            gmv:0,
-            units:0
-        },
+        rto:{gmv:0,units:0},
 
-        cx:{
-            gmv:0,
-            units:0
-        },
+        cx:{gmv:0,units:0},
 
-        net:{
-            gmv:0,
-            units:0
-        }
+        net:{gmv:0,units:0}
+
+    };
+
+    SalesReturnStore.reports = {
+
+        poType:[],
+
+        brand:[],
+
+        style:[],
+
+        returnReason:[],
+
+        trend:[]
 
     };
 
@@ -100,7 +103,7 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Build KPI
+     * KPI
      * ==========================================
      */
 
@@ -116,15 +119,35 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
+     * PO Type Report
+     * ==========================================
+     */
+
+    SalesReturnStore.reports.poType =
+
+        buildPOTypeReport(
+
+            SalesReturnStore.sales,
+
+            SalesReturnStore.returns,
+
+            SalesReturnStore.lookup
+
+        );
+
+    /**
+     * ==========================================
      * Render KPI
      * ==========================================
      */
 
-    const kpiContainer = document.getElementById(
+    const kpiContainer =
 
-        "salesReturnKPIs"
+        document.getElementById(
 
-    );
+            "salesReturnKPIs"
+
+        );
 
     if(kpiContainer){
 
@@ -140,7 +163,33 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Update Status
+     * Render PO Type
+     * ==========================================
+     */
+
+    const poContainer =
+
+        document.getElementById(
+
+            "salesReturnPOType"
+
+        );
+
+    if(poContainer){
+
+        await renderPOTypeReport(
+
+            poContainer,
+
+            SalesReturnStore.reports.poType
+
+        );
+
+    }
+
+    /**
+     * ==========================================
+     * Status
      * ==========================================
      */
 
@@ -166,7 +215,7 @@ export async function refreshDashboard(){
 
     console.log(
 
-        "Sales Rows :",
+        "Sales Rows:",
 
         SalesReturnStore.sales.length
 
@@ -174,7 +223,7 @@ export async function refreshDashboard(){
 
     console.log(
 
-        "Return Rows :",
+        "Return Rows:",
 
         SalesReturnStore.returns.length
 
@@ -182,7 +231,7 @@ export async function refreshDashboard(){
 
     console.log(
 
-        "Lookup :",
+        "Lookup:",
 
         Object.keys(
 
@@ -192,39 +241,19 @@ export async function refreshDashboard(){
 
     );
 
-    console.table({
+    console.log(
 
-        "Sale GMV":
-            SalesReturnStore.dashboard.sale.gmv,
+        "PO Types:",
 
-        "Sale Units":
-            SalesReturnStore.dashboard.sale.units,
+        SalesReturnStore.reports.poType.length
 
-        "Cancel GMV":
-            SalesReturnStore.dashboard.cancel.gmv,
+    );
 
-        "Cancel Units":
-            SalesReturnStore.dashboard.cancel.units,
+    console.table(
 
-        "RTO GMV":
-            SalesReturnStore.dashboard.rto.gmv,
+        SalesReturnStore.reports.poType
 
-        "RTO Units":
-            SalesReturnStore.dashboard.rto.units,
-
-        "CX GMV":
-            SalesReturnStore.dashboard.cx.gmv,
-
-        "CX Units":
-            SalesReturnStore.dashboard.cx.units,
-
-        "Net GMV":
-            SalesReturnStore.dashboard.net.gmv,
-
-        "Net Units":
-            SalesReturnStore.dashboard.net.units
-
-    });
+    );
 
     console.groupEnd();
 
