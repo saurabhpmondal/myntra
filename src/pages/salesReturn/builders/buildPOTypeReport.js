@@ -3,70 +3,224 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Build PO Type Report
- * Version : V12.0
+ * Version : V12.1
  * =====================================================
  */
 
 export function buildPOTypeReport(
-    dashboardRows
+
+    sales=[],
+
+    returns=[],
+
+    lookup={}
+
 ){
 
-    const map = {};
+    const report={};
 
-    dashboardRows.forEach(row=>{
+    /**
+     * ==========================================
+     * SALES
+     * ==========================================
+     */
 
-        const key = row.po_type || "-";
+    sales.forEach(row=>{
 
-        if(!map[key]){
+        const key=
 
-            map[key]={
+            row.po_type || "-";
 
-                poType:key,
+        if(!report[key]){
 
-                saleGMV:0,
-                saleUnits:0,
-
-                cancelGMV:0,
-                cancelUnits:0,
-
-                rtoGMV:0,
-                rtoUnits:0,
-
-                cxGMV:0,
-                cxUnits:0,
-
-                netGMV:0,
-                netUnits:0
-
-            };
+            report[key]=createRow(key);
 
         }
 
-        const item = map[key];
+        const units=
 
-        item.saleGMV += row.saleGMV || 0;
-        item.saleUnits += row.saleUnits || 0;
+            Number(row.qty)||0;
 
-        item.cancelGMV += row.cancelGMV || 0;
-        item.cancelUnits += row.cancelUnits || 0;
+        const gmv=
 
-        item.rtoGMV += row.rtoGMV || 0;
-        item.rtoUnits += row.rtoUnits || 0;
+            Number(row.final_amount)||0;
 
-        item.cxGMV += row.cxGMV || 0;
-        item.cxUnits += row.cxUnits || 0;
+        report[key].saleGMV+=gmv;
 
-        item.netGMV += row.netGMV || 0;
-        item.netUnits += row.netUnits || 0;
+        report[key].saleUnits+=units;
+
+        if(
+
+            String(
+
+                row.order_status
+
+            ).toUpperCase()==="F"
+
+        ){
+
+            report[key].cancelGMV+=gmv;
+
+            report[key].cancelUnits+=units;
+
+        }
 
     });
 
-    return Object.values(map)
+    /**
+     * ==========================================
+     * RETURNS
+     * ==========================================
+     */
 
-        .sort((a,b)=>
+    returns.forEach(row=>{
 
-            b.saleGMV-a.saleGMV
+        const sale=
+
+            lookup[
+
+                row.order_line_id
+
+            ];
+
+        if(!sale){
+
+            return;
+
+        }
+
+        const key=
+
+            sale.po_type || "-";
+
+        const gmv=
+
+            Number(
+
+                sale.final_amount
+
+            )||0;
+
+        const type=
+
+            String(
+
+                row.type||""
+
+            )
+
+            .trim()
+
+            .toUpperCase();
+
+        if(type==="RTO"){
+
+            report[key].rtoGMV+=gmv;
+
+            report[key].rtoUnits++;
+
+        }
+
+        else if(type==="RETURN"){
+
+            report[key].cxGMV+=gmv;
+
+            report[key].cxUnits++;
+
+        }
+
+    });
+
+    /**
+     * ==========================================
+     * NET
+     * ==========================================
+     */
+
+    Object.values(report).forEach(item=>{
+
+        item.netGMV=
+
+            item.saleGMV
+
+            -
+
+            item.cancelGMV
+
+            -
+
+            item.rtoGMV
+
+            -
+
+            item.cxGMV;
+
+        item.netUnits=
+
+            item.saleUnits
+
+            -
+
+            item.cancelUnits
+
+            -
+
+            item.rtoUnits
+
+            -
+
+            item.cxUnits;
+
+    });
+
+    return Object.values(report)
+
+        .sort(
+
+            (a,b)=>
+
+                b.saleGMV-a.saleGMV
 
         );
+
+}
+
+/**
+ * =====================================================
+ * Create Row
+ * =====================================================
+ */
+
+function createRow(
+
+    poType
+
+){
+
+    return{
+
+        poType,
+
+        saleGMV:0,
+
+        saleUnits:0,
+
+        cancelGMV:0,
+
+        cancelUnits:0,
+
+        rtoGMV:0,
+
+        rtoUnits:0,
+
+        cxGMV:0,
+
+        cxUnits:0,
+
+        netGMV:0,
+
+        netUnits:0
+
+    };
 
 }
