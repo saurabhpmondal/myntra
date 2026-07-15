@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Return Reason Report Renderer
- * Version : V12.0
+ * Version : V12.1
  * =====================================================
  */
 
@@ -34,60 +34,26 @@ export async function renderReturnReasonReport(
             },
 
             {
-                key:"rtoGMV",
-                label:"RTO GMV",
+                key:"returnGMV",
+                label:"Return GMV",
                 format:"currency"
             },
 
             {
-                key:"rtoUnits",
-                label:"RTO Units",
+                key:"returnUnits",
+                label:"Return Units",
                 format:"number"
             },
 
             {
-                key:"cxGMV",
-                label:"CX Return GMV",
-                format:"currency"
-            },
-
-            {
-                key:"cxUnits",
-                label:"CX Return Units",
-                format:"number"
-            },
-
-            {
-                key:"totalGMV",
-                label:"Total Return GMV",
-                format:"currency"
-            },
-
-            {
-                key:"totalUnits",
-                label:"Total Return Units",
-                format:"number"
+                key:"contribution",
+                label:"Contribution %",
+                renderer:(value)=>`${Number(value||0).toFixed(2)}%`
             }
 
         ],
 
-        rows: rows.map(row=>({
-
-            ...row,
-
-            totalGMV:
-
-                row.rtoGMV +
-
-                row.cxGMV,
-
-            totalUnits:
-
-                row.rtoUnits +
-
-                row.cxUnits
-
-        }))
+        rows
 
     });
 
