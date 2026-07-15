@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Refresh Dashboard
- * Version : V12.1
+ * Version : V12.2
  * =====================================================
  */
 
@@ -14,6 +14,8 @@ import { filterData } from "../engines/filterData.js";
 import { buildLookup } from "../engines/buildLookup.js";
 
 import { buildKPIs } from "../engines/buildKPIs.js";
+
+import { renderKPIs } from "../renderers/renderKPIs.js";
 
 /**
  * =====================================================
@@ -39,15 +41,30 @@ export async function refreshDashboard(){
 
     SalesReturnStore.dashboard = {
 
-        sale:{gmv:0,units:0},
+        sale:{
+            gmv:0,
+            units:0
+        },
 
-        cancel:{gmv:0,units:0},
+        cancel:{
+            gmv:0,
+            units:0
+        },
 
-        rto:{gmv:0,units:0},
+        rto:{
+            gmv:0,
+            units:0
+        },
 
-        cx:{gmv:0,units:0},
+        cx:{
+            gmv:0,
+            units:0
+        },
 
-        net:{gmv:0,units:0}
+        net:{
+            gmv:0,
+            units:0
+        }
 
     };
 
@@ -71,7 +88,7 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Build Order Lookup
+     * Build Lookup
      * ==========================================
      */
 
@@ -99,7 +116,31 @@ export async function refreshDashboard(){
 
     /**
      * ==========================================
-     * Status
+     * Render KPI
+     * ==========================================
+     */
+
+    const kpiContainer = document.getElementById(
+
+        "salesReturnKPIs"
+
+    );
+
+    if(kpiContainer){
+
+        await renderKPIs(
+
+            kpiContainer,
+
+            SalesReturnStore.dashboard
+
+        );
+
+    }
+
+    /**
+     * ==========================================
+     * Update Status
      * ==========================================
      */
 
@@ -117,7 +158,11 @@ export async function refreshDashboard(){
      * ==========================================
      */
 
-    console.group("Sales & Return");
+    console.group(
+
+        "Sales & Return"
+
+    );
 
     console.log(
 
@@ -150,43 +195,33 @@ export async function refreshDashboard(){
     console.table({
 
         "Sale GMV":
-
             SalesReturnStore.dashboard.sale.gmv,
 
         "Sale Units":
-
             SalesReturnStore.dashboard.sale.units,
 
         "Cancel GMV":
-
             SalesReturnStore.dashboard.cancel.gmv,
 
         "Cancel Units":
-
             SalesReturnStore.dashboard.cancel.units,
 
         "RTO GMV":
-
             SalesReturnStore.dashboard.rto.gmv,
 
         "RTO Units":
-
             SalesReturnStore.dashboard.rto.units,
 
         "CX GMV":
-
             SalesReturnStore.dashboard.cx.gmv,
 
         "CX Units":
-
             SalesReturnStore.dashboard.cx.units,
 
         "Net GMV":
-
             SalesReturnStore.dashboard.net.gmv,
 
         "Net Units":
-
             SalesReturnStore.dashboard.net.units
 
     });
