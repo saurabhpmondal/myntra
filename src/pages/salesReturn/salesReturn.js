@@ -2,60 +2,37 @@
  * =====================================================
  * Project Phoenix
  * Product : Myntra Analytics
- * Module  : Sales & Return V12
+ * Module  : Sales & Return
  * Version : V12.0
+ * =====================================================
+ */
+
+import { initializeSalesReturn } from "./services/initializeSalesReturn.js";
+
+/**
+ * =====================================================
+ * Render
  * =====================================================
  */
 
 export async function renderSalesReturn(container){
 
-    container.innerHTML = `
+    await initializeSalesReturn(
 
-    <div class="page">
+        container
 
-        <div class="page-header">
-
-            <h1>Sales & Return</h1>
-
-            <p>
-                Phoenix V12 is currently under development.
-            </p>
-
-        </div>
-
-        <div class="card">
-
-            <div
-                style="
-                    padding:60px;
-                    text-align:center;
-                    color:#666;
-                ">
-
-                <h2>🚧 Sales & Return V12</h2>
-
-                <p>
-                    Module rebuild in progress.
-                </p>
-
-                <p>
-                    Sprint 0 • Foundation
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    `;
+    );
 
 }
+
+/**
+ * =====================================================
+ * Destroy
+ * =====================================================
+ */
 
 export function destroySalesReturn(){
 
-    // Nothing required for placeholder
+    // Reserved for future cleanup
 
 }
-
-
