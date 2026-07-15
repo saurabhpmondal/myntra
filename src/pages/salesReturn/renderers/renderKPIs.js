@@ -3,7 +3,7 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : KPI Renderer
- * Version : V12.2
+ * Version : V12.3
  * =====================================================
  */
 
@@ -27,11 +27,11 @@ function formatAmount(value){
 
 /**
  * =====================================================
- * Build KPI Card
+ * Build Amount Card
  * =====================================================
  */
 
-async function buildCard(
+async function buildAmountCard(
 
     id,
 
@@ -79,6 +79,52 @@ async function buildCard(
 
 /**
  * =====================================================
+ * Build Unit Card
+ * =====================================================
+ */
+
+async function buildUnitCard(
+
+    id,
+
+    title,
+
+    units,
+
+    icon
+
+){
+
+    await renderKPICard(
+
+        document.getElementById(id),
+
+        {
+
+            title,
+
+            value:
+
+                Number(units)
+
+                    .toLocaleString("en-IN"),
+
+            subtitle:"Units",
+
+            icon,
+
+            growth:0,
+
+            compareLabel:"Previous Period"
+
+        }
+
+    );
+
+}
+
+/**
+ * =====================================================
  * Render KPI
  * =====================================================
  */
@@ -95,6 +141,24 @@ export async function renderKPIs(
 
 <style>
 
+.sales-return-kpi-section{
+
+    margin-bottom:28px;
+
+}
+
+.sales-return-kpi-heading{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#111827;
+
+    margin:0 0 14px 4px;
+
+}
+
 .sales-return-kpi-grid{
 
     display:grid;
@@ -103,7 +167,11 @@ export async function renderKPIs(
 
     gap:20px;
 
-    margin-bottom:24px;
+}
+
+.sales-return-kpi-section + .sales-return-kpi-section{
+
+    margin-top:30px;
 
 }
 
@@ -139,23 +207,63 @@ export async function renderKPIs(
 
 </style>
 
-<div class="sales-return-kpi-grid">
+<div class="sales-return-kpi-section">
 
-    <div id="srSale"></div>
+    <div class="sales-return-kpi-heading">
 
-    <div id="srCancel"></div>
+        GMV Performance
 
-    <div id="srRTO"></div>
+    </div>
 
-    <div id="srCX"></div>
+    <div class="sales-return-kpi-grid">
 
-    <div id="srNet"></div>
+        <div id="srSale"></div>
+
+        <div id="srCancel"></div>
+
+        <div id="srRTO"></div>
+
+        <div id="srCX"></div>
+
+        <div id="srNet"></div>
+
+    </div>
+
+</div>
+
+<div class="sales-return-kpi-section">
+
+    <div class="sales-return-kpi-heading">
+
+        Unit Performance
+
+    </div>
+
+    <div class="sales-return-kpi-grid">
+
+        <div id="srSaleUnits"></div>
+
+        <div id="srCancelUnits"></div>
+
+        <div id="srRTOUnits"></div>
+
+        <div id="srCXUnits"></div>
+
+        <div id="srNetUnits"></div>
+
+    </div>
 
 </div>
 
 `;
 
-    await buildCard(
+    /**
+     * ==========================================
+     * GMV Cards
+     * ==========================================
+     */
+
+    await buildAmountCard(
 
         "srSale",
 
@@ -169,7 +277,7 @@ export async function renderKPIs(
 
     );
 
-    await buildCard(
+    await buildAmountCard(
 
         "srCancel",
 
@@ -183,7 +291,7 @@ export async function renderKPIs(
 
     );
 
-    await buildCard(
+    await buildAmountCard(
 
         "srRTO",
 
@@ -197,7 +305,7 @@ export async function renderKPIs(
 
     );
 
-    await buildCard(
+    await buildAmountCard(
 
         "srCX",
 
@@ -211,13 +319,79 @@ export async function renderKPIs(
 
     );
 
-    await buildCard(
+    await buildAmountCard(
 
         "srNet",
 
         "Net",
 
         dashboard.net.gmv,
+
+        dashboard.net.units,
+
+        "wallet"
+
+    );
+
+    /**
+     * ==========================================
+     * Unit Cards
+     * ==========================================
+     */
+
+    await buildUnitCard(
+
+        "srSaleUnits",
+
+        "Sale",
+
+        dashboard.sale.units,
+
+        "package"
+
+    );
+
+    await buildUnitCard(
+
+        "srCancelUnits",
+
+        "Cancelled",
+
+        dashboard.cancel.units,
+
+        "circle-x"
+
+    );
+
+    await buildUnitCard(
+
+        "srRTOUnits",
+
+        "RTO",
+
+        dashboard.rto.units,
+
+        "rotate-ccw"
+
+    );
+
+    await buildUnitCard(
+
+        "srCXUnits",
+
+        "CX Return",
+
+        dashboard.cx.units,
+
+        "package-x"
+
+    );
+
+    await buildUnitCard(
+
+        "srNetUnits",
+
+        "Net",
 
         dashboard.net.units,
 
