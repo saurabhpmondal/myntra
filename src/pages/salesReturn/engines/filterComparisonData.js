@@ -3,20 +3,27 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Comparison Filter Engine
- * Version : V13.2
+ * Version : V13.3
  * =====================================================
  */
-
-import { FilterState } from "../../../services/filterService.js";
 
 import { DataStore } from "../../../services/dataService.js";
 
 import {
 
-    getPeriodKey,
+    FilterState,
+
+    getSalesByPeriod
+
+} from "../../../services/filterService.js";
+
+import {
+
     getPeriodLabel
 
 } from "../../../services/periodService.js";
+
+import { buildLookup } from "./buildLookup.js";
 
 /**
  * =====================================================
@@ -76,115 +83,121 @@ export function filterComparisonData(){
 
     /**
      * ==========================================
-     * Current Sales
+     * Sales
+     * Global filters already applied
      * ==========================================
      */
 
     const currentSales=
 
-        DataStore.sales.filter(row=>{
+        getSalesByPeriod(
 
-            return(
+            currentPeriod
 
-                getPeriodKey(
-
-                    row.month,
-
-                    row.year
-
-                )===currentPeriod
-
-            );
-
-        });
-
-    /**
-     * ==========================================
-     * Previous Sales
-     * ==========================================
-     */
+        );
 
     const previousSales=
 
-        DataStore.sales.filter(row=>{
+        getSalesByPeriod(
 
-            return(
+            previousPeriod
 
-                getPeriodKey(
-
-                    row.month,
-
-                    row.year
-
-                )===previousPeriod
-
-            );
-
-        });
+        );
 
     /**
      * ==========================================
-     * Current Returns
+     * Lookup
+     * ==========================================
+     */
+
+    const currentLookup=
+
+        buildLookup(
+
+            currentSales
+
+        );
+
+    const previousLookup=
+
+        buildLookup(
+
+            previousSales
+
+        );
+
+    /**
+     * ==========================================
+     * Returns
+     * Automatically inherit
+     * Brand
+     * Category
+     * ERP Status
+     * Search
+     * because lookup only contains
+     * filtered sales.
      * ==========================================
      */
 
     const currentReturns=
 
-        DataStore.returns.filter(row=>{
+        DataStore.returns.filter(
 
-            return(
+            row=>
 
-                getPeriodKey(
+                currentLookup[
 
-                    row.month,
+                    row.order_line_id
 
-                    row.year
+                ]
 
-                )===currentPeriod
-
-            );
-
-        });
-
-    /**
-     * ==========================================
-     * Previous Returns
-     * ==========================================
-     */
+        );
 
     const previousReturns=
 
-        DataStore.returns.filter(row=>{
+        DataStore.returns.filter(
 
-            return(
+            row=>
 
-                getPeriodKey(
+                previousLookup[
 
-                    row.month,
+                    row.order_line_id
 
-                    row.year
+                ]
 
-                )===previousPeriod
-
-            );
-
-        });
+        );
 
     return{
 
         current:{
 
-            sales:currentSales,
+            sales:
 
-            returns:currentReturns
+                currentSales,
+
+            returns:
+
+                currentReturns,
+
+            lookup:
+
+                currentLookup
 
         },
 
         previous:{
 
-            sales:previousSales,
+            sales:
 
-            returns:previousReturns
+                previousSales,
+
+            returns:
+
+                previousReturns,
+
+            lookup:
+
+                previousLookup
 
         },
 
