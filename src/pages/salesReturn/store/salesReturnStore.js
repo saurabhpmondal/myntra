@@ -3,14 +3,16 @@
  * Project Phoenix
  * Product : Myntra Analytics
  * Module  : Sales Return Store
- * Version : V12.0
+ * Version : V13.3
  * =====================================================
  */
 
 export const SalesReturnStore={
 
     /**
+     * ==========================================
      * Status
+     * ==========================================
      */
 
     loaded:false,
@@ -20,7 +22,9 @@ export const SalesReturnStore={
     generatedOn:null,
 
     /**
+     * ==========================================
      * Filtered Dataset
+     * ==========================================
      */
 
     sales:[],
@@ -28,46 +32,78 @@ export const SalesReturnStore={
     returns:[],
 
     /**
+     * ==========================================
      * Lookup
+     * ==========================================
      */
 
     lookup:{},
 
     /**
-     * KPI
+     * ==========================================
+     * Current Period KPI
+     * ==========================================
      */
 
-    dashboard:{
+    currentDashboard:{
 
-        sale:{
-            units:0,
-            gmv:0
-        },
+        sale:{units:0,gmv:0},
 
-        cancel:{
-            units:0,
-            gmv:0
-        },
+        cancel:{units:0,gmv:0},
 
-        rto:{
-            units:0,
-            gmv:0
-        },
+        rto:{units:0,gmv:0},
 
-        cx:{
-            units:0,
-            gmv:0
-        },
+        cx:{units:0,gmv:0},
 
-        net:{
-            units:0,
-            gmv:0
-        }
+        net:{units:0,gmv:0}
 
     },
 
     /**
+     * ==========================================
+     * Previous Period KPI
+     * ==========================================
+     */
+
+    previousDashboard:{
+
+        sale:{units:0,gmv:0},
+
+        cancel:{units:0,gmv:0},
+
+        rto:{units:0,gmv:0},
+
+        cx:{units:0,gmv:0},
+
+        net:{units:0,gmv:0}
+
+    },
+
+    /**
+     * ==========================================
+     * Dashboard
+     * Growth Ready KPI
+     * ==========================================
+     */
+
+    dashboard:{
+
+        sale:{},
+
+        cancel:{},
+
+        rto:{},
+
+        cx:{},
+
+        net:{}
+
+    },
+
+    /**
+     * ==========================================
      * Reports
+     * ==========================================
      */
 
     reports:{
@@ -85,7 +121,9 @@ export const SalesReturnStore={
     },
 
     /**
+     * ==========================================
      * UI
+     * ==========================================
      */
 
     ui:{
@@ -95,6 +133,12 @@ export const SalesReturnStore={
     }
 
 };
+
+/**
+ * =====================================================
+ * Reset Store
+ * =====================================================
+ */
 
 export function resetSalesReturnStore(){
 
@@ -110,7 +154,13 @@ export function resetSalesReturnStore(){
 
     SalesReturnStore.lookup={};
 
-    SalesReturnStore.dashboard={
+    /**
+     * ==========================================
+     * Current Dashboard
+     * ==========================================
+     */
+
+    SalesReturnStore.currentDashboard={
 
         sale:{units:0,gmv:0},
 
@@ -123,6 +173,52 @@ export function resetSalesReturnStore(){
         net:{units:0,gmv:0}
 
     };
+
+    /**
+     * ==========================================
+     * Previous Dashboard
+     * ==========================================
+     */
+
+    SalesReturnStore.previousDashboard={
+
+        sale:{units:0,gmv:0},
+
+        cancel:{units:0,gmv:0},
+
+        rto:{units:0,gmv:0},
+
+        cx:{units:0,gmv:0},
+
+        net:{units:0,gmv:0}
+
+    };
+
+    /**
+     * ==========================================
+     * Growth Dashboard
+     * ==========================================
+     */
+
+    SalesReturnStore.dashboard={
+
+        sale:{},
+
+        cancel:{},
+
+        rto:{},
+
+        cx:{},
+
+        net:{}
+
+    };
+
+    /**
+     * ==========================================
+     * Reports
+     * ==========================================
+     */
 
     SalesReturnStore.reports={
 
