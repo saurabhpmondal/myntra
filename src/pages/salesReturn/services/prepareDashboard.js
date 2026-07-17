@@ -17,7 +17,7 @@ import { buildPreviousKPIs } from "../engines/buildPreviousKPIs.js";
 
 import { buildGrowthKPIs } from "../engines/buildGrowthKPIs.js";
 
-export async function prepareDashboard(){
+export async function prepareDashboard() {
 
     /**
      * ==========================================
@@ -45,17 +45,15 @@ export async function prepareDashboard(){
      * ==========================================
      */
 
-    SalesReturnStore.currentDashboard =
+    SalesReturnStore.currentDashboard = buildKPIs(
 
-        buildKPIs(
+        comparison.current.sales,
 
-            comparison.current.sales,
+        comparison.current.returns,
 
-            comparison.current.returns,
+        comparison.current.lookup
 
-            comparison.current.lookup
-
-        );
+    );
 
     /**
      * ==========================================
@@ -63,36 +61,31 @@ export async function prepareDashboard(){
      * ==========================================
      */
 
-    SalesReturnStore.previousDashboard =
+    SalesReturnStore.previousDashboard = buildPreviousKPIs(
 
-        buildPreviousKPIs(
+        comparison.previous.sales,
 
-            comparison.previous.sales,
+        comparison.previous.returns,
 
-            comparison.previous.returns,
+        comparison.previous.lookup
 
-            comparison.previous.lookup
-
-        );
+    );
 
     /**
      * ==========================================
-     * Growth Dashboard
+     * Growth KPI
      * ==========================================
      */
 
-    SalesReturnStore.dashboard =
+    SalesReturnStore.dashboard = buildGrowthKPIs(
 
-        buildGrowthKPIs(
+        SalesReturnStore.currentDashboard,
 
-            SalesReturnStore.currentDashboard,
+        SalesReturnStore.previousDashboard,
 
-            SalesReturnStore.previousDashboard,
+        comparison.compareLabel
 
-            comparison.compareLabel
-
-        );
+    );
 
     return comparison;
-
 }
