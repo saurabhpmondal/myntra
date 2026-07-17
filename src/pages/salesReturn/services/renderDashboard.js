@@ -16,7 +16,7 @@ import { renderStyleReport } from "../renderers/renderStyleReport.js";
 import { renderReturnReasonReport } from "../renderers/renderReturnReasonReport.js";
 import { renderTrendReport } from "../renderers/renderTrendReport.js";
 
-export async function renderDashboard(){
+export async function renderDashboard() {
 
     /**
      * ==========================================
@@ -25,19 +25,14 @@ export async function renderDashboard(){
      */
 
     const kpiContainer = document.getElementById(
-
         "salesReturnKPIs"
-
     );
 
-    if(kpiContainer){
+    if (kpiContainer) {
 
         await renderKPIs(
-
             kpiContainer,
-
             SalesReturnStore.dashboard
-
         );
 
     }
@@ -49,19 +44,14 @@ export async function renderDashboard(){
      */
 
     const poContainer = document.getElementById(
-
         "salesReturnPOType"
-
     );
 
-    if(poContainer){
+    if (poContainer) {
 
         await renderPOTypeReport(
-
             poContainer,
-
             SalesReturnStore.reports.poType
-
         );
 
     }
@@ -73,19 +63,14 @@ export async function renderDashboard(){
      */
 
     const brandContainer = document.getElementById(
-
         "salesReturnBrand"
-
     );
 
-    if(brandContainer){
+    if (brandContainer) {
 
         await renderBrandReport(
-
             brandContainer,
-
             SalesReturnStore.reports.brand
-
         );
 
     }
@@ -97,19 +82,14 @@ export async function renderDashboard(){
      */
 
     const styleContainer = document.getElementById(
-
         "salesReturnStyle"
-
     );
 
-    if(styleContainer){
+    if (styleContainer) {
 
         await renderStyleReport(
-
             styleContainer,
-
             SalesReturnStore.reports.style
-
         );
 
     }
@@ -121,19 +101,14 @@ export async function renderDashboard(){
      */
 
     const reasonContainer = document.getElementById(
-
         "salesReturnReason"
-
     );
 
-    if(reasonContainer){
+    if (reasonContainer) {
 
         await renderReturnReasonReport(
-
             reasonContainer,
-
             SalesReturnStore.reports.returnReason
-
         );
 
     }
@@ -145,19 +120,14 @@ export async function renderDashboard(){
      */
 
     const trendContainer = document.getElementById(
-
         "salesReturnTrend"
-
     );
 
-    if(trendContainer){
+    if (trendContainer) {
 
         await renderTrendReport(
-
             trendContainer,
-
             SalesReturnStore.reports.trend
-
         );
 
     }
