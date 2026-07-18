@@ -77,7 +77,7 @@ export const Sheets = {
     // ==========================================
 
     ads:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGOsj66mo-CpS5eTerQgEcjYvr5GuOkQUIQ_9Sy4bwFu6FjGv9wBvCZn5UQBcFB7M-dcuJdbxMxSnj/pub?gid=1175680150&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvZylQJaVL05kdoYsQ0IL_MIA9CJ7SxlAdgBtnz-o1gn48MHGJGP5subUshJ3cDb52GlcCnQ_v8c-a/pub?gid=0&single=true&output=csv",
 
     // ==========================================
     // Image Links
